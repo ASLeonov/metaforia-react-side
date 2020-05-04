@@ -1,0 +1,6 @@
+.content-cards-caption {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}

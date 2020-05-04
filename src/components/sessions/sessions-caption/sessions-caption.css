@@ -1,0 +1,21 @@
+.content-sessions-caption {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.content-sessions-caption__title {
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.content-sessions-caption__title:hover {
+  opacity: 1;
+}
+
+.content-sessions-caption__title___active {
+  border-bottom: 2px dotted red;
+  opacity: 1;
+}

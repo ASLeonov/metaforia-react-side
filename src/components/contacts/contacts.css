@@ -1,0 +1,40 @@
+.content-contacts {
+  display: flex;
+}
+
+.content-contacts-list {
+  box-sizing: border-box;
+  margin-top: 10px;
+  padding: 20px;
+  width: 50%;
+  border-right: 1px solid rgb(182, 182, 182);
+}
+
+.content-contacts-list__title {
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 17px;
+  margin-top: 0;
+}
+
+.content-contacts-list__body {
+  max-height: calc(100vh - 90px - 50px - 40px - 50px - 38px - 7px);  /* 7px - запас */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.content-contacts-other {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 20px;
+}
+
+.buttonAddClient {
+  background-color: lightcoral;
+}
+
+.buttonAddClient:hover {
+  background-color: rgb(184, 101, 101);
+}

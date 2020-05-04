@@ -1,0 +1,22 @@
+.content-cards-caption {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.content-cards-caption__title {
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.content-cards-caption__title:hover {
+  opacity: 1;
+}
+
+.content-cards-caption__title___active {
+  border-bottom: 2px dotted red;
+  opacity: 1;
+}
