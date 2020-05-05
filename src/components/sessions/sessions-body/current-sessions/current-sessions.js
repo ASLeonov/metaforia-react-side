@@ -27,12 +27,11 @@ function CurrentSessions() {
                 </div>
                 <div className="sessions-item-body">
                   {element.session_descr}
-                  {/* {element.session_closed} */}
                 </div>
               </div>
-            )         
+            )
           })
-          console.log('sessions list ->', sessions_list)
+          // console.log('sessions list ->', sessions_list)
           setFetched(sessions_list)
         }
       })
