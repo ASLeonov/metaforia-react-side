@@ -4,9 +4,11 @@ import './contact.css'
 
 function Contact(props) {
 
+  const {client_id, client_name, client_surname, client_gender, client_email, client_descr} = props.clientData
+
   const [isActive, setIsActive] = useState(false)
 
-  const onHandleClick = event => {
+  const onHandleClick = () => {
     setIsActive(!isActive)
   }
 
@@ -18,19 +20,19 @@ function Contact(props) {
           className={isActive ? "content-contacts-list__item___data____active" : "content-contacts-list__item___data"}
           onClick={onHandleClick}
         >
-          {props.clientData.client_name}&nbsp;
-          {props.clientData.client_surname}
+          {client_name}&nbsp;
+          {client_surname}
         </span>
       </div>
       <div className={isActive === true ? "content-contacts-list__item___openBlock" : "content-contacts-list__item___closeBlock"}>
         <p>
-          Пол: {props.clientData.client_gender}
+          Пол: {client_gender}
         </p>
         <p>
-          E-mail: {props.clientData.client_email}
+          E-mail: {client_email}
         </p>
         <p>
-          Примечание: {props.clientData.client_descr}
+          Примечание: {client_descr}
         </p>
         <button className="content-contacts-list__item___button buttonInvite">
           Отправить приглашение

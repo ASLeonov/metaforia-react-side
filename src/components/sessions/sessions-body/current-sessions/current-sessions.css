@@ -1,0 +1,18 @@
+.sessions-item {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 10px 14px 10px;
+  border-bottom: 1px solid grey;
+}
+
+.sessions-item-caption {
+  margin-bottom: 8px;
+}
+
+.sessions-item-caption__1stelement {
+  margin-right: 25px;
+}
+
+.sessions-item-caption__2ndelement {
+  font-weight: bold;
+}

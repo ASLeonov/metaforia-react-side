@@ -1,31 +1,34 @@
 import React from 'react'
+import {useState, useEffect} from 'react'
 import Contact from './contact'
-import {contacts} from '../../fixtures/contacts'
+// import {contacts} from '../../fixtures/contacts'
 import './contacts.css'
 
 function Contacts(props) {
-  const userHardCode = "tanyaleo81@yandex.ru"
 
+  const [fetched, setFetched] = useState([])
+  const userHardCode = "tanyaleo81@yandex.ru"
   const clients_list = []
 
-  const contacts_for_user = contacts[userHardCode]
-
-  if (contacts_for_user) {
-    for (const key in contacts_for_user) {
-      clients_list.push(
-        <Contact
-          key={contacts_for_user[key].client_id}
-          clientData={contacts_for_user[key]}
-        />
-      )
-    }
-  } else {
-    clients_list.push(
-      <p className="content-contacts-list__item" key='no_clients'>
-        Клиентов пока нет.
-      </p>
-    )
-  }
+  useEffect( () => {
+    fetch(`http://localhost/ll/clients.php?${userHardCode}`)
+      .then(res => res.json())
+      .then(res => {
+        if (fetched.length === 0) {
+          res.forEach(element => {
+            clients_list.push(
+              <Contact
+                key={element.client_id}
+                clientData={element}
+              />
+            )         
+          })
+          console.log('client list ->', clients_list)
+          setFetched(clients_list)
+        }
+      })
+      .catch(err => console.log('error', err))
+  })
 
   return (
       <div className="content-contacts">
@@ -34,7 +37,7 @@ function Contacts(props) {
             Список Ваших клиентов
           </p>
           <div className="content-contacts-list__body">
-            {clients_list}
+            {fetched}
           </div>
         </div>
         <div className="content-contacts-other">
