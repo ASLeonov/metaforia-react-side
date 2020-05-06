@@ -1,46 +1,25 @@
 import React from 'react'
-import {useState} from 'react'
+import {Link} from "react-router-dom"
 import './sidebar.css'
 
 function Sidebar(props) {
 
-  const [activeMenu, setActiveMenu] = useState(props.activePage)
+  const CN_default = "sidebar-buttons sidebar-sessions"
+  const ACN = "sidebar-buttons-active"
 
-  const {changePage} = props
-
-  const onHandleClick = event => {
-    const currnetTarget = event.target.attributes.targetlink.value
-      if (currnetTarget !== activeMenu) {
-        setActiveMenu(currnetTarget)
-        changePage(currnetTarget)
-      }          
-  }
-
-  const classNameDefault = "sidebar-buttons sidebar-sessions"
+  console.log('render Sidebar')
 
   return (
       <div className="sidebar">
-        <div
-          className={activeMenu === 'sessions' ? `${classNameDefault} sidebar-buttons-active` : classNameDefault}
-          onClick={onHandleClick}
-          targetlink="sessions"
-        >
+        <Link to="/current-sessions" className={(props.activePage === "sessions") ? `${CN_default} ${ACN}` : CN_default}>
           Сессии
-        </div>
-        <div
-          className={activeMenu === 'cards' ? `${classNameDefault} sidebar-buttons-active` : classNameDefault}
-          onClick={onHandleClick}
-          targetlink="cards"
-        >
+        </Link>
+        <Link to="/free-cards" className={(props.activePage === "cards") ? `${CN_default} ${ACN}` : CN_default}>
           Колоды
-        </div>
-        <div
-          className={activeMenu === 'contacts' ? `${classNameDefault} sidebar-buttons-active` : classNameDefault}
-          onClick={onHandleClick}
-          targetlink="contacts"
-        >
+        </Link>
+        <Link to="/contacts" className={(props.activePage === "contacts") ? `${CN_default} ${ACN}` : CN_default}>
           Контакты
-        </div>
+        </Link>
       </div>
   )
   

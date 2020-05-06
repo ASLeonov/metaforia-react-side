@@ -7,21 +7,19 @@ import './content.css'
 
 function Content(props) {
 
-  const {activePage} = props
-
   let activeData = ''
-    switch (activePage) {
+    switch (props.activePage) {
       case 'sessions':
-        activeData = <Sessions />
+        activeData = <Sessions activeSessionsTab={props.activeTab} />
         break;
       case 'cards':
-        activeData = <Cards />
+        activeData = <Cards activeCardsTab={props.activeTab} />
         break;
       case 'contacts':
         activeData = <Contacts />
         break;
       default:
-        activeData = <Sessions />
+        activeData = <Sessions activeSessionsTab="currentSessions" />
         break;
     }
 

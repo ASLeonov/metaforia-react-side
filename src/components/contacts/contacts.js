@@ -1,17 +1,18 @@
 import React from 'react'
 import {useState, useEffect} from 'react'
 import Contact from './contact'
-// import {contacts} from '../../fixtures/contacts'
+import {api_path} from '../../settings'
 import './contacts.css'
 
-function Contacts(props) {
+function Contacts() {
 
   const [fetched, setFetched] = useState([])
   const userHardCode = "tanyaleo81@yandex.ru"
   const clients_list = []
 
   useEffect( () => {
-    fetch(`http://localhost/ll/clients.php?${userHardCode}`)
+    // двойной фетч надо убрать, видимо из-зи юзЭффекта
+    fetch(`${api_path}clients.php?${userHardCode}`)
       .then(res => res.json())
       .then(res => {
         if (fetched.length === 0) {
@@ -23,7 +24,7 @@ function Contacts(props) {
               />
             )         
           })
-          console.log('client list ->', clients_list)
+          // console.log('client list ->', clients_list)
           setFetched(clients_list)
         }
       })

@@ -6,11 +6,9 @@ import './cards-body.css'
 
 function CardsBody(props) {
 
-  const {activeCardsTab} = props
-
   let currentData = ''
 
-  switch (activeCardsTab) {
+  switch (props.activeCardsTab) {
     case 'freeCards':
       currentData = <FreeCards />
       break;

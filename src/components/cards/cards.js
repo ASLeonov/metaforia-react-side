@@ -1,30 +1,19 @@
 import React from 'react'
-import {useState} from 'react'
 import CardsCaption from './cards-caption'
 import CardsBody from './cards-body'
 import './cards.css'
 
-function Cards() {
+function Cards(props) {
 
-  const [activeCardsTab, setActiveCardsTab] = useState('freeCards')
-
-  const changeActiveCards = newCardsTab => {
-    setActiveCardsTab(newCardsTab)
-  }
+  console.log('render Cards')
 
   return (
-      <div className="content-cards">
-        <CardsCaption
-          activeCardsTab={activeCardsTab}
-          changeActiveCards={changeActiveCards}
-        />
-        <CardsBody
-          activeCardsTab={activeCardsTab}
-          changeActiveCards={changeActiveCards}
-        />
-      </div>
+    <div className="content-cards">
+      <CardsCaption />
+      <CardsBody activeCardsTab={props.activeCardsTab} />
+    </div>
   )
-  
+
 }
 
 export default Cards

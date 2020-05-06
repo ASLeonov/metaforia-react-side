@@ -1,21 +1,16 @@
 import React from 'react'
-import {useState} from 'react'
 import Sidebar from '../sidebar'
 import Content from '../content'
 import './middle.css'
 
-function Middle() {
+function Middle(props) {
 
-  const [activePage, setActivePage] = useState('sessions')
-
-  const onChangeActivePage = currentPage => {
-    setActivePage(currentPage)
-  }
+  console.log('render Middle', props.activePage)
 
   return (
     <div className="middle">
-      <Sidebar changePage={onChangeActivePage} activePage={activePage} />
-      <Content changePage={onChangeActivePage} activePage={activePage} />
+      <Sidebar activePage={props.activePage} />
+      <Content activePage={props.activePage} activeTab={props.activeTab}/>
     </div>
   )
 

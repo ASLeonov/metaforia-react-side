@@ -1,41 +1,23 @@
 import React from 'react'
+import {NavLink} from "react-router-dom"
 import './cards-caption.css'
 
-function CardsCaption(props) {
+function CardsCaption() {
 
-  const {activeCardsTab, changeActiveCards} = props
-
-  const onHandleClick = event => {
-    const currentTarget = event.target.attributes.targetcardslink.value
-      if (currentTarget !== activeCardsTab)
-      changeActiveCards(currentTarget)
-  }
-
-  const classNameDefault = "content-cards-caption__title"
+  const CN_default = "content-cards-caption__title"
+  const ACN = "content-cards-caption__title___active"
 
   return (
     <div className="content-cards-caption">
-      <span
-        className={activeCardsTab === 'freeCards' ? `${classNameDefault} content-cards-caption__title___active` : classNameDefault}
-        onClick={onHandleClick}
-        targetcardslink="freeCards"
-      >
+      <NavLink to="/free-cards" className={CN_default} activeClassName={ACN}>
         Доступные колоды
-      </span>
-      <span
-        className={activeCardsTab === 'payCards' ? `${classNameDefault} content-cards-caption__title___active` : classNameDefault}
-        onClick={onHandleClick}
-        targetcardslink="payCards"
-      >
+      </NavLink>
+      <NavLink to="/pay-cards" className={CN_default} activeClassName={ACN}>
         Дополнительные колоды
-      </span>
-      <span
-        className={activeCardsTab === 'clientCards' ? `${classNameDefault} content-cards-caption__title___active` : classNameDefault}
-        onClick={onHandleClick}
-        targetcardslink="clientCards"
-      >
+      </NavLink>
+      <NavLink to="/client-cards" className={CN_default} activeClassName={ACN}>
         Закачать свою колоду
-      </span>
+      </NavLink>
     </div>
   )
 

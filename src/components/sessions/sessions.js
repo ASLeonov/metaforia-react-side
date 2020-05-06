@@ -1,29 +1,18 @@
 import React from 'react'
 import SessionsCaption from './sessions-caption'
 import SessionsBody from './sessions-body'
-import {useState} from 'react'
-// import './sidebar.css'
 
-function Sessions() {
+function Sessions(props) {
 
-  const [activeSessionsTab, setActiveSessionsTab] = useState('currentSessions')
-
-  const changeActiveSession = newSessionTab => {
-    setActiveSessionsTab(newSessionTab)
-  }
+console.log('render Sessions')
 
   return (
-      <div className="content-sessions">
-        <SessionsCaption
-          activeSessionsTab={activeSessionsTab}
-          changeActiveSession={changeActiveSession}
-        />
-        <SessionsBody
-          activeSessionsTab={activeSessionsTab}
-          changeActiveSession={changeActiveSession}
-        />
-      </div>
+    <div className="content-sessions">
+      <SessionsCaption />
+      <SessionsBody activeSessionsTab={props.activeSessionsTab} />
+    </div>
   )
+  
 }
 
 export default Sessions

@@ -1,6 +1,7 @@
 import React from 'react'
 import {useState, useEffect} from 'react'
-// import './pay-cards.css'
+import CardsMessages from '../../cards-messages'
+import {api_path} from '../../../../settings'
 
 function PayCards() {
 
@@ -10,7 +11,8 @@ function PayCards() {
   const cards_list = []
 
   useEffect( () => {
-    fetch(`http://localhost/ll/cards.php?name=${userHardCode}&type=payCards`)
+    if (fetched.length > 0) return
+    fetch(`${api_path}cards.php?name=${userHardCode}&type=payCards`)
       .then(res => res.json())
       .then(res => {
         if (fetched.length === 0) {
@@ -18,8 +20,10 @@ function PayCards() {
             cards_list.push(
               <div className="freeCards-item" key={element.cards_id}>
                 <img
-                  src={`./images/${element.cards_img}`}
+                  src={`../images/cards-pack/${element.cards_img}`}
                   className="freeCards-item-img"
+                  alt={`Колода «${element.cards_name}», стоимость ${element.cards_pay}₽/месяц`}
+                  title={`Колода «${element.cards_name}», стоимость ${element.cards_pay}₽/месяц`}
                 />
                 <span><b>{element.cards_name}</b></span>
                 <span>Автор: <b>{element.cards_author}</b></span>
@@ -27,24 +31,18 @@ function PayCards() {
               </div>
             )
           })
-          console.log('cards list ->', cards_list)
+          // console.log('cards list ->', cards_list)
           setFetched(cards_list)
         }
       })
-      .catch(err => console.log('error', err))
+      .catch(err => 
+        setFetched([<CardsMessages caption="message_payCardsError" key="pay-cards" err={err} />]))
   })
 
-  //   cards_list.push(
-  //     <p key='no_paycards'>
-  //       Наборов карт нету у тебя, о подован.
-  //     </p>
-  //   )
-  // }
-
   return (
-      <div className="content-cards-body-freeCards">
-        {fetched}
-      </div>
+    <div className="content-cards-body-freeCards">
+      {fetched}
+    </div>
   )
 }
 

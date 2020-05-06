@@ -1,5 +1,6 @@
 import React from 'react'
 import {useState, useEffect} from 'react'
+import {api_path} from '../../../../settings'
 import './current-sessions.css'
 
 function CurrentSessions() {
@@ -10,7 +11,8 @@ function CurrentSessions() {
   const sessions_list = []
 
   useEffect( () => {
-    fetch(`http://localhost/ll/sessions.php?name=${userHardCode}&type=currentSessions`)
+      // двойной фетч надо убрать, видимо из-зи юзЭффекта
+    fetch(`${api_path}sessions.php?name=${userHardCode}&type=currentSessions`)
       .then(res => res.json())
       .then(res => {
         if (fetched.length === 0) {

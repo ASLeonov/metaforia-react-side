@@ -1,5 +1,7 @@
 import React from 'react'
 import {useState, useEffect} from 'react'
+import CardsMessages from '../../cards-messages'
+import {api_path} from '../../../../settings'
 import './free-cards.css'
 
 function FreeCards() {
@@ -10,7 +12,8 @@ function FreeCards() {
   const cards_list = []
 
   useEffect( () => {
-    fetch(`http://localhost/ll/cards.php?name=${userHardCode}&type=freeCards`)
+    if (fetched.length > 0) return
+    fetch(`${api_path}cards.php?name=${userHardCode}&type=freeCards`)
       .then(res => res.json())
       .then(res => {
         if (fetched.length === 0) {
@@ -18,8 +21,10 @@ function FreeCards() {
             cards_list.push(
               <div className="freeCards-item" key={element.freecards_id}>
                 <img
-                  src={`./images/${element.freecards_img}`}
+                  src={`../images/cards-pack/${element.freecards_img}`}
                   className="freeCards-item-img"
+                  alt={`Колода «${element.freecards_name}»`}
+                  title={`Колода «${element.freecards_name}»`}
                 />
                 <span><b>{element.freecards_name}</b></span>
                 <span>Автор: <b>{element.freecards_author}</b></span>
@@ -30,7 +35,8 @@ function FreeCards() {
           setFetched(cards_list)
         }
       })
-      .catch(err => console.log('error', err))
+      .catch(err => 
+        setFetched([<CardsMessages caption="message_freeCardsError" key="free-cards" err={err} />]))
   })
 
   return (

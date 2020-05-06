@@ -2,15 +2,12 @@ import React from 'react'
 import CurrentSessions from './current-sessions'
 import LastSessions from './last-sessions'
 import './sessions-body.css'
-// import {useState} from 'react'
 
 function SessionsBody(props) {
 
-  const {activeSessionsTab} = props
-
   let currentData = ''
 
-  switch (activeSessionsTab) {
+  switch (props.activeSessionsTab) {
     case 'currentSessions':
       currentData = <CurrentSessions />
       break;
@@ -22,11 +19,14 @@ function SessionsBody(props) {
       break;
   }
 
+  console.log('render Sessions Body')
+
   return (
       <div className="content-sessions-body">
         {currentData}
       </div>
   )
+  
 }
 
 export default SessionsBody

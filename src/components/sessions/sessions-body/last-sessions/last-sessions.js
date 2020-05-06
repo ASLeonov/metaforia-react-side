@@ -1,5 +1,6 @@
 import React from 'react'
 import {useState, useEffect} from 'react'
+import {api_path} from '../../../../settings'
 
 function LastSessions() {
 
@@ -9,12 +10,12 @@ function LastSessions() {
   const sessions_list = []
 
   useEffect( () => {
-    fetch(`http://localhost/ll/sessions.php?name=${userHardCode}&type=lastSessions`)
+    // двойной фетч надо убрать, видимо из-зи юзЭффекта
+    fetch(`${api_path}sessions.php?name=${userHardCode}&type=lastSessions`)
       .then(res => res.json())
       .then(res => {
         if (fetched.length === 0) {
           res.forEach(element => {
-            console.log(typeof element.session_date)
             sessions_list.push(
               <div className="sessions-item" key={element.session_id}>
                 <div className="sessions-item-caption">

@@ -4,7 +4,7 @@ import './contact.css'
 
 function Contact(props) {
 
-  const {client_id, client_name, client_surname, client_gender, client_email, client_descr} = props.clientData
+  const {client_name, client_surname, client_gender, client_email, client_descr} = props.clientData
 
   const [isActive, setIsActive] = useState(false)
 

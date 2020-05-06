@@ -1,34 +1,22 @@
 import React from 'react'
+import {NavLink} from "react-router-dom"
 import './sessions-caption.css'
 
 function SessionsCaption(props) {
 
-  const {activeSessionsTab, changeActiveSession} = props
+  const CN_default = "content-sessions-caption__title"
+  const ACN = "content-sessions-caption__title___active"
 
-  const onHandleClick = event => {
-    const currentTarget = event.target.attributes.targetsessionlink.value
-      if (currentTarget !== activeSessionsTab)
-        changeActiveSession(currentTarget)
-  }
-
-  const classNameDefault = "content-sessions-caption__title"
+  console.log('render Sessions Caption')
 
   return (
     <div className="content-sessions-caption">
-      <span
-        className={activeSessionsTab === 'currentSessions' ? `${classNameDefault} content-sessions-caption__title___active` : classNameDefault}
-        onClick={onHandleClick}
-        targetsessionlink="currentSessions"
-      >
+      <NavLink to="/current-sessions" className={CN_default} activeClassName={ACN}>
         Текущие сессии
-      </span>
-      <span
-        className={activeSessionsTab === 'lastSessions' ? `${classNameDefault} content-sessions-caption__title___active` : classNameDefault}
-        onClick={onHandleClick}
-        targetsessionlink="lastSessions"
-      >
+      </NavLink>
+      <NavLink to="/last-sessions" className={CN_default} activeClassName={ACN}>
         Прошедшие сессии
-      </span>
+      </NavLink>
     </div>
   )
 
