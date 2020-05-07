@@ -1,50 +1,61 @@
 import React from 'react'
-import {useState, useEffect} from 'react'
-import {api_path} from '../../../../settings'
+import {connect} from 'react-redux'
+import {getCurrentSessions} from '../../../../store/action-creators'
+import {selectCurrentSessions, selectCurrentSessionsData} from '../../../../store/selectors'
+import {select} from '../../../../store/selectors'
 import './current-sessions.css'
 
-function CurrentSessions() {
+function CurrentSessions(props) {
+  const {sessions_data, getCurrentSessions} = props
+  let fetched = []
 
-  const [fetched, setFetched] = useState([])
-
-  const userHardCode = "tanyaleo81@yandex.ru"
-  const sessions_list = []
-
-  useEffect( () => {
-      // двойной фетч надо убрать, видимо из-зи юзЭффекта
-    fetch(`${api_path}sessions.php?name=${userHardCode}&type=currentSessions`)
-      .then(res => res.json())
-      .then(res => {
-        if (fetched.length === 0) {
-          res.forEach(element => {
-            sessions_list.push(
-              <div className="sessions-item" key={element.session_id}>
-                <div className="sessions-item-caption">
-                  <span className="sessions-item-caption__1stelement">
-                    {element.session_date}
-                  </span>
-                  <span className="sessions-item-caption__2ndelement">
-                    {`${element.client_name} ${element.client_surname}`} 
-                  </span>
-                </div>
-                <div className="sessions-item-body">
-                  {element.session_descr}
-                </div>
-              </div>
-            )
-          })
-          // console.log('sessions list ->', sessions_list)
-          setFetched(sessions_list)
-        }
-      })
-      .catch(err => console.log('error', err))
-  })
+  if (!sessions_data.isLoaded) {
+    fetched.push(<div key="loading-current-sessions">Загрузка...</div>)
+    getCurrentSessions()
+  } else if (sessions_data.data[0] !== "ERROR") {
+    fetched = props.sessionsJSX
+    // fetched = sessions_data.data.map(element => {
+    //   console.log('calc data arr')
+    //     return (
+    //       <div className="sessions-item" key={element.session_id}>
+    //         <div className="sessions-item-caption">
+    //           <span className="sessions-item-caption__1stelement">
+    //             {element.session_date}
+    //           </span>
+    //           <span className="sessions-item-caption__2ndelement">
+    //             {`${element.client_name} ${element.client_surname}`} 
+    //           </span>
+    //         </div>
+    //         <div className="sessions-item-body">
+    //           {element.session_descr}
+    //         </div>
+    //       </div>
+    //     )
+    // })
+  } else {
+    fetched.push(<div key="error-current-sessions">Произошла ошибка загрузки...</div>)
+  }
+  
 
   return (
-      <div>
-        {fetched}
-      </div>
+    <div>
+      {fetched}
+    </div>
   )
 }
 
-export default CurrentSessions
+const mapStateToProps = state => {
+  return {
+    sessions_data: selectCurrentSessions(state),
+    sessionsJSX: selectCurrentSessionsData(state)
+  }
+}
+
+const mapDispatchToProps = {
+  getCurrentSessions: getCurrentSessions
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CurrentSessions)

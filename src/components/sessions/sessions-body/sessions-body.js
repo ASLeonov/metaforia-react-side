@@ -19,7 +19,7 @@ function SessionsBody(props) {
       break;
   }
 
-  console.log('render Sessions Body')
+  // console.log('render Sessions Body')
 
   return (
       <div className="content-sessions-body">

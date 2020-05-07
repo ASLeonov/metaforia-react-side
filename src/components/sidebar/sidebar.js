@@ -7,7 +7,7 @@ function Sidebar(props) {
   const CN_default = "sidebar-buttons sidebar-sessions"
   const ACN = "sidebar-buttons-active"
 
-  console.log('render Sidebar')
+  // console.log('render Sidebar')
 
   return (
       <div className="sidebar">

@@ -4,7 +4,7 @@ import SessionsBody from './sessions-body'
 
 function Sessions(props) {
 
-console.log('render Sessions')
+// console.log('render Sessions')
 
   return (
     <div className="content-sessions">

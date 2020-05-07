@@ -7,7 +7,7 @@ function SessionsCaption(props) {
   const CN_default = "content-sessions-caption__title"
   const ACN = "content-sessions-caption__title___active"
 
-  console.log('render Sessions Caption')
+  // console.log('render Sessions Caption')
 
   return (
     <div className="content-sessions-caption">
