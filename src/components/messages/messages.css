@@ -1,4 +1,4 @@
-.cards_messages {
+.messages {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -6,7 +6,7 @@
   box-sizing: border-box;
   width: 100%;
   min-height: 100px;
-  margin: 40px 20px;
+  margin: 40px 0;
   padding: 20px 10px;
   background-color: rgb(10, 119, 114);
   border-radius: 8px;
@@ -14,6 +14,6 @@
   font-size: 120%;
 }
 
-.cards_messages span {
+.messages span {
   margin: 5px 0;
 }

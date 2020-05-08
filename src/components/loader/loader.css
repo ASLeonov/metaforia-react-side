@@ -1,0 +1,18 @@
+.loader {
+  width: 100%;
+  min-height: 30vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: loader_show 700ms ease-out forwards;
+}
+
+@keyframes loader_show {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+.loader svg {
+  width: 100px;
+  height: 100px;
+}

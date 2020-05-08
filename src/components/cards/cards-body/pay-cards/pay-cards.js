@@ -1,6 +1,6 @@
 import React from 'react'
 import {useState, useEffect} from 'react'
-import CardsMessages from '../../cards-messages'
+import Messages from '../../../messages'
 import {api_path} from '../../../../settings'
 
 function PayCards() {
@@ -36,7 +36,7 @@ function PayCards() {
         }
       })
       .catch(err => 
-        setFetched([<CardsMessages caption="message_payCardsError" key="pay-cards" err={err} />]))
+        setFetched([<Messages caption="message_payCardsError" key="pay-cards" err={err} />]))
   })
 
   return (

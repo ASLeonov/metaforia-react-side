@@ -1,6 +1,6 @@
 import React from 'react'
 import {useState, useEffect} from 'react'
-import CardsMessages from '../../cards-messages'
+import Messages from '../../../messages'
 import {api_path} from '../../../../settings'
 import './free-cards.css'
 
@@ -36,7 +36,7 @@ function FreeCards() {
         }
       })
       .catch(err => 
-        setFetched([<CardsMessages caption="message_freeCardsError" key="free-cards" err={err} />]))
+        setFetched([<Messages caption="message_freeCardsError" key="free-cards" err={err} />]))
   })
 
   return (

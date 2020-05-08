@@ -1,41 +1,23 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getCurrentSessions} from '../../../../store/action-creators'
-import {selectCurrentSessions, selectCurrentSessionsData} from '../../../../store/selectors'
-import {select} from '../../../../store/selectors'
+import {selectCurrentSessions, selectCurrentSessionsJSX} from '../../../../store/selectors/sessions'
+import Messages from '../../../messages'
+import Loader from '../../../loader'
 import './current-sessions.css'
 
 function CurrentSessions(props) {
-  const {sessions_data, getCurrentSessions} = props
-  let fetched = []
+  const {sessions_data, sessionsJSX, getCurrentSessions} = props
+  let fetched
 
   if (!sessions_data.isLoaded) {
-    fetched.push(<div key="loading-current-sessions">Загрузка...</div>)
+    fetched = <Loader />
     getCurrentSessions()
   } else if (sessions_data.data[0] !== "ERROR") {
-    fetched = props.sessionsJSX
-    // fetched = sessions_data.data.map(element => {
-    //   console.log('calc data arr')
-    //     return (
-    //       <div className="sessions-item" key={element.session_id}>
-    //         <div className="sessions-item-caption">
-    //           <span className="sessions-item-caption__1stelement">
-    //             {element.session_date}
-    //           </span>
-    //           <span className="sessions-item-caption__2ndelement">
-    //             {`${element.client_name} ${element.client_surname}`} 
-    //           </span>
-    //         </div>
-    //         <div className="sessions-item-body">
-    //           {element.session_descr}
-    //         </div>
-    //       </div>
-    //     )
-    // })
+    fetched = sessionsJSX
   } else {
-    fetched.push(<div key="error-current-sessions">Произошла ошибка загрузки...</div>)
+    fetched = <Messages caption="message_currentSessionsError" />
   }
-  
 
   return (
     <div>
@@ -47,7 +29,7 @@ function CurrentSessions(props) {
 const mapStateToProps = state => {
   return {
     sessions_data: selectCurrentSessions(state),
-    sessionsJSX: selectCurrentSessionsData(state)
+    sessionsJSX: selectCurrentSessionsJSX(state)
   }
 }
 

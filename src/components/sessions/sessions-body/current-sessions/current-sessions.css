@@ -3,6 +3,12 @@
   flex-direction: column;
   padding: 10px 10px 14px 10px;
   border-bottom: 1px solid grey;
+  animation: name2 500ms ease-in forwards;
+}
+
+@keyframes name2 {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
 }
 
 .sessions-item-caption {

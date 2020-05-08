@@ -24,7 +24,7 @@ export const getCurrentSessions = () => (dispatch, getState) => {
         error,
       })
     })
-  }, 2000)
+  }, 3000)
 }
 
 export const getLastSessions = () => (dispatch, getState) => {

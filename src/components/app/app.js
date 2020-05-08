@@ -8,9 +8,9 @@ import Footer from '../footer'
 import './app.css'
 
 
-import Sidebar from '../sidebar'
-import SessionsCaption from '../sessions/sessions-caption'
-import SessionsBody from '../sessions/sessions-body'
+      import Sidebar from '../sidebar'
+      import SessionsCaption from '../sessions/sessions-caption'
+      import SessionsBody from '../sessions/sessions-body'
 
 
 function App() {

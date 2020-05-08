@@ -1,11 +1,11 @@
 import React from 'react'
-import CardsMessages from '../../cards-messages'
+import Messages from '../../../messages'
 
 function ClientCards() {
 
   return (
     <div className="content-cards-body-freeCards">
-      <CardsMessages caption="message_uploadCards" />
+      <Messages caption="message_uploadCards" />
     </div>
   )
 }
