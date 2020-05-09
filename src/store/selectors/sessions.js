@@ -1,13 +1,13 @@
 import React from 'react'
 import {createSelector} from 'reselect'
+import Messages from '../../components/messages'
 
 export const selectCurrentSessions = state => state.currentSessions
 export const selectLastSessions = state => state.lastSessions
 
 export const selectCurrentSessionsJSX = createSelector(
   selectCurrentSessions,
-  (currentSessions) => {
-    let result = []
+  (currentSessions, result) => {
     // console.log('current sessions input ->',currentSessions.data, currentSessions.data.length)
       if (currentSessions.data.length > 0) {
         result = currentSessions.data.map(element => (
@@ -26,6 +26,8 @@ export const selectCurrentSessionsJSX = createSelector(
           </div>
           )
         )
+      } else {
+        result = <Messages caption="message_currentSessionsNone" />
       }
     // console.log('current sessions result ->',result)
     return result
@@ -34,8 +36,7 @@ export const selectCurrentSessionsJSX = createSelector(
 
 export const selectLastSessionsJSX = createSelector(
   selectLastSessions,
-  (lastSessions) => {
-    let result = []
+  (lastSessions, result) => {
     // console.log('last sessions input ->',lastSessions.data, lastSessions.data.length)
       if (lastSessions.data.length > 0) {
         result = lastSessions.data.map(element => (
@@ -54,6 +55,8 @@ export const selectLastSessionsJSX = createSelector(
           </div>
           )
         )
+      } else {
+        result = <Messages caption="message_lastSessionsNone" />
       }
     // console.log('last sessions result ->',result)
     return result

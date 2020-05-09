@@ -1,41 +1,29 @@
 import React from 'react'
-import {useState, useEffect} from 'react'
-import Contact from './contact'
-import {api_path} from '../../settings'
+import {connect} from 'react-redux'
+import {getContacts} from '../../store/action-creators'
+import {selectContacts, selectContactsJSX} from '../../store/selectors/contacts'
+import Messages from '../messages'
+import Loader from '../loader'
 import './contacts.css'
 
-function Contacts() {
+function Contacts(props) {
+  const {contacts_data, contactsJSX, getContacts} = props
+  let fetched
 
-  const [fetched, setFetched] = useState([])
-  const userHardCode = "tanyaleo81@yandex.ru"
-  const clients_list = []
-
-  useEffect( () => {
-    // двойной фетч надо убрать, видимо из-зи юзЭффекта
-    fetch(`${api_path}clients.php?${userHardCode}`)
-      .then(res => res.json())
-      .then(res => {
-        if (fetched.length === 0) {
-          res.forEach(element => {
-            clients_list.push(
-              <Contact
-                key={element.client_id}
-                clientData={element}
-              />
-            )         
-          })
-          // console.log('client list ->', clients_list)
-          setFetched(clients_list)
-        }
-      })
-      .catch(err => console.log('error', err))
-  })
+  if (!contacts_data.isLoaded) {
+    fetched = <Loader />
+    getContacts()
+  } else if (contacts_data.data[0] !== "ERROR") {
+    fetched = contactsJSX
+  } else {
+    fetched = <Messages caption="message_contactsError" />
+  }
 
   return (
       <div className="content-contacts">
         <div className="content-contacts-list">
           <p className="content-contacts-list__title">
-            Список Ваших клиентов
+            Список Ваших клиентов / Создание сессии
           </p>
           <div className="content-contacts-list__body">
             {fetched}
@@ -50,4 +38,18 @@ function Contacts() {
   )
 }
 
-export default Contacts
+const mapStateToProps = (state) => {
+  return {
+    contacts_data: selectContacts(state),
+    contactsJSX: selectContactsJSX(state)
+  }
+}
+
+const mapDispatchToProps = {
+  getContacts: getContacts
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Contacts)

@@ -4,6 +4,7 @@
   margin: 4px 0;
   padding: 4px 0 6px 0;
   border-bottom: 1px solid rgb(182, 182, 182);
+  overflow: hidden;
 }
 
 .content-contacts-list__item___firstline {
@@ -70,4 +71,29 @@
 
 .buttonEdit:hover {
   background-color: rgb(184, 101, 101);
+}
+
+.ccc-appear {
+  height: 0;
+}
+
+.ccc-enter {
+  height: 175px;
+}
+.ccc-enter-active {
+  height: 0;
+  transition: all 500ms ease-in;
+}
+.ccc-enter-done {
+  height: 0;
+}
+.ccc-exit {
+  height: 0;
+}
+.ccc-exit-active {
+  height: 175px;
+  transition: all 500ms ease-in;
+}
+.ccc-exit-done {
+  height: 175px;
 }

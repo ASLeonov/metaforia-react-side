@@ -1,49 +1,43 @@
 import React from 'react'
-import {useState, useEffect} from 'react'
+import {connect} from 'react-redux'
+import {getFreeCards} from '../../../../store/action-creators'
+import {selectFreeCards, selectFreeCardsJSX} from '../../../../store/selectors/cards'
 import Messages from '../../../messages'
-import {api_path} from '../../../../settings'
+import Loader from '../../../loader'
 import './free-cards.css'
 
-function FreeCards() {
+function FreeCards(props) {
+  const {cards_data, cardsJSX, getFreeCards} = props
+  let fetched
 
-  const [fetched, setFetched] = useState([])
-
-  const userHardCode = "tanyaleo81@yandex.ru"
-  const cards_list = []
-
-  useEffect( () => {
-    if (fetched.length > 0) return
-    fetch(`${api_path}cards.php?name=${userHardCode}&type=freeCards`)
-      .then(res => res.json())
-      .then(res => {
-        if (fetched.length === 0) {
-          res.forEach(element => {
-            cards_list.push(
-              <div className="freeCards-item" key={element.freecards_id}>
-                <img
-                  src={`../images/cards-pack/${element.freecards_img}`}
-                  className="freeCards-item-img"
-                  alt={`Колода «${element.freecards_name}»`}
-                  title={`Колода «${element.freecards_name}»`}
-                />
-                <span><b>{element.freecards_name}</b></span>
-                <span>Автор: <b>{element.freecards_author}</b></span>
-              </div>
-            )
-          })
-          // console.log('cards list ->', cards_list)
-          setFetched(cards_list)
-        }
-      })
-      .catch(err => 
-        setFetched([<Messages caption="message_freeCardsError" key="free-cards" err={err} />]))
-  })
+  if (!cards_data.isLoaded) {
+    fetched = <Loader />
+    getFreeCards()
+  } else if (cards_data.data[0] !== "ERROR") {
+    fetched = cardsJSX
+  } else {
+    fetched = <Messages caption="message_freeCardsError" />
+  }
 
   return (
-      <div className="content-cards-body-freeCards">
-        {fetched}
-      </div>
+    <div className="content-cards-body-freeCards">
+      {fetched}
+    </div>
   )
 }
 
-export default FreeCards
+const mapStateToProps = state => {
+  return {
+    cards_data: selectFreeCards(state),
+    cardsJSX: selectFreeCardsJSX(state)
+  }
+}
+
+const mapDispatchToProps = {
+  getFreeCards: getFreeCards
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FreeCards)

@@ -4,7 +4,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  animation: loader_show 700ms ease-out forwards;
+  animation: loader_show 800ms ease-out;
 }
 
 @keyframes loader_show {

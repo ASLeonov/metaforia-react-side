@@ -5,7 +5,7 @@ import './cards.css'
 
 function Cards(props) {
 
-  console.log('render Cards')
+  // console.log('render Cards')
 
   return (
     <div className="content-cards">

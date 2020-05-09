@@ -3,7 +3,7 @@
   flex-direction: column;
   padding: 10px 10px 14px 10px;
   border-bottom: 1px solid grey;
-  animation: name2 500ms ease-in forwards;
+  animation: name2 400ms ease-in forwards;
 }
 
 @keyframes name2 {

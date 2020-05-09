@@ -12,8 +12,25 @@
   border-radius: 8px;
   color: rgb(250, 244, 237);
   font-size: 120%;
+  animation: messages-fadeIn 500ms;
+}
+
+@keyframes messages-fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
 }
 
 .messages span {
   margin: 5px 0;
+}
+
+.messages_link {
+  color: rgb(250, 244, 237);
+  border-bottom: 1px dashed rgb(250, 244, 237);
+  transition: all 0.3s;
+}
+
+.messages_link:hover {
+  color: rgb(170, 255, 184);
+  border-bottom: 1px dashed rgb(170, 255, 184);
 }
