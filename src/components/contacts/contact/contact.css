@@ -1,10 +1,56 @@
 .content-contacts-list__item {
   display: flex;
   flex-direction: column;
-  margin: 4px 0;
+  margin: 4px 15px 4px 0;
   padding: 4px 0 6px 0;
   border-bottom: 1px solid rgb(182, 182, 182);
   overflow: hidden;
+}
+
+.content-contacts-list__item form {
+  position: relative;
+}
+
+.content-contacts-list__item input[type="text"] {
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid grey;
+  padding-left: 10px;
+  width: 250px;
+}
+
+.content-contacts-list__item label {
+  display: block;
+  margin: 10px 0;
+}
+
+.content-contacts-list__item span {
+  display: inline-block;
+  width: 105px;
+}
+
+.content-contacts-list__item___description {
+  display: flex !important;
+  align-items: flex-start;
+}
+
+.content-contacts-list__item___description span{
+  display: inline-block;
+}
+
+.content-contacts-list__item textarea {
+  resize: none;
+  box-sizing: border-box;
+  padding: 2px 5px;
+  min-height: 70px; /* 42px; */
+  max-height: 170px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 250px;
+  border: none;
+  border-bottom: 1px solid gray;
+  /* border-right: 1px solid gray; */
+  /* border-bottom-right-radius: 5px; */
 }
 
 .content-contacts-list__item___firstline {
@@ -50,50 +96,76 @@
 }
 
 .content-contacts-list__item___button {
+  box-sizing: border-box;
+  width: 130px;
   padding: 10px 15px;
-  margin-bottom: 10px;
+  margin: 0 10px 10px 10px;
   transition: all 0.3s;
   border-radius: 4px;
-}
-
-.buttonInvite {
   background-color: lightcoral;
-  margin-right: 30px;
+  border-style: none;
+  outline: none;
+  cursor: pointer;
 }
 
-.buttonInvite:hover {
-  background-color: rgb(184, 101, 101);
+.hide_button {
+  display: none;
 }
 
-.buttonEdit {
-  background-color: lightcoral;
-}
-
-.buttonEdit:hover {
+.content-contacts-list__item___button:hover {
   background-color: rgb(184, 101, 101);
 }
 
 .ccc-appear {
-  height: 0;
+  max-height: 0;
 }
 
 .ccc-enter {
-  height: 175px;
+  max-height: 330px;
 }
 .ccc-enter-active {
-  height: 0;
+  max-height: 0;
   transition: all 500ms ease-in;
 }
 .ccc-enter-done {
-  height: 0;
+  max-height: 0;
 }
 .ccc-exit {
-  height: 0;
+  max-height: 0;
 }
 .ccc-exit-active {
-  height: 175px;
+  max-height: 330px;
   transition: all 500ms ease-in;
 }
 .ccc-exit-done {
-  height: 175px;
+  max-height: 330px;
+}
+
+.content-contacts-list__item___buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 12px;
+}
+
+.form_blocker {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  opacity: 0.8;
+}
+
+.form_blocker__none {
+  display: none;
+}
+
+.form__noEdit {
+  opacity: 0.5;
+}
+
+.form__isEdit {
+  opacity: 1;
 }
