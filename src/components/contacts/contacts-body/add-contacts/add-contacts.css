@@ -1,0 +1,3 @@
+.content-contacts-body-addContacts{
+  animation: contacts_fadeIn 600ms;   /*  keyframes in contacts-body.css  */
+}

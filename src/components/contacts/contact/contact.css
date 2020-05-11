@@ -1,11 +1,11 @@
-.content-contacts-list__item {
+/* .content-contacts-list__item {
   display: flex;
   flex-direction: column;
   margin: 4px 15px 4px 0;
   padding: 4px 0 6px 0;
   border-bottom: 1px solid rgb(182, 182, 182);
   overflow: hidden;
-}
+} */
 
 .content-contacts-list__item form {
   position: relative;
@@ -75,9 +75,9 @@
   user-select: none;
 }
 
-.content-contacts-list__item___data:hover {
+/* .content-contacts-list__item___data:hover {
   font-weight: bold;
-}
+} */
 
 .content-contacts-list__item___data____active {
   font-weight: bold;

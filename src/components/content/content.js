@@ -16,7 +16,7 @@ function Content(props) {
         activeData = <Cards activeCardsTab={props.activeTab} />
         break;
       case 'contacts':
-        activeData = <Contacts />
+        activeData = <Contacts activeContactsTab={props.activeTab} />
         break;
       default:
         activeData = <Sessions activeSessionsTab="currentSessions" />

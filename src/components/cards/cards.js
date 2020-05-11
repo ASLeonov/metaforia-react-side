@@ -4,7 +4,6 @@ import CardsBody from './cards-body'
 import './cards.css'
 
 function Cards(props) {
-
   // console.log('render Cards')
 
   return (
@@ -13,7 +12,6 @@ function Cards(props) {
       <CardsBody activeCardsTab={props.activeCardsTab} />
     </div>
   )
-
 }
 
 export default Cards

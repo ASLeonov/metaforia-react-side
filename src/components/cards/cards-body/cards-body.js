@@ -5,7 +5,6 @@ import ClientCards from './client-cards'
 import './cards-body.css'
 
 function CardsBody(props) {
-
   let currentData = ''
 
   switch (props.activeCardsTab) {
@@ -28,7 +27,6 @@ function CardsBody(props) {
       {currentData}
     </div>
   )
-
 }
 
 export default CardsBody

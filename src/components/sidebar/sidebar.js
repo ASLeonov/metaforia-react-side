@@ -3,7 +3,6 @@ import {Link} from "react-router-dom"
 import './sidebar.css'
 
 function Sidebar(props) {
-
   const CN_default = "sidebar-buttons sidebar-sessions"
   const ACN = "sidebar-buttons-active"
 
@@ -22,7 +21,6 @@ function Sidebar(props) {
         </Link>
       </div>
   )
-  
 }
 
 export default Sidebar

@@ -1,0 +1,20 @@
+.content-contacts-body-currentContacts {
+  display: flex;
+  justify-content: space-around;
+  padding-bottom: 10px;
+  animation: contacts_fadeIn 600ms;   /*  keyframes in contacts-body.css  */
+}
+
+.contacts-list {
+  box-sizing: border-box;
+  padding: 20px;
+  width: 50%;
+  /* min-width: 430px; */
+  border-right: 1px solid rgb(182, 182, 182);
+}
+
+.contact-item {
+  box-sizing: border-box;
+  padding: 20px;
+  width: 50%;
+}

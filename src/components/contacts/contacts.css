@@ -1,6 +1,6 @@
 .content-contacts {
-  display: flex;
-  animation: contacts-fadeIn 400ms forwards;
+  /* display: flex; */
+  /* animation: contacts-fadeIn 400ms forwards; */
 }
 
 @keyframes contacts-fadeIn {
@@ -8,15 +8,7 @@
   100% {opacity: 1;}
 }
 
-.content-contacts-list {
-  box-sizing: border-box;
-  margin-top: 10px;
-  padding: 20px;
-  width: 50%;
-  min-width: 430px;
-  border-right: 1px solid rgb(182, 182, 182);
-  overflow-x: hidden;
-}
+
 
 .content-contacts-list__title {
   font-weight: bold;

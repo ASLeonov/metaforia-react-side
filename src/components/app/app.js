@@ -7,14 +7,11 @@ import Middle from '../middle'
 import Footer from '../footer'
 import './app.css'
 
-
       import Sidebar from '../sidebar'
       import SessionsCaption from '../sessions/sessions-caption'
       import SessionsBody from '../sessions/sessions-body'
 
-
 function App() {
-
   // console.log('render App')
 
   return (
@@ -36,19 +33,22 @@ function App() {
                 </div>
               </Route>
               <Route path="/last-sessions">
-                <Middle activePage="sessions" activeTab="lastSessions"/>
+                <Middle activePage="sessions" activeTab="lastSessions" />
               </Route>
               <Route path="/free-cards">
                 <Middle activePage="cards" activeTab="freeCards" />
               </Route>
               <Route path="/pay-cards">
-                <Middle activePage="cards" activeTab="payCards"/>
+                <Middle activePage="cards" activeTab="payCards" />
               </Route>
               <Route path="/client-cards">
-                <Middle activePage="cards" activeTab="clientCards"/>
+                <Middle activePage="cards" activeTab="clientCards" />
               </Route>
               <Route path="/contacts">
-                <Middle activePage="contacts" />
+                <Middle activePage="contacts" activeTab="currentContacts" />
+              </Route>
+              <Route path="/add-contacts">
+                <Middle activePage="contacts" activeTab="addContacts" />
               </Route>
               <Redirect from={'/'} to={'/current-sessions'} />
             </Switch>
@@ -57,7 +57,6 @@ function App() {
       </Router>
     </Provider>
   )
-  
 }
 
 export default App
