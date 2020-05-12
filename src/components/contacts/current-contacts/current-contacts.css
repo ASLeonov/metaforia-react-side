@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-around;
   padding-bottom: 10px;
-  animation: contacts_fadeIn 600ms;   /*  keyframes in contacts-body.css  */
+  /* animation: contacts_fadeIn 600ms;    keyframes in contacts-body.css  */
 }
 
 .contacts-list {

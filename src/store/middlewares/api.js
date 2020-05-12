@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 // import Loader from '../../components/loader'
 
 export default store => next => action => {

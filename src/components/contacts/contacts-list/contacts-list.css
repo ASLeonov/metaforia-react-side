@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
+  animation: contacts_fadeIn 600ms;   /*  keyframes in contacts-body.css  */
 }
 
 .contacts-list-item {

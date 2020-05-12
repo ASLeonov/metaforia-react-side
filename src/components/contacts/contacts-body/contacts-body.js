@@ -1,6 +1,6 @@
 import React from 'react'
 import CurrentContacts from '../current-contacts'
-import AddContacts from './add-contacts'
+import AddContacts from '../add-contacts'
 import './contacts-body.css'
 
 function ContactsBody(props) {

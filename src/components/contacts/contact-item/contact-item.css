@@ -1,0 +1,86 @@
+.contact-item-animate-appear {
+  opacity: 0;
+}
+
+.contact-item-animate-appear-active {
+  opacity: 1;
+  transition: all 600ms ease;
+}
+
+.contact-item-animate-appear-done {
+  opacity: 1;
+}
+
+.content-item-form {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 15px 4px 0;
+  padding: 4px 0 6px 0;
+}
+
+.content-item-form form {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.content-item-form input[type="text"] {
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid rgb(179, 175, 175);
+  padding-left: 95px;
+  padding-bottom: 3px;
+  margin-bottom: 15px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.content-item-form textarea {
+  resize: none;
+  box-sizing: border-box;
+  padding: 10px 5px 5px 5px;
+  height: 150px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid gray;
+  border-right: 1px solid gray;
+  border-bottom-right-radius: 5px;
+}
+
+.form__noEdit {
+  opacity: 0.5;
+}
+
+.form__isEdit {
+  opacity: 1;
+}
+
+.content-item-form___buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.content-item-form___button {
+  box-sizing: border-box;
+  width: 130px;
+  padding: 10px 15px;
+  margin: 0 10px 10px 10px;
+  transition: all 0.3s;
+  border-radius: 4px;
+  background-color: lightcoral;
+  border-style: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.content-item-form___button:hover {
+  background-color: rgb(184, 101, 101);
+}
+
+.hide_button {
+  display: none;
+}

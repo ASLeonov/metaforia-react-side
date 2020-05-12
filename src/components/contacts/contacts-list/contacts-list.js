@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import './contacts-list.css'
 
 function ContactsList(props) {
-  const [isActive, setIsActive] = useState('')
+  const [isActive, setIsActive] = useState(props.activeContact)
 
   const CN_default = "contacts-list-item"
   const ACN = "contacts-list-item contacts-list-item__active"
@@ -17,8 +17,6 @@ function ContactsList(props) {
       {`${element.client_name} ${element.client_surname}`}
     </div>
   ))
-
-  console.log('isActive ->',isActive)
 
   return (
     <div className="contacts-list-wrapper">

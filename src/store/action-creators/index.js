@@ -89,6 +89,13 @@ export const getPayCards = () => (dispatch, getState) => {
 
 export const getContacts = () => (dispatch, getState) => {
   const user_login = getState().user.login
+
+  setTimeout( () => {   // фиксил непонятный баг
+    dispatch({
+      type: 'GET_CONTACTS__LOADING'
+    })
+  })
+
   setTimeout( () => {
     fetch(`${api_path}clients.php?${user_login}`)
     .then(res => res.json())
@@ -104,7 +111,7 @@ export const getContacts = () => (dispatch, getState) => {
         error,
       })
     })
-  }, 3000)
+  }, 4000)
 }
 
 
