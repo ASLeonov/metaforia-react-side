@@ -17,10 +17,10 @@ function App() {
           <Header />
             <Switch>
               <Route path="/consultation">
-                <Middle activePage="consultation" activeTab="xxx"/>
+                <Middle activePage="consultation" />
               </Route>
               <Route path="/current-sessions">
-                <Middle activePage="sessions" activeTab="currentSessions"/>
+                <Middle activePage="sessions" activeTab="currentSessions" />
               </Route>
               <Route path="/last-sessions">
                 <Middle activePage="sessions" activeTab="lastSessions" />
@@ -40,7 +40,7 @@ function App() {
               <Route path="/add-contacts">
                 <Middle activePage="contacts" activeTab="addContacts" />
               </Route>
-              {/* <Redirect from={'/'} to={'/current-sessions'} /> */}
+              <Redirect from={'/'} to={'/current-sessions'} />
             </Switch>
           <Footer />
         </div>

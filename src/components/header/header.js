@@ -5,7 +5,7 @@ import Exit from './exit'
 
 function Header() {
 
-  console.log('render Header')
+  // console.log('render Header')
 
   return (
     <header className="header">

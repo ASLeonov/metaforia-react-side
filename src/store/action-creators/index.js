@@ -69,28 +69,33 @@ export const clearLastSessions = () => (dispatch, getState) => {
   })
 }
 
-export const getFreeCards = () => (dispatch, getState) => {
-  const user_login = getState().user.login
-  setTimeout( () => {
-    fetch(`${api_path}cards.php?name=${user_login}&type=freeCards`)
-    .then(res => res.json())
-    .then(res =>
-      dispatch({
-        type: 'GET_CARDS_FREE__SUCCESS',
-        response: res,
-      })
-    )
-    .catch(error => {
-      dispatch({
-        type: 'GET_CARDS_FREE__FAILED',
-        error,
-      })
-    })
-  }, 3000)
-}
+// export const getFreeCards = () => (dispatch, getState) => {
+//   const user_login = getState().user.login
+//   setTimeout( () => {
+//     fetch(`${api_path}cards.php?name=${user_login}&type=freeCards`)
+//     .then(res => res.json())
+//     .then(res =>
+//       dispatch({
+//         type: 'GET_CARDS_FREE__SUCCESS',
+//         response: res,
+//       })
+//     )
+//     .catch(error => {
+//       dispatch({
+//         type: 'GET_CARDS_FREE__FAILED',
+//         error,
+//       })
+//     })
+//   }, 3000)
+// }
 
 export const getPayCards = () => (dispatch, getState) => {
   const user_login = getState().user.login
+  setTimeout( () => {
+    dispatch({
+      type: 'GET_CARDS_PAY__LOADING'
+    })
+  })
   setTimeout( () => {
     fetch(`${api_path}cards.php?name=${user_login}&type=payCards`)
     .then(res => res.json())
@@ -103,6 +108,32 @@ export const getPayCards = () => (dispatch, getState) => {
     .catch(error => {
       dispatch({
         type: 'GET_CARDS_PAY__FAILED',
+        error,
+      })
+    })
+  }, 3000)
+}
+
+export const getUserCards = () => (dispatch, getState) => {
+  const user_login = getState().user.login
+  setTimeout( () => {
+    dispatch({
+      type: 'GET_USER_CARDS__LOADING'
+    })
+  })
+  setTimeout( () => {
+    fetch(`${api_path}cards.php?name=${user_login}&type=userPayCards`)
+    .then(res => res.json())
+    .then(res =>
+      dispatch({
+        type: 'GET_USER_CARDS__SUCCESS',
+        response: res,
+      })
+    )
+    .catch(error => {
+      console.log(error)
+      dispatch({
+        type: 'GET_USER_CARDS__FAILED',
         error,
       })
     })

@@ -1,0 +1,45 @@
+.consultation_large {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  animation: large-fadeIn 1000ms;
+}
+
+@keyframes large-fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+.consultation_low {
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  animation: low-fadeIn 1000ms;
+}
+
+@keyframes low-fadeIn {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+.consultation-header {
+  display: flex;
+  justify-content: flex-end; 
+  align-items: center;
+  box-sizing: border-box;
+  height: 50px;
+  padding: 5px 15px 5px 0;
+}
+
+.consultation-header span {
+  padding: 5px;
+  cursor: pointer;
+  font-size: 150%;
+}

@@ -2,7 +2,6 @@
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
-  /* animation: freeCards_fadeIn 2400ms; */
 }
 
 @keyframes freeCards_fadeIn {
@@ -26,6 +25,7 @@
 
 .freeCards-item-img {
   width: 140px;
+  margin-bottom: 10px;
 }
 
 .freeCards-item-title {
