@@ -7,10 +7,6 @@ import Middle from '../middle'
 import Footer from '../footer'
 import './app.css'
 
-      import Sidebar from '../sidebar'
-      import SessionsCaption from '../sessions/sessions-caption'
-      import SessionsBody from '../sessions/sessions-body'
-
 function App() {
   // console.log('render App')
 
@@ -20,17 +16,11 @@ function App() {
         <div className="app">
           <Header />
             <Switch>
+              <Route path="/consultation">
+                <Middle activePage="consultation" activeTab="xxx"/>
+              </Route>
               <Route path="/current-sessions">
-                {/* <Middle activePage="sessions" activeTab="currentSessions"/> */}
-                <div className="middle">
-                  <Sidebar activePage="sessions" />
-                  <div className="content">
-                    <div className="content-sessions">
-                      <SessionsCaption />
-                      <SessionsBody activeSessionsTab="currentSessions" />
-                    </div>               
-                  </div>
-                </div>
+                <Middle activePage="sessions" activeTab="currentSessions"/>
               </Route>
               <Route path="/last-sessions">
                 <Middle activePage="sessions" activeTab="lastSessions" />
@@ -50,7 +40,7 @@ function App() {
               <Route path="/add-contacts">
                 <Middle activePage="contacts" activeTab="addContacts" />
               </Route>
-              <Redirect from={'/'} to={'/current-sessions'} />
+              {/* <Redirect from={'/'} to={'/current-sessions'} /> */}
             </Switch>
           <Footer />
         </div>

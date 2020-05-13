@@ -10,6 +10,11 @@ export const getUser = () => {
 export const getCurrentSessions = () => (dispatch, getState) => {
   const user_login = getState().user.login
   setTimeout( () => {
+    dispatch({
+      type: 'GET_SESSIONS_CURRENT__LOADING'
+    })
+  })
+  setTimeout( () => {
     fetch(`${api_path}sessions.php?name=${user_login}&type=currentSessions`)
     .then(res => res.json())
     .then(res =>
@@ -24,11 +29,22 @@ export const getCurrentSessions = () => (dispatch, getState) => {
         error,
       })
     })
-  }, 3000)
+  }, 1000)
+}
+
+export const clearCurrentSessions = () => (dispatch, getState) => {
+  dispatch({
+    type: 'CLEAR_SESSIONS_CURRENT',
+  })
 }
 
 export const getLastSessions = () => (dispatch, getState) => {
   const user_login = getState().user.login
+  setTimeout( () => {
+    dispatch({
+      type: 'GET_SESSIONS_LAST__LOADING'
+    })
+  })
   setTimeout( () => {
   fetch(`${api_path}sessions.php?name=${user_login}&type=lastSessions`)
     .then(res => res.json())
@@ -45,6 +61,12 @@ export const getLastSessions = () => (dispatch, getState) => {
       })
     })
   }, 2000)
+}
+
+export const clearLastSessions = () => (dispatch, getState) => {
+  dispatch({
+    type: 'CLEAR_SESSIONS_LAST',
+  })
 }
 
 export const getFreeCards = () => (dispatch, getState) => {
@@ -111,7 +133,7 @@ export const getContacts = () => (dispatch, getState) => {
         error,
       })
     })
-  }, 4000)
+  }, 1000)
 }
 
 

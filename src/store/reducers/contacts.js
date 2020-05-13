@@ -1,5 +1,4 @@
 export const contactsReducer = (contactsState = {isLoaded: false, isLoading: false, data: []}, action) => {
-  console.log(action.type)
   switch (action.type) {
     case 'GET_CONTACTS__LOADING': {
       return {

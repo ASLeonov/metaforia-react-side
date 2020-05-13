@@ -1,0 +1,43 @@
+.sessions-item {
+  display: flex;
+  padding: 10px 10px 14px 10px;
+  border-bottom: 1px solid grey;
+  animation: sessions-list-animate 400ms ease-in forwards;
+}
+
+.sessions-item-left {
+  width: 60%;
+}
+
+.sessions-item-caption {
+  margin-bottom: 8px;
+}
+
+.sessions-item-caption__1stelement {
+  margin-right: 25px;
+}
+
+.sessions-item-caption__2ndelement {
+  font-weight: bold;
+}
+
+.sessions-item-right {
+  display: flex;
+  align-items: center;
+}
+
+.sessions-item-button {
+  box-sizing: border-box;
+  width: 95px;
+  margin-right: 25px;
+  padding: 10px;
+  background-color: rgb(180, 180, 180);;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.sessions-item-button:hover {
+  opacity: 1;
+}

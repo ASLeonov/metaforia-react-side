@@ -1,4 +1,5 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
+import {Link} from "react-router-dom"
 import {CSSTransition} from 'react-transition-group'
 import {api_path} from '../../../store/common'
 import './contact-item.css'
@@ -9,8 +10,9 @@ function ContactItem(props) {
 
   const [clientData, setClientData] = useState({name:client_name, surname:client_surname, gender:client_gender, email:client_email, descr:client_descr})
   const [isEdit, setIsEdit] = useState(false)
-  const [isUpdating, setIsUpdating] = useState(false)
   const [animate, setAnimate] = useState(false)
+
+  const redirectBtn = useRef(null)
 
   const onEditClick = event => {
     event.preventDefault()
@@ -33,7 +35,6 @@ function ContactItem(props) {
           return
         }
     event.preventDefault()
-    setIsUpdating(true)
     fetch(`${api_path}clients.php`, {
       method: 'POST',
       headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
@@ -43,6 +44,28 @@ function ContactItem(props) {
       .then(data => {
         if (data === 'UPDATE_CLIENT') {
           props.getContacts()
+        }
+      })
+      .catch(e => console.log('catch error =>', e))
+  }
+
+  const startSession = event => {
+    event.preventDefault()      // и без этого работает
+    fetch(`${api_path}sessions.php`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
+      body: `insert=ok&user_name=${props.user.login}&client_id=${client_id}`
+    })
+      .then(response => response.text())
+      .then(data => {
+        if (data === 'INSERT_SESSION') {
+          let promise = new Promise(function(resolve, reject) {
+            resolve(props.clearCurrentSessions())
+          })
+          promise.then(         // resolve запустит первую функцию, переданную в .then
+            () => redirectBtn.current.click(),
+            error => console.log(error)
+          )
         }
       })
       .catch(e => console.log('catch error =>', e))
@@ -72,7 +95,7 @@ function ContactItem(props) {
           <textarea className={formElementCN} name="descr" value={clientData.descr} onChange={handleChange} />
         </label>
         <div className="content-item-form___buttons">
-          <input type="button" className={isEdit ? "content-item-form___button hide_button" : "content-item-form___button"} value="Начать сессию" />
+          <input type="button" className={isEdit ? "content-item-form___button hide_button" : "content-item-form___button"} value="Начать сессию" onClick={startSession}/>
           <input type="button" className={isEdit ? "content-item-form___button hide_button" : "content-item-form___button"} value="Редактировать" onClick={onEditClick} />
           <input type="submit" className={isEdit ? "content-item-form___button" : "content-item-form___button hide_button"} value="Сохранить" />
           <input type="button" className={isEdit ? "content-item-form___button" : "content-item-form___button hide_button"} value="Отменить" onClick={onEditClick} />
@@ -83,7 +106,6 @@ function ContactItem(props) {
 
   useEffect( () => {
     setClientData({name:client_name, surname:client_surname, gender:client_gender, email:client_email, descr:client_descr})
-    setIsUpdating(false)
     setIsEdit(false)
     if (!animate) setAnimate(true)
   }, [client_id, client_name, client_surname, client_gender, client_email, client_descr])
@@ -95,6 +117,7 @@ function ContactItem(props) {
           {client_data}
         </CSSTransition> : <p></p>
       }
+      <Link style={{display:'none'}} ref={redirectBtn} to="/current-sessions" />
     </div>
   )
 }

@@ -1,24 +1,8 @@
-.sessions-item {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 10px 14px 10px;
-  border-bottom: 1px solid grey;
-  animation: name2 400ms ease-in forwards;
+.sessions-list {
+  animation: sessions-list-animate 400ms ease-in forwards;
 }
 
-@keyframes name2 {
+@keyframes sessions-list-animate {
   0% {opacity: 0;}
   100% {opacity: 1;}
-}
-
-.sessions-item-caption {
-  margin-bottom: 8px;
-}
-
-.sessions-item-caption__1stelement {
-  margin-right: 25px;
-}
-
-.sessions-item-caption__2ndelement {
-  font-weight: bold;
 }
