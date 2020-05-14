@@ -2,9 +2,10 @@ import { combineReducers } from 'redux'
 import { userReducer } from './user'
 import { currentSessionsReducer } from './current-sessions'
 import { lastSessionsReducer } from './last-sessions'
-import { freeCardsReducer } from './free-cards'
+// import { freeCardsReducer } from './free-cards'
 import { payCardsReducer } from './pay-cards'
 import { userCardsReducer } from './user-cards'
+import {userSelectedCardItems} from './user-selected-card-items'
 import { contactsReducer } from './contacts'
 
 export const reducer = combineReducers({
@@ -18,6 +19,8 @@ export const reducer = combineReducers({
   payCards: payCardsReducer,
 
   userCards: userCardsReducer,
+
+  userSelectedCards: userSelectedCardItems,
 
   contacts: contactsReducer
   

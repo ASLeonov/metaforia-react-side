@@ -1,0 +1,62 @@
+.consultation-cards {
+  display: flex;
+  box-sizing: border-box;
+  height: 150px;
+  padding: 10px 10px;
+  border-top: 1px solid cadetblue;
+}
+
+.consultation-cards__none {
+  display: none;
+}
+
+.consultation-cards-center {
+  position: relative;
+  width: 70%;
+}
+
+.consultation-cards-center-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
+  width: 100%;
+  /* display: flex; */
+  /* justify-content: space-around; */
+  /* align-items: center; */
+  /* flex-wrap: nowrap; */
+  /* overflow: hidden; */
+  /* width: 50%; */
+  /* border: 1px solid grey; */
+  /* border-radius: 5px; */
+  /* flex-grow: 1; */
+}
+
+.consultation-card {
+  display: inline-block;
+  width: 95px;
+  margin: 0 10px;
+  transition: all 0.5s;
+}
+
+
+.consultation-cards-leftBtn, .consultation-cards-rightBtn {
+  box-sizing: border-box;
+  width: 80px;
+  height: 80px;
+  background-repeat: no-repeat;
+  background-size: 60px 60px;
+  background-position: 50% 40%;
+  transition: all 0.1s;
+  cursor: pointer;
+  background-image: url('../../../images/btn85.png');
+}
+
+.consultation-cards-leftBtn {
+  transform: rotate(-90deg);
+}
+.consultation-cards-rightBtn {
+  transform: rotate(90deg);
+}

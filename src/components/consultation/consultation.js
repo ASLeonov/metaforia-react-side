@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import ConsultationContent from '../consultation-content'
 import './consultation.css'
 
-function Consultation() {
+function Consultation(props) {
   const [windowFullScreen, setWindowFullScreen] = useState(false)
 
   const onChangeWindow = () => {

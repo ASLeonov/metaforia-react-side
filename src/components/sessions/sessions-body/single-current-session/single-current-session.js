@@ -1,4 +1,5 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 import {api_path} from '../../../../store/common'
 import './single-current-session.css'
 
@@ -7,10 +8,6 @@ function SingleCurrentSession(props) {
 
   const inviteClick = () => {
     console.log('invite client')
-  }
-
-  const openClick = () => {
-    console.log('enter session')
   }
 
   const closeClick = () => {
@@ -57,7 +54,9 @@ function SingleCurrentSession(props) {
       </div>
       <div className="sessions-item-right">
         <button className="sessions-item-button" onClick={inviteClick}>Пригласить</button>
-        <button className="sessions-item-button" onClick={openClick}>Войти</button>
+        <Link to='./consultation'>
+          <button className="sessions-item-button">Войти</button>
+        </Link>
         <button className="sessions-item-button" onClick={closeClick}>Закрыть</button>
         <button className="sessions-item-button" onClick={deleteClick}>Удалить</button>
       </div>      

@@ -131,13 +131,38 @@ export const getUserCards = () => (dispatch, getState) => {
       })
     )
     .catch(error => {
-      console.log(error)
+      // console.log(error)
       dispatch({
         type: 'GET_USER_CARDS__FAILED',
         error,
       })
     })
   }, 3000)
+}
+
+export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
+  setTimeout( () => {
+    dispatch({
+      type: 'GET_SELECTED_CARD_ITEMS__LOADING'
+    })
+  })
+  setTimeout( () => {
+    fetch(`${api_path}cards.php?name=user&type=userSelectedCards&payload=${cards_id}`)
+    .then(res => res.json())
+    .then(res =>
+      dispatch({
+        type: 'GET_SELECTED_CARD_ITEMS__SUCCESS',
+        response: res,
+      })
+    )
+    .catch(error => {
+      // console.log(error)
+      dispatch({
+        type: 'GET_SELECTED_CARD_ITEMS__FAILED',
+        error,
+      })
+    })
+  }, 2000)
 }
 
 export const getContacts = () => (dispatch, getState) => {
