@@ -36,9 +36,16 @@
 
 .consultation-card {
   display: inline-block;
+  box-sizing: border-box;
   width: 95px;
-  margin: 0 10px;
+  border: 5px solid transparent;
+  border-radius: 5px;
+  /* margin: 0 10px; */
   transition: all 0.5s;
+}
+
+.consultation-card:hover {
+  border: 5px solid chocolate;
 }
 
 

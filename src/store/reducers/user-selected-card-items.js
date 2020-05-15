@@ -9,7 +9,7 @@ export const userSelectedCardItems = (userSelectedCardItemsState = {isLoaded: fa
     //   }
     // }
     case 'GET_SELECTED_CARD_ITEMS__LOADING': {
-      console.log('GET_SELECTED_CARD_ITEMS__LOADING')
+      // console.log('GET_SELECTED_CARD_ITEMS__LOADING')
       return {
         isLoaded: false,
         isLoading: true,
@@ -17,7 +17,7 @@ export const userSelectedCardItems = (userSelectedCardItemsState = {isLoaded: fa
       }
     }
     case 'GET_SELECTED_CARD_ITEMS__SUCCESS': {
-      console.log('GET_SELECTED_CARD_ITEMS__SUCCESS')
+      // console.log('GET_SELECTED_CARD_ITEMS__SUCCESS')
       return {
         isLoaded: true,
         isLoading: false,
@@ -25,7 +25,7 @@ export const userSelectedCardItems = (userSelectedCardItemsState = {isLoaded: fa
       }
     }
     case 'GET_SELECTED_CARD_ITEMS__FAILED': {
-      console.log('GET_SELECTED_CARD_ITEMS__FAILED')
+      // console.log('GET_SELECTED_CARD_ITEMS__FAILED')
       return {
         isLoaded: true,
         isLoading: false,

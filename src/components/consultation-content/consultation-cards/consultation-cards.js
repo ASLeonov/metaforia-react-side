@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards} from '../../../store/selectors/cards'
 import {getSelectedCardItems} from '../../../store/action-creators'
+import ConsultationCard from '../consultation-card'
 import Loader from '../../loader'
 import './consultation-cards.css'
 
@@ -34,16 +35,9 @@ function ConsultationCards(props) {
         fetched = data.map(
           element => {
             i++
-            const style = {width:'0', margin:'0'}
+            const style_1 = (i <= xPosition) ? {width:'0', margin:'0'} : {}
             return (
-              <img
-                key={element.cards_id}
-                src={`../images/cards-item/${element.cards_img}`}
-                className="consultation-card"
-                alt={`Карта «${element.cards_name}»`}
-                title={`Карта «${element.cards_name}»`}
-                style={i <= xPosition ? style : null}
-              />
+              <ConsultationCard key={element.cards_id} style_1={style_1} card={element} />
             )
           } 
         )

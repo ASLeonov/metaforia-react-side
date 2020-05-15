@@ -9,6 +9,7 @@ import Loader from '../loader'
 import './consultation-content.css'
 
 function ConsultationContent(props) {
+  const [position, setPosition] = useState([false, 250, 200, 0, 0])
   const [selectCards, setSelectCards] = useState(null)
   const {isLoaded, isLoading, data} = props.userCards
 
@@ -54,12 +55,46 @@ function ConsultationContent(props) {
     }
   }
 
+  const setDraggbleON = event => {
+    // document.querySelector('.consultation-field-tmp').focus()
+    const move_DOM = document.querySelector('.consultation-field-tmp').getBoundingClientRect()
+
+    setPosition([true, position[1], position[2], event.clientX-move_DOM.left, event.clientY-move_DOM.top])
+  }
+
+  const setDraggbleOFF = () => {
+    if (position[0]) setPosition([false, position[1], position[2], position[3], position[4]])
+  }
+
+  const blockMouseLeave = () => {
+    document.querySelector('.consultation-field-tmp').focus()
+  }
+
+  const changePositionMouseDown = event => {
+    event.preventDefault()
+
+    if (position[0]) {
+      const field_DOM = document.querySelector('.consultation-field').getBoundingClientRect()
+
+      const new_x = event.clientX-field_DOM.left-position[3] > 0 ? event.clientX-field_DOM.left-position[3] : 0 
+      const new_y = event.clientY-field_DOM.top-position[4] > 0  ? event.clientY-field_DOM.top-position[4]  : 0 
+      setPosition([true, new_x, new_y, position[3], position[4]])
+    }
+  }
+
+  // if (position[0]) document.querySelector('.consultation-field-tmp').focus()
+  // console.log(position)
+
   return (
     <>
       <div className="consultation-field">
         <div className={selectCards ? "consultation-set-cards__none" : "consultation-set-cards"}>
           {fetched}
         </div>
+        <div className="consultation-field-tmp" style={{position:'absolute', left:position[1], top:position[2]}} onMouseDown={setDraggbleON} onMouseUp={setDraggbleOFF} onMouseMove={changePositionMouseDown} onDragStart={()=>{return false}} onMouseLeave={setDraggbleOFF}>
+        </div>
+        {/* <div className="consultation-field-tmp" style={{position:'fixed', top:position[1], left:position[0]}} onDrag={changePositionMouseDown} onDragEnd={fixPositionMouseDown}>
+        </div> */}
       </div>
       {selectCards ? <ConsultationCards cards_id={selectCards}/> : ''}
     </>

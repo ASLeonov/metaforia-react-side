@@ -1,5 +1,8 @@
 .consultation-field {
   flex-grow: 1;
+  position: relative;
+  border: 1px solid wheat;
+  overflow: hidden;
 }
 
 .consultation-set-cards {
@@ -11,4 +14,11 @@
 
 .consultation-set-cards__none {
   display: none;
+}
+
+.consultation-field-tmp {
+  width: 100px;
+  height: 100px;
+  background-color: goldenrod;
+  /* transition: all 0.1s; */
 }
