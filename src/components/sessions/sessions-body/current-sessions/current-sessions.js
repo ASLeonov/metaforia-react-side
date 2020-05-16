@@ -40,7 +40,7 @@ function CurrentSessions(props) {
     }
   }
 
-  const reload = () => clearCurrentSessions()
+  // const reload = () => clearCurrentSessions()
 
   return (
     <div className="sessions-list">

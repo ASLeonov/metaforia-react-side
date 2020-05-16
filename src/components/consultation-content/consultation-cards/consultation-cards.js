@@ -51,6 +51,7 @@ function ConsultationCards(props) {
 
   return (
     <div className="consultation-cards">
+      <div className="consultation-cards-tools"></div>
       <div className="consultation-cards-leftBtn" onClick={leftScrollClick}></div>
       <div className="consultation-cards-center">
         <div className="consultation-cards-center-wrapper">

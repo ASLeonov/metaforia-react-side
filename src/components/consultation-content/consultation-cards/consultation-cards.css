@@ -1,9 +1,14 @@
 .consultation-cards {
   display: flex;
+  justify-content: space-between;
   box-sizing: border-box;
   height: 150px;
   padding: 10px 10px;
   border-top: 1px solid cadetblue;
+}
+
+.consultation_low .consultation-cards {
+  display: none;
 }
 
 .consultation-cards__none {
@@ -12,7 +17,7 @@
 
 .consultation-cards-center {
   position: relative;
-  width: 70%;
+  flex-grow: 1;
 }
 
 .consultation-cards-center-wrapper {
@@ -23,29 +28,31 @@
   overflow-y: hidden;
   white-space: nowrap;
   width: 100%;
-  /* display: flex; */
-  /* justify-content: space-around; */
-  /* align-items: center; */
-  /* flex-wrap: nowrap; */
-  /* overflow: hidden; */
-  /* width: 50%; */
-  /* border: 1px solid grey; */
-  /* border-radius: 5px; */
-  /* flex-grow: 1; */
 }
 
 .consultation-card {
   display: inline-block;
   box-sizing: border-box;
-  width: 95px;
+  width: 100px;
   border: 5px solid transparent;
   border-radius: 5px;
-  /* margin: 0 10px; */
-  transition: all 0.5s;
+  /* margin: 10px; */
+  transition: width 0.4s;
 }
 
 .consultation-card:hover {
   border: 5px solid chocolate;
+  z-index: 9999;
+}
+
+.consultation_low .consultation-card {
+  display: none;
+}
+
+.consultation-cards-tools {
+  width: 80px;
+  height: 100%;
+  background-color: chocolate;
 }
 
 

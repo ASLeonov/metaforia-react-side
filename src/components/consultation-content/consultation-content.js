@@ -9,7 +9,8 @@ import Loader from '../loader'
 import './consultation-content.css'
 
 function ConsultationContent(props) {
-  const [position, setPosition] = useState([false, 250, 200, 0, 0])
+  // const [position, setPosition] = useState([false, 250, 200, 0, 0])
+  const [windowFullScreen, setWindowFullScreen] = useState(false)
   const [selectCards, setSelectCards] = useState(null)
   const {isLoaded, isLoading, data} = props.userCards
 
@@ -55,49 +56,53 @@ function ConsultationContent(props) {
     }
   }
 
-  const setDraggbleON = event => {
-    // document.querySelector('.consultation-field-tmp').focus()
-    const move_DOM = document.querySelector('.consultation-field-tmp').getBoundingClientRect()
+  // const setDraggbleON = event => {
+  //   const move_DOM = document.querySelector('.consultation-field-tmp').getBoundingClientRect()
 
-    setPosition([true, position[1], position[2], event.clientX-move_DOM.left, event.clientY-move_DOM.top])
+  //   setPosition([true, position[1], position[2], event.clientX-move_DOM.left, event.clientY-move_DOM.top])
+  // }
+
+  // const setDraggbleOFF = () => {
+  //   if (position[0]) setPosition([false, position[1], position[2], position[3], position[4]])
+  // }
+
+  // const changePositionMouseDown = event => {
+  //   event.preventDefault()
+
+  //   if (position[0]) {
+  //     const field_DOM = document.querySelector('.consultation-field').getBoundingClientRect()
+
+  //     const new_x = event.clientX-field_DOM.left-position[3] > 0 ? event.clientX-field_DOM.left-position[3] : 0 
+  //     const new_y = event.clientY-field_DOM.top-position[4] > 0  ? event.clientY-field_DOM.top-position[4]  : 0 
+  //     setPosition([true, new_x, new_y, position[3], position[4]])
+  //   }
+  // }
+
+  const onChangeWindow = () => {
+    setWindowFullScreen(!windowFullScreen)
   }
 
-  const setDraggbleOFF = () => {
-    if (position[0]) setPosition([false, position[1], position[2], position[3], position[4]])
-  }
-
-  const blockMouseLeave = () => {
-    document.querySelector('.consultation-field-tmp').focus()
-  }
-
-  const changePositionMouseDown = event => {
-    event.preventDefault()
-
-    if (position[0]) {
-      const field_DOM = document.querySelector('.consultation-field').getBoundingClientRect()
-
-      const new_x = event.clientX-field_DOM.left-position[3] > 0 ? event.clientX-field_DOM.left-position[3] : 0 
-      const new_y = event.clientY-field_DOM.top-position[4] > 0  ? event.clientY-field_DOM.top-position[4]  : 0 
-      setPosition([true, new_x, new_y, position[3], position[4]])
-    }
-  }
-
-  // if (position[0]) document.querySelector('.consultation-field-tmp').focus()
-  // console.log(position)
+  const window_CN = windowFullScreen ? "consultation_large" : "consultation_low"
 
   return (
-    <>
+    <div className={window_CN}>
+      <div className="consultation-header">
+        <span title={windowFullScreen ? "Свернуть окно" : "В полноэкранный режим"} onClick={onChangeWindow}>{windowFullScreen ? 'x' : '▢'}</span>
+      </div>
       <div className="consultation-field">
+        {!selectCards ? <h2 style={{textAlign:'center'}}>Выберите колоду для консультации</h2> : ''}
         <div className={selectCards ? "consultation-set-cards__none" : "consultation-set-cards"}>
           {fetched}
         </div>
-        <div className="consultation-field-tmp" style={{position:'absolute', left:position[1], top:position[2]}} onMouseDown={setDraggbleON} onMouseUp={setDraggbleOFF} onMouseMove={changePositionMouseDown} onDragStart={()=>{return false}} onMouseLeave={setDraggbleOFF}>
-        </div>
-        {/* <div className="consultation-field-tmp" style={{position:'fixed', top:position[1], left:position[0]}} onDrag={changePositionMouseDown} onDragEnd={fixPositionMouseDown}>
-        </div> */}
+        {!windowFullScreen && selectCards ? 
+          <h4 className="consultation-field-message" onClick={onChangeWindow}>
+            Для отображения колоды и поля
+            <span style={{textDecoration:'underline', marginTop:'15px'}}> перейдите в полноэкранный режим</span>
+          </h4> : ''
+        }
       </div>
-      {selectCards ? <ConsultationCards cards_id={selectCards}/> : ''}
-    </>
+        {selectCards ? <ConsultationCards cards_id={selectCards}/> : ''}
+    </div>
   )
 }
 
