@@ -42,7 +42,7 @@
 
 .consultation-card:hover {
   border: 5px solid chocolate;
-  z-index: 9999;
+  z-index: 8888;
 }
 
 .consultation_low .consultation-card {

@@ -11,6 +11,7 @@ import './consultation-content.css'
 function ConsultationContent(props) {
   // const [position, setPosition] = useState([false, 250, 200, 0, 0])
   const [windowFullScreen, setWindowFullScreen] = useState(false)
+  const [showChangeCards, setShowChangeCards] = useState(false)
   const [selectCards, setSelectCards] = useState(null)
   const {isLoaded, isLoading, data} = props.userCards
 
@@ -79,15 +80,27 @@ function ConsultationContent(props) {
   // }
 
   const onChangeWindow = () => {
+    if (showChangeCards) setShowChangeCards(false)
     setWindowFullScreen(!windowFullScreen)
   }
-
   const window_CN = windowFullScreen ? "consultation_large" : "consultation_low"
+
+  const setCards = () => {
+    setShowChangeCards(!showChangeCards)
+  }
 
   return (
     <div className={window_CN}>
       <div className="consultation-header">
-        <span title={windowFullScreen ? "Свернуть окно" : "В полноэкранный режим"} onClick={onChangeWindow}>{windowFullScreen ? 'x' : '▢'}</span>
+        <span className="consultation-header-setCards" onClick={setCards} style={showChangeCards ? {backgroundColor:'#f5deb3'} : {}}>
+          {showChangeCards ? 'Скрыть вкладку' : 'Сменить колоду'}
+        </span>
+          <div className="consultation-header-setCards-wrapper" style={showChangeCards ? {display:'flex'} : {}}>
+            {(!isLoading && isLoaded && data[0] !== "ERROR") ? userCardsJSX(data) : ''}
+          </div>
+        <span className="consultation-header-resize" title={windowFullScreen ? "Свернуть окно" : "В полноэкранный режим"} onClick={onChangeWindow}>
+          {windowFullScreen ? 'x' : '▢'}
+        </span>
       </div>
       <div className="consultation-field">
         {!selectCards ? <h2 style={{textAlign:'center'}}>Выберите колоду для консультации</h2> : ''}
