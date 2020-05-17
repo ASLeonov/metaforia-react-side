@@ -9,7 +9,6 @@ import Loader from '../loader'
 import './consultation-content.css'
 
 function ConsultationContent(props) {
-  // const [position, setPosition] = useState([false, 250, 200, 0, 0])
   const [windowFullScreen, setWindowFullScreen] = useState(false)
   const [showChangeCards, setShowChangeCards] = useState(false)
   const [selectCards, setSelectCards] = useState(null)
@@ -57,28 +56,6 @@ function ConsultationContent(props) {
     }
   }
 
-  // const setDraggbleON = event => {
-  //   const move_DOM = document.querySelector('.consultation-field-tmp').getBoundingClientRect()
-
-  //   setPosition([true, position[1], position[2], event.clientX-move_DOM.left, event.clientY-move_DOM.top])
-  // }
-
-  // const setDraggbleOFF = () => {
-  //   if (position[0]) setPosition([false, position[1], position[2], position[3], position[4]])
-  // }
-
-  // const changePositionMouseDown = event => {
-  //   event.preventDefault()
-
-  //   if (position[0]) {
-  //     const field_DOM = document.querySelector('.consultation-field').getBoundingClientRect()
-
-  //     const new_x = event.clientX-field_DOM.left-position[3] > 0 ? event.clientX-field_DOM.left-position[3] : 0 
-  //     const new_y = event.clientY-field_DOM.top-position[4] > 0  ? event.clientY-field_DOM.top-position[4]  : 0 
-  //     setPosition([true, new_x, new_y, position[3], position[4]])
-  //   }
-  // }
-
   const onChangeWindow = () => {
     if (showChangeCards) setShowChangeCards(false)
     setWindowFullScreen(!windowFullScreen)
@@ -92,13 +69,21 @@ function ConsultationContent(props) {
   return (
     <div className={window_CN}>
       <div className="consultation-header">
-        <span className="consultation-header-setCards" onClick={setCards} style={showChangeCards ? {backgroundColor:'#f5deb3'} : {}}>
-          {showChangeCards ? 'Скрыть вкладку' : 'Сменить колоду'}
-        </span>
-          <div className="consultation-header-setCards-wrapper" style={showChangeCards ? {display:'flex'} : {}}>
-            {(!isLoading && isLoaded && data[0] !== "ERROR") ? userCardsJSX(data) : ''}
+        <div className="consultation-header-buttons">
+          <span className="consultation-header-button" onClick={setCards} style={showChangeCards ? {backgroundColor:'#f5deb3'} : {}}>
+            {showChangeCards ? 'Скрыть вкладку' : 'Сменить колоду'}
+          </span>
+          <span className="consultation-header-button">
+            Закрыть сессию
+          </span>
+        </div>
+          <div className="consultation-header-setCards-wrapper" style={showChangeCards ? {display:'block'} : {}}>
+            <div className="consultation-header-setCards">
+              {(!isLoading && isLoaded && data[0] !== "ERROR") ? userCardsJSX(data) : ''}     {/* // провреить условия */}
+              {/* Еще варианты сюда */}
+            </div>
           </div>
-        <span className="consultation-header-resize" title={windowFullScreen ? "Свернуть окно" : "В полноэкранный режим"} onClick={onChangeWindow}>
+        <span className="consultation-header-closeButton" title={windowFullScreen ? "Свернуть окно" : "В полноэкранный режим"} onClick={onChangeWindow}>
           {windowFullScreen ? 'x' : '▢'}
         </span>
       </div>
@@ -114,7 +99,7 @@ function ConsultationContent(props) {
           </h4> : ''
         }
       </div>
-        {selectCards ? <ConsultationCards cards_id={selectCards}/> : ''}
+        {selectCards ? <ConsultationCards activeCards_id={selectCards}/> : ''}
     </div>
   )
 }

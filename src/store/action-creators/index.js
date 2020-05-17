@@ -69,6 +69,19 @@ export const clearLastSessions = () => (dispatch, getState) => {
   })
 }
 
+export const saveCardThisSession = (cards_id, card, position_left, position_top) => {
+  return {
+    type: 'SAVE_CARD_THIS_SESSION',
+    payload: {
+      cards_id: cards_id,
+      card: card,
+      position_left: position_left,
+      position_top: position_top
+    }
+    // callApi: `${api_path}`,
+}
+}
+
 // export const getFreeCards = () => (dispatch, getState) => {
 //   const user_login = getState().user.login
 //   setTimeout( () => {
@@ -156,13 +169,20 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
       })
     )
     .catch(error => {
-      // console.log(error)
       dispatch({
         type: 'GET_SELECTED_CARD_ITEMS__FAILED',
         error,
       })
     })
-  }, 2000)
+  }, 1000)
+}
+
+export const addSelectedCardItems = () => (dispatch) => {
+  setTimeout( () => {
+    dispatch({
+      type: 'ADD_SELECTED_CARD_ITEMS'
+    })
+  })
 }
 
 export const getContacts = () => (dispatch, getState) => {

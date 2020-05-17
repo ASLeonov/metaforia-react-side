@@ -39,18 +39,16 @@
   position: relative;
 }
 
-.consultation-header-resize {
-  padding: 5px;
-  cursor: pointer;
-  font-size: 150%;
-}
-
-.consultation_low .consultation-header-resize {
+.consultation_low .consultation-header {
   display: none;
 }
 
-.consultation-header-setCards {
-  display: flex;
+.consultation-header-buttons {
+  height: 100%;
+}
+
+.consultation-header-button {
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
@@ -62,24 +60,32 @@
   transition: background-color 0.3s;
 }
 
-.consultation-header-setCards:hover {
-  background-color: wheat;
+.consultation-header-button:hover {
+  background-color: #f5deb3;
 }
 
-.consultation_low .consultation-header-setCards {
-  display: none;
+.consultation-header-closeButton {
+  padding: 5px;
+  cursor: pointer;
+  font-size: 150%;
 }
 
 .consultation-header-setCards-wrapper {
   display: none;
   position: absolute;
   top: 50px;
-  left: 15px;
-  flex-wrap: wrap;
+  left: 0;
   z-index: 9999;
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 100%;
+  min-height: calc(100vh - 50px);
+}
+
+.consultation-header-setCards {
+  display: flex;
+  margin-left: 15px;
+  flex-wrap: wrap;
   background-color: wheat;
   width: 90%;
-  /* border: 1px solid wheat; */
-  /* border-top: none; */
   border-bottom-right-radius: 10px;
 }

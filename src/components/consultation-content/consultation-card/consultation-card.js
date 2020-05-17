@@ -1,9 +1,12 @@
 import React, {useState} from 'react'
+import {connect} from 'react-redux'
+import {selectThisSessionCards} from '../../../store/selectors/cards'
+import {saveCardThisSession} from '../../../store/action-creators'
 
 function ConsultationCard(props) {
   const [playMode, setPlayMode] = useState(false)
   const [position, setPosition] = useState([false, 0, 0, 0, 0, 0, 0]) // Двигаемся, left, top, расст по X до точки приложения, расст по Y до точки приложения, ширина, высота
-  const {cards_id, cards_img, cards_name} = props.card
+  const {cards_id, cards_img, cards_name} = props.card    //cards_box, 
 
   const setDraggbleON = event => {
     const move_DOM = document.querySelector(`#consultation-card-${cards_id}`).getBoundingClientRect()
@@ -20,6 +23,14 @@ function ConsultationCard(props) {
     if (position[0]) {
       if (move_DOM.bottom < border_DOM.bottom) {
         setPosition([false, position[1], position[2], position[3], position[4], position[5], position[6]])
+        if (!props.thisSessionCards[cards_id]) {
+          props.saveCardThisSession(
+            cards_id,
+            {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img},   //cards_box: cards_box,
+            position[1],
+            position[2]
+          )
+        }
       } else {
         setPosition([false, 0, 0, 0, 0, 0, 0])
       }
@@ -39,13 +50,19 @@ function ConsultationCard(props) {
     }
   }
 
-  if (!playMode && position[1] !== 0 && position[2] !==0) {
-    const border_DOM = document.querySelector('.consultation-field').getBoundingClientRect()
-    const move_DOM = document.querySelector(`#consultation-card-${cards_id}`).getBoundingClientRect()
-    if (move_DOM.bottom < border_DOM.bottom) {
-      setPlayMode(true)
-    }
+  // if (!playMode && position[1] !== 0 && position[2] !==0) {
+  //   const border_DOM = document.querySelector('.consultation-field').getBoundingClientRect()
+  //   const move_DOM = document.querySelector(`#consultation-card-${cards_id}`).getBoundingClientRect()
+  //   if (move_DOM.bottom < border_DOM.bottom) {
+  //     setPlayMode(true)
+  //   }
+  // }
+
+  if (props.exist_card && position[1] === 0 && position [2] === 0) {
+    // console.log('---',props.exist_card)
+    setPosition([false, props.exist_card.position_left, props.exist_card.position_top, 0, 0, 0, 0])
   }
+  // console.log(props.position_left)
 
   const currentStyle = (position[1] !== 0 && position[2] !== 0) ?
     {
@@ -55,7 +72,6 @@ function ConsultationCard(props) {
       // margin: '50px',
       ...props.style_1
     } : props.style_1
-
 
   return (
     <img
@@ -74,4 +90,13 @@ function ConsultationCard(props) {
   )
 }
 
-export default ConsultationCard
+export default connect(
+  state => {
+    return {
+      thisSessionCards: selectThisSessionCards(state)
+    }
+  },
+  {
+    saveCardThisSession: saveCardThisSession
+  }
+)(ConsultationCard)

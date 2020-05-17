@@ -16,12 +16,6 @@
   display: none;
 }
 
-/* .consultation-field-tmp {
-  width: 100px;
-  height: 100px;
-  background-color: goldenrod;
-} */
-
 .consultation-field-message {
   display: flex;
   flex-direction: column;

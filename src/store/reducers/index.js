@@ -5,7 +5,8 @@ import { lastSessionsReducer } from './last-sessions'
 // import { freeCardsReducer } from './free-cards'
 import { payCardsReducer } from './pay-cards'
 import { userCardsReducer } from './user-cards'
-import {userSelectedCardItems} from './user-selected-card-items'
+import { userSelectedCardReducer } from './user-selected-card-items'
+import { thisSessionReducer } from './this-session'
 import { contactsReducer } from './contacts'
 
 export const reducer = combineReducers({
@@ -20,7 +21,9 @@ export const reducer = combineReducers({
 
   userCards: userCardsReducer,
 
-  userSelectedCards: userSelectedCardItems,
+  userSelectedCards: userSelectedCardReducer,
+
+  cardsThisSession: thisSessionReducer,
 
   contacts: contactsReducer
   
