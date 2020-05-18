@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
 import {selectThisSessionCards} from '../../../store/selectors/cards'
-import {saveCardThisSession} from '../../../store/action-creators'
+import {saveCardThisSession, setCardInUse} from '../../../store/action-creators'
 
 function ConsultationCard(props) {
-  const [playMode, setPlayMode] = useState(false)
+  const [playMode, setPlayMode] = useState(false)     // сейчас он всегда false - разобраться
   const [position, setPosition] = useState([false, 0, 0, 0, 0, 0, 0]) // Двигаемся, left, top, расст по X до точки приложения, расст по Y до точки приложения, ширина, высота
   const {cards_id, cards_img, cards_name} = props.card    //cards_box, 
 
@@ -30,6 +30,7 @@ function ConsultationCard(props) {
             position[1],
             position[2]
           )
+          props.setCardInUse(cards_id)
         }
       } else {
         setPosition([false, 0, 0, 0, 0, 0, 0])
@@ -58,9 +59,9 @@ function ConsultationCard(props) {
   //   }
   // }
 
-  if (props.exist_card && position[1] === 0 && position [2] === 0) {
+  if (props.exist_card && position[1] === 0 && position[2] === 0) {
     // console.log('---',props.exist_card)
-    setPosition([false, props.exist_card.position_left, props.exist_card.position_top, 0, 0, 0, 0])
+    setPosition([false, props.position_left, props.position_top, 0, 0, 0, 0])
   }
   // console.log(props.position_left)
 
@@ -97,6 +98,7 @@ export default connect(
     }
   },
   {
-    saveCardThisSession: saveCardThisSession
+    saveCardThisSession: saveCardThisSession,
+    setCardInUse: setCardInUse
   }
 )(ConsultationCard)

@@ -8,7 +8,7 @@ import './consultation-cards.css'
 
 function ConsultationCards(props) {
   const [xPosition, setXPosition] = useState(0)
-  const {isLoaded, isLoading, data} = props.userSelectedCards
+  const {isLoaded, isLoading, activeCardsBox, data} = props.userSelectedCards
   const thisSessionCards = props.thisSessionCards
   let fetched
   let fetched_already_exist = []
@@ -30,12 +30,11 @@ function ConsultationCards(props) {
 
   if (isLoading) {
     fetched = <Loader />
-  } else if (isLoaded) {
-    if (!data[props.activeCards_id]) {
+  } else if (isLoaded) {     //isLoaded
+    if (props.activeCards_id !== activeCardsBox) {      // Если выбрана колода, к-я уже скачана ранее???
       props.addSelectedCards(props.activeCards_id)
     } else {
-      if (!data["ERROR"]) {             // тут думать
-
+      if (!data["ERROR"]) {         // !data["ERROR"]    // тут думать
 
           // if (thisSessionCards.isExist && thisSessionCards.data.length > 0) {
           //   console.log('thisSessionCards.isExist && thisSessionCards.length > 0')
@@ -44,35 +43,57 @@ function ConsultationCards(props) {
           //   )
           // }
 
-        const cards_already_exist = {...thisSessionCards}
-        if (data[props.activeCards_id].length > 0) {
-          let i = 0
-          fetched = data[props.activeCards_id].map(
-            element => {
-              i++
-              const style_1 = (i <= xPosition) ? {width:'0', margin:'0'} : {}
-              if (cards_already_exist[element.cards_id]) {
-                console.log(cards_already_exist)
-                delete cards_already_exist[element.cards_id]
-              }
-              return (
-                <ConsultationCard key={element.cards_id} style_1={style_1} card={element} />
+        // const cards_already_exist = {...thisSessionCards}
+
+        for (const key in thisSessionCards) {
+          if (thisSessionCards.hasOwnProperty(key)) {
+            const element = thisSessionCards[key]
+              fetched_already_exist.push(
+                <ConsultationCard key={`exist-card-${key}`} style_1={{}} card={element.card} position_left={element.position_left} position_top={element.position_top} exist_card={true} />
               )
-            } 
-          )
-          console.log(cards_already_exist)
-          for (const key in cards_already_exist) {
-            const element = cards_already_exist[key]
-            fetched_already_exist.push(
-              <ConsultationCard key={element.card.cards_id} style_1={{}} exist_card={element} card={element.card}/>
-            )
-            
           }
-          // if (cards_already_exist.values) {
-          //   fetched_already_exist = cards_already_exist.values.map(
-          //     element => <ConsultationCard key={element.cards_id} style_1={{}} exist_card={element} />
-          //   )
-          // }
+        }
+
+
+
+        if (Object.keys(data).length > 0) {
+          let i = 0
+          fetched = []
+            for (const key in data) {
+              if (data.hasOwnProperty(key)) {
+                const element = data[key]
+                  if (element.cards_box === activeCardsBox && !element.cardInUse) {
+                    i++
+                    const style_1 = (i <= xPosition) ? {width:'0', margin:'0'} : {}
+                    fetched.push(
+                      <ConsultationCard key={element.cards_id} style_1={style_1} card={element} />
+                    )
+                  }
+              }
+            }
+
+        // if (Object.keys(data).length > 0) {
+        //   let i = 0
+        //   fetched = data[props.activeCards_id].map(
+        //     element => {
+        //       i++
+        //       const style_1 = (i <= xPosition) ? {width:'0', margin:'0'} : {}
+        //       if (cards_already_exist[element.cards_id]) {
+        //         console.log(cards_already_exist)
+        //         delete cards_already_exist[element.cards_id]
+        //       }
+        //       return (
+        //         <ConsultationCard key={element.cards_id} style_1={style_1} card={element} />
+        //       )
+        //     } 
+        //   )
+                // console.log(cards_already_exist)
+                // for (const key in cards_already_exist) {
+                //   const element = cards_already_exist[key]
+                //   fetched_already_exist.push(
+                //     <ConsultationCard key={element.card.cards_id} style_1={{}} exist_card={element} card={element.card}/>
+                //   )
+                // }
         } else {
           // fetched = <Messages caption="message_freeCardsNone" />
         }
@@ -82,7 +103,7 @@ function ConsultationCards(props) {
     }
   }
 
-  console.log('render CONS CARDS ')
+  // console.log('render CONS CARDS ')
 
   return (
     <div className="consultation-cards">

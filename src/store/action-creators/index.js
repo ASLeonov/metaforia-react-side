@@ -150,7 +150,7 @@ export const getUserCards = () => (dispatch, getState) => {
         error,
       })
     })
-  }, 3000)
+  }, 700)
 }
 
 export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
@@ -174,16 +174,34 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
         error,
       })
     })
-  }, 1000)
+  }, 700)
 }
 
-export const addSelectedCardItems = () => (dispatch) => {
+export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {
   setTimeout( () => {
     dispatch({
-      type: 'ADD_SELECTED_CARD_ITEMS'
+      type: 'ADD_SELECTED_CARD_ITEMS',
+      payload: {
+        cardsBox_id: cardsBox_id
+      }
     })
   })
 }
+
+export const setCardInUse = (cards_id) => (dispatch) => {
+  setTimeout( () => {
+    dispatch({
+      type: 'SET_IN_USE_SELECTED_CARD_ITEMS',
+      payload: {
+        cards_id: cards_id
+      }
+    })
+  })
+}
+
+
+
+
 
 export const getContacts = () => (dispatch, getState) => {
   const user_login = getState().user.login
