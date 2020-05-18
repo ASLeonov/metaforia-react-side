@@ -6,11 +6,11 @@ export const userSelectedCardReducer =
 // ---------------------------- А не замутить ли иммутабле ??? Типа объект в объекте и все такое...
     switch (action.type) {
       case 'ADD_SELECTED_CARD_ITEMS': {
-        console.log('ADD_SELECTED_CARD_ITEMS')
+        // console.log('ADD_SELECTED_CARD_ITEMS')
         const new_cardBoxes = userSelectedCardItemsState.cardBoxes[action.payload.cardsBox_id]
         const isLoaded_new = new_cardBoxes === undefined ? false : true
 
-        console.log(action.payload.cardsBox_id, new_cardBoxes, isLoaded_new)
+        // console.log(action.payload.cardsBox_id, new_cardBoxes, isLoaded_new)
 
         return {
           isLoaded: isLoaded_new,

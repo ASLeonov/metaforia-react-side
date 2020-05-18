@@ -36,15 +36,6 @@ function ConsultationCards(props) {
     } else {
       if (!data["ERROR"]) {         // !data["ERROR"]    // тут думать
 
-          // if (thisSessionCards.isExist && thisSessionCards.data.length > 0) {
-          //   console.log('thisSessionCards.isExist && thisSessionCards.length > 0')
-          //   fetched_already_exist = thisSessionCards.data.map(
-          //     element => <ConsultationCard key={element.key} style_1={{}} card={element.card} position_left={element.position_left} position_top={element.position_top} />
-          //   )
-          // }
-
-        // const cards_already_exist = {...thisSessionCards}
-
         for (const key in thisSessionCards) {
           if (thisSessionCards.hasOwnProperty(key)) {
             const element = thisSessionCards[key]
@@ -53,8 +44,6 @@ function ConsultationCards(props) {
               )
           }
         }
-
-
 
         if (Object.keys(data).length > 0) {
           let i = 0
@@ -72,28 +61,6 @@ function ConsultationCards(props) {
               }
             }
 
-        // if (Object.keys(data).length > 0) {
-        //   let i = 0
-        //   fetched = data[props.activeCards_id].map(
-        //     element => {
-        //       i++
-        //       const style_1 = (i <= xPosition) ? {width:'0', margin:'0'} : {}
-        //       if (cards_already_exist[element.cards_id]) {
-        //         console.log(cards_already_exist)
-        //         delete cards_already_exist[element.cards_id]
-        //       }
-        //       return (
-        //         <ConsultationCard key={element.cards_id} style_1={style_1} card={element} />
-        //       )
-        //     } 
-        //   )
-                // console.log(cards_already_exist)
-                // for (const key in cards_already_exist) {
-                //   const element = cards_already_exist[key]
-                //   fetched_already_exist.push(
-                //     <ConsultationCard key={element.card.cards_id} style_1={{}} exist_card={element} card={element.card}/>
-                //   )
-                // }
         } else {
           // fetched = <Messages caption="message_freeCardsNone" />
         }
