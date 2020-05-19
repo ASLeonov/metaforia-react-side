@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
 import {selectThisSessionCards} from '../../../store/selectors/cards'
-import {saveCardThisSession, setCardInUse} from '../../../store/action-creators'
+import {setCardInUse} from '../../../store/action-creators'
+import {saveCardThisSession} from '../../../store/action-creators/cards-actions'
 import './consultation-card.css'
 
 function ConsultationCard(props) {
@@ -24,21 +25,30 @@ function ConsultationCard(props) {
     const move_DOM = document.querySelector(`#consultation-card-${cards_id}`).getBoundingClientRect()
     if (position[0]) {
       if (move_DOM.bottom < border_DOM.bottom) {
-        // setPlayMode(true)
         setPosition([false, position[1], position[2], position[3], position[4], position[5], position[6]])
-        props.saveCardThisSession(
-          cards_id,
-          {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img},   //cards_box: cards_box,
-          position[1],
-          position[2]
-        )
-        if (!props.thisSessionCards[cards_id]) {
+        if (props.exist_card) {
+          if (Number(props.position_left) !== position[1] && Number(props.position_top) !== position[2]) {
+            props.saveCardThisSession(
+              cards_id,
+              {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img},   //cards_box: cards_box,
+              position[1],
+              position[2]
+            )
+          }
+        } else {
+          props.saveCardThisSession(
+            cards_id,
+            {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img},   //cards_box: cards_box,
+            position[1],
+            position[2]
+          )
+        }
+        if (!props.thisSessionCards.data[cards_id]) {
           props.setCardInUse(cards_id)
         }
       } else {
         setPosition([false, 0, 0, 0, 0, 0, 0])
       }
-
     }
   }
 
@@ -54,8 +64,10 @@ function ConsultationCard(props) {
   }
 
   if (props.exist_card && position[1] === 0 && position[2] === 0) {
-    setPosition([false, props.position_left, props.position_top, 0, 0, 0, 0])
+    console.log('->', props.exist_card, cards_id, props.position_left, props.position_top)
+    setPosition([false, Number(props.position_left), Number(props.position_top), 0, 0, 0, 0])
     setPlayMode(true)
+    props.setCardInUse(cards_id)
   }
 
   const increaseSize = () => {
@@ -80,6 +92,8 @@ function ConsultationCard(props) {
       // margin: '50px',
       ...props.style_1
     } : props.style_1
+
+    if (cards_id === '1-1') console.log(position, props.position_left, props.position_top)
 
   return (
     <div 

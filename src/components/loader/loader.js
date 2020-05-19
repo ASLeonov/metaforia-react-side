@@ -3,7 +3,7 @@ import './loader.css'
 
 function Loader(props) {
   return (
-    <div className="loader">
+    <div className={props.fullscreen ? "loader__fullscreen" : "loader"}>
         <svg version="1.1" id="L2" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100" enableBackground="new 0 0 100 100" xmlSpace="preserve">
           <circle fill="none" stroke="grey" strokeWidth="4" strokeMiterlimit="10" cx="50" cy="50" r="48"/>
           <line fill="none" strokeLinecap="round" stroke="grey" strokeWidth="4" strokeMiterlimit="10" x1="50" y1="50" x2="85" y2="50.5">

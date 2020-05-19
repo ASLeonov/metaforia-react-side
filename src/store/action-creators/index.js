@@ -69,18 +69,7 @@ export const clearLastSessions = () => (dispatch, getState) => {
   })
 }
 
-export const saveCardThisSession = (cards_id, card, position_left, position_top) => {
-  return {
-    type: 'SAVE_CARD_THIS_SESSION',
-    payload: {
-      cards_id: cards_id,
-      card: card,
-      position_left: position_left,
-      position_top: position_top
-    }
-    // callApi: `${api_path}`,
-}
-}
+
 
 // export const getFreeCards = () => (dispatch, getState) => {
 //   const user_login = getState().user.login
@@ -174,7 +163,7 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
         error,
       })
     })
-  }, 700)
+  }, 1500)
 }
 
 export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {

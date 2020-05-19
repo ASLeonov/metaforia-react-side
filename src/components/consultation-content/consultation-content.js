@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
-import {selectUserCards} from '../../store/selectors/cards'
+import {selectUserCards, selectThisSessionCards} from '../../store/selectors/cards'
 import {getUserCards} from '../../store/action-creators'
+// import {getCardsThisSession} from '../../store/action-creators/cards-actions'
 import CardsBox from '../cards/cards-box'
 import ConsultationCards from './consultation-cards'
 import Messages from '../messages'
@@ -13,6 +14,8 @@ function ConsultationContent(props) {
   const [showChangeCards, setShowChangeCards] = useState(false)
   const [selectCards, setSelectCards] = useState(null)
   const {isLoaded, isLoading, data} = props.userCards
+
+        // const thisSessionCards = props.thisSessionCards
 
   let fetched
 
@@ -37,6 +40,11 @@ function ConsultationContent(props) {
     }
     return result
   }
+
+  // console.log(thisSessionCards.isLoaded, thisSessionCards.isLoading)
+  // if (!thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
+  //   props.getCardsThisSession()
+  // }
 
   if (!isLoaded && !isLoading) {
     props.getUserCards()
@@ -65,6 +73,8 @@ function ConsultationContent(props) {
   const setCards = () => {
     setShowChangeCards(!showChangeCards)
   }
+
+  // console.log('HOC element - cons-content')
 
   return (
     <div className={window_CN}>
@@ -107,10 +117,12 @@ function ConsultationContent(props) {
 export default connect(
   state => {
     return {
-      userCards: selectUserCards(state)
+      userCards: selectUserCards(state),
+      // thisSessionCards: selectThisSessionCards(state) 
     }
   },
   {
-    getUserCards: getUserCards
+    getUserCards: getUserCards,
+    // getCardsThisSession: getCardsThisSession
   }
 )(ConsultationContent)
