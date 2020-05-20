@@ -29,7 +29,7 @@ export const getCurrentSessions = () => (dispatch, getState) => {
         error,
       })
     })
-  }, 1000)
+  })
 }
 
 export const clearCurrentSessions = () => (dispatch, getState) => {
@@ -60,7 +60,7 @@ export const getLastSessions = () => (dispatch, getState) => {
         error,
       })
     })
-  }, 2000)
+  })
 }
 
 export const clearLastSessions = () => (dispatch, getState) => {
@@ -113,7 +113,7 @@ export const getPayCards = () => (dispatch, getState) => {
         error,
       })
     })
-  }, 3000)
+  })
 }
 
 export const getUserCards = () => (dispatch, getState) => {
@@ -139,7 +139,7 @@ export const getUserCards = () => (dispatch, getState) => {
         error,
       })
     })
-  }, 700)
+  })
 }
 
 export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
@@ -163,7 +163,7 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
         error,
       })
     })
-  }, 1500)
+  })
 }
 
 export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {
@@ -216,7 +216,7 @@ export const getContacts = () => (dispatch, getState) => {
         error,
       })
     })
-  }, 1000)
+  })
 }
 
 

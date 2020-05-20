@@ -8,9 +8,9 @@ import Loader from '../../loader'
 import './consultation-cards.css'
 
 function ConsultationCards(props) {
+  const [isLoadedAll, setIsLoadedAll] = useState(false)
   const [xPosition, setXPosition] = useState(0)
   const {isLoaded, isLoading, activeCardsBox, data} = props.userSelectedCards
-  // const {isLoaded_thisSessionCards, isLoading_thisSessionCards, data_thisSessionCards} = props.thisSessionCards
   const thisSessionCards = props.thisSessionCards
   let fetched, fetched_already_exist
 
@@ -32,7 +32,7 @@ function ConsultationCards(props) {
           for (const key in data) {
             if (data.hasOwnProperty(key)) {
               const element = data[key]
-                if (element.cards_box === activeCardsBox && !element.cardInUse) {
+                if (element.cards_box === activeCardsBox && !element.cardInUse) {      // && !element.cardInUse
                   i++
                   const style_1 = (i <= xPosition) ? {width:'0', margin:'0'} : {}
                   fetched.push(
@@ -47,21 +47,39 @@ function ConsultationCards(props) {
 
   const thisSessionCardsJSX = () => {
     fetched_already_exist = []
-      for (const key in thisSessionCards.data) {
-        if (thisSessionCards.data.hasOwnProperty(key)) {
-          const element = thisSessionCards.data[key]
-            fetched_already_exist.push(
-              <ConsultationCard
-                key={`exist-card-${key}`}
-                style_1={{}}
-                card={element.card}
-                position_left={element.position_left}
-                position_top={element.position_top}
-                exist_card={true}
-              />
-            )
+      if (!isLoadedAll) {
+        for (const key in thisSessionCards.data) {
+          if (thisSessionCards.data.hasOwnProperty(key)) {
+            const element = thisSessionCards.data[key]
+              fetched_already_exist.push(
+                <ConsultationCard
+                  key={`exist-card-${key}`}
+                  style_1={{}}
+                  card={element.card}
+                  position_left={element.position_left}
+                  position_top={element.position_top}
+                  scale={element.scale}
+                  exist_card={true}
+                />
+              )
+          }
         }
-      }
+      } 
+      // else {
+      //   if (Object.keys(data).length > 0) {
+      //       for (const key in data) {
+      //         if (data.hasOwnProperty(key)) {
+      //           const element = data[key]
+      //             if (element.cards_box === activeCardsBox && element.cardInUse) {      // && !element.cardInUse
+      //               fetched.push(
+      //                 <ConsultationCard key={`exist-card-${key}`} style_1={{}} card={element} position_left={200} position_top={200} scale={1} exist_card={true} />
+      //               )
+      //             }
+      //         }
+      //       }
+      //   }
+      // }
+
     return fetched_already_exist
   }
 
@@ -75,18 +93,11 @@ function ConsultationCards(props) {
     } else {}   // прописать errors...
   }
 
-  // if (isLoading) {
-  //   fetched = <Loader fullscreen={true} />
-  // }
-
   if (!thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
     props.getCardsThisSession()
   }
 
   if (thisSessionCards.isLoaded) {
-
-
-
     if (!isLoaded && !isLoading) {
       props.getSelectedCards(props.activeCards_id)
     } else if (isLoading) {
@@ -94,6 +105,7 @@ function ConsultationCards(props) {
     } else if (isLoaded) {
       if (!thisSessionCards.data["ERROR"]) {
         thisSessionCardsJSX()
+        // if (!isLoadedAll )setIsLoadedAll(true)
       } else {}                                             // прописать errors...  
     }
   }

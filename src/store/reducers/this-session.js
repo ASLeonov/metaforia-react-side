@@ -14,14 +14,13 @@ export const thisSessionReducer = (thisSessionState = { isLoaded: false, isLoadi
           action.response.forEach(element => {
             data_new[element.cards_id] = {
               card: {
-                cards_id: element.cards_id,
+                cards_id:   element.cards_id,
                 cards_name: element.cards_name,
-                cards_img: element.cards_img,
+                cards_img:  element.cards_img,
               },
-              // cards_box: element.cards_box,
-              // cardInUse: false,
-              position_left: element.position_left,
-              position_top: element.position_top
+              position_left:  element.position_left,
+              position_top:   element.position_top,
+              scale:          element.scale
             }
           })
         return {

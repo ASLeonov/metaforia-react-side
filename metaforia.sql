@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Май 18 2020 г., 17:36
+-- Время создания: Май 20 2020 г., 17:18
 -- Версия сервера: 10.1.32-MariaDB
 -- Версия PHP: 7.2.5
 
@@ -155,7 +155,7 @@ INSERT INTO `free-cards` (`freecards_id`, `freecards_name`, `freecards_author`, 
 --
 
 CREATE TABLE `tanyaleo81@yandex.ru__cards` (
-  `cards_uuid` mediumint(9) NOT NULL,
+  `cards___id` mediumint(9) NOT NULL,
   `cards_id` smallint(6) NOT NULL,
   `cards_end_date` date NOT NULL,
   `cards_type` tinytext NOT NULL
@@ -165,7 +165,7 @@ CREATE TABLE `tanyaleo81@yandex.ru__cards` (
 -- Дамп данных таблицы `tanyaleo81@yandex.ru__cards`
 --
 
-INSERT INTO `tanyaleo81@yandex.ru__cards` (`cards_uuid`, `cards_id`, `cards_end_date`, `cards_type`) VALUES
+INSERT INTO `tanyaleo81@yandex.ru__cards` (`cards___id`, `cards_id`, `cards_end_date`, `cards_type`) VALUES
 (1, 1, '2020-08-31', 'payment'),
 (3, 3, '2020-10-31', 'payment'),
 (4, 4, '2022-07-31', 'payment');
@@ -216,9 +216,33 @@ CREATE TABLE `tanyaleo81@yandex.ru__sessions` (
 INSERT INTO `tanyaleo81@yandex.ru__sessions` (`session_id`, `session_date`, `session_client`, `session_descr`, `session_closed`) VALUES
 (135, '2020-05-31', 1, ' --- ', 1),
 (137, '2020-05-31', 1, ' --- ', 1),
-(138, '2020-05-31', 1, ' --- ', 0),
-(139, '2020-05-31', 3, ' --- ', 1),
-(140, '2020-05-31', 3, ' --- ', 0);
+(138, '2020-05-31', 1, ' --- ', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `tanyaleo81@yandex.ru__sessions-current-cards`
+--
+
+CREATE TABLE `tanyaleo81@yandex.ru__sessions-current-cards` (
+  `table___id` smallint(5) NOT NULL,
+  `session_id` smallint(5) NOT NULL COMMENT 'for front-end',
+  `cards_id` tinytext NOT NULL,
+  `cards_name` tinytext NOT NULL,
+  `cards_img` tinytext NOT NULL,
+  `position_left` smallint(6) NOT NULL,
+  `position_top` smallint(6) NOT NULL,
+  `scale` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Дамп данных таблицы `tanyaleo81@yandex.ru__sessions-current-cards`
+--
+
+INSERT INTO `tanyaleo81@yandex.ru__sessions-current-cards` (`table___id`, `session_id`, `cards_id`, `cards_name`, `cards_img`, `position_left`, `position_top`, `scale`) VALUES
+(226, 0, '1-1', 'Тестовая карта 1', 'card-1.png', 100, 100, 1.6),
+(227, 0, '1-2', 'Тестовая карта 2', 'card-1.png', 433, 354, 1),
+(228, 0, '1-3', 'Тестовая карта 3', 'card-1.png', 258, 525, 1);
 
 --
 -- Индексы сохранённых таблиц
@@ -252,7 +276,7 @@ ALTER TABLE `free-cards`
 -- Индексы таблицы `tanyaleo81@yandex.ru__cards`
 --
 ALTER TABLE `tanyaleo81@yandex.ru__cards`
-  ADD PRIMARY KEY (`cards_uuid`);
+  ADD PRIMARY KEY (`cards___id`);
 
 --
 -- Индексы таблицы `tanyaleo81@yandex.ru__clients`
@@ -265,6 +289,12 @@ ALTER TABLE `tanyaleo81@yandex.ru__clients`
 --
 ALTER TABLE `tanyaleo81@yandex.ru__sessions`
   ADD PRIMARY KEY (`session_id`);
+
+--
+-- Индексы таблицы `tanyaleo81@yandex.ru__sessions-current-cards`
+--
+ALTER TABLE `tanyaleo81@yandex.ru__sessions-current-cards`
+  ADD PRIMARY KEY (`table___id`);
 
 --
 -- AUTO_INCREMENT для сохранённых таблиц
@@ -298,7 +328,7 @@ ALTER TABLE `free-cards`
 -- AUTO_INCREMENT для таблицы `tanyaleo81@yandex.ru__cards`
 --
 ALTER TABLE `tanyaleo81@yandex.ru__cards`
-  MODIFY `cards_uuid` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `cards___id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT для таблицы `tanyaleo81@yandex.ru__clients`
@@ -310,7 +340,13 @@ ALTER TABLE `tanyaleo81@yandex.ru__clients`
 -- AUTO_INCREMENT для таблицы `tanyaleo81@yandex.ru__sessions`
 --
 ALTER TABLE `tanyaleo81@yandex.ru__sessions`
-  MODIFY `session_id` smallint(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
+  MODIFY `session_id` smallint(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
+
+--
+-- AUTO_INCREMENT для таблицы `tanyaleo81@yandex.ru__sessions-current-cards`
+--
+ALTER TABLE `tanyaleo81@yandex.ru__sessions-current-cards`
+  MODIFY `table___id` smallint(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=229;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

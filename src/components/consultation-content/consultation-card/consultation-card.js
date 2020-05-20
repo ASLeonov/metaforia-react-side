@@ -2,13 +2,22 @@ import React, {useState} from 'react'
 import {connect} from 'react-redux'
 import {selectThisSessionCards} from '../../../store/selectors/cards'
 import {setCardInUse} from '../../../store/action-creators'
-import {saveCardThisSession} from '../../../store/action-creators/cards-actions'
+import {saveCardThisSession, saveCardPropsThisSession} from '../../../store/action-creators/cards-actions'
 import './consultation-card.css'
+
+
+//
+//
+//
+// ДЕЛАТЬ НОВЫЙ СТОР ДЛЯ ДОБАВЛЕННЫХ КАРТ, ЗАПИСАННЫХ В БАЗУ, НО НЕ ОБНОВЛЕННЫХ ИЗ НЕЕ ПОКА ЧТО
+//
+//
+//
 
 function ConsultationCard(props) {
   const [position, setPosition] = useState([false, 0, 0, 0, 0, 0, 0]) // Двигаемся, left, top, расст по X до точки приложения, расст по Y до точки приложения, ширина, высота
   const [playMode, setPlayMode] = useState(false)
-  const [size, setSize] = useState(1)
+  const [scale, setScale] = useState(1)
   const {cards_id, cards_img, cards_name} = props.card    //cards_box, 
 
   const setDraggbleON = event => {
@@ -26,21 +35,24 @@ function ConsultationCard(props) {
     if (position[0]) {
       if (move_DOM.bottom < border_DOM.bottom) {
         setPosition([false, position[1], position[2], position[3], position[4], position[5], position[6]])
+        setPlayMode(true)
         if (props.exist_card) {
-          if (Number(props.position_left) !== position[1] && Number(props.position_top) !== position[2]) {
+          if (Number(props.position_left) !== position[1] || Number(props.position_top) !== position[2]) {
             props.saveCardThisSession(
               cards_id,
-              {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img},   //cards_box: cards_box,
+              {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img},
               position[1],
-              position[2]
+              position[2],
+              scale
             )
           }
         } else {
           props.saveCardThisSession(
             cards_id,
-            {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img},   //cards_box: cards_box,
+            {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img},
             position[1],
-            position[2]
+            position[2],
+            scale
           )
         }
         if (!props.thisSessionCards.data[cards_id]) {
@@ -63,20 +75,30 @@ function ConsultationCard(props) {
     }
   }
 
-  if (props.exist_card && position[1] === 0 && position[2] === 0) {
-    console.log('->', props.exist_card, cards_id, props.position_left, props.position_top)
+  if (props.exist_card && position[1] === 0 && position[2] === 0) {         // Если карта уже выбрана в данной сессии
+    console.log('->', props.exist_card, cards_id, props.position_left, props.position_top, props.scale)
     setPosition([false, Number(props.position_left), Number(props.position_top), 0, 0, 0, 0])
+    setScale(Number(props.scale))
     setPlayMode(true)
     props.setCardInUse(cards_id)
   }
 
-  const increaseSize = () => {
-    if (size < 2) setSize(size + 0.2)
+  const increaseScale = () => {
+    if (scale < 2) {
+      const new_scale = Number((scale + 0.2).toFixed(1))
+      setScale(new_scale)
+      props.saveCardThisSession(cards_id, {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img}, position[1], position[2], new_scale)
+    }
   }
-  const decreaseSize = () => {
-    if (size > 1) setSize(size - 0.2)
+  const decreaseScale = () => {
+    if (scale > 1) {
+      const new_scale = Number((scale - 0.2).toFixed(1))
+      setScale(new_scale)
+      props.saveCardThisSession(cards_id, {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img}, position[1], position[2], new_scale)
+      // props.saveScaleCardThisSession(cards_id, new_scale)
+    }
   }
-  const img_width = 100*size + 'px'
+  const img_width = 100*scale + 'px'
   const img_style = {width: img_width}
 
   const hideCard = () => {
@@ -93,7 +115,8 @@ function ConsultationCard(props) {
       ...props.style_1
     } : props.style_1
 
-    if (cards_id === '1-1') console.log(position, props.position_left, props.position_top)
+    // if (cards_id === '1-1') console.log(scale)
+    // console.log('render', cards_id, scale)
 
   return (
     <div 
@@ -108,23 +131,17 @@ function ConsultationCard(props) {
     >
       <div className="consultation-card-tools" style={playMode ? {} : {height:'0'}}>
         <div>
-          <span onClick={increaseSize} style={size >= 2 ? {opacity: 0.1} : {}}>+</span>
-          <span onClick={decreaseSize} style={size <= 1 ? {opacity: 0.1} : {}}>-</span>
+          <span onClick={increaseScale} style={scale >= 2 ? {opacity: 0.1} : {}}>+</span>
+          <span onClick={decreaseScale} style={scale <= 1 ? {opacity: 0.1} : {}}>-</span>
         </div>
         <span onClick={hideCard}>x</span>
       </div>
       <img
         src={`../images/cards-item/${cards_img}`}
-        // id={`consultation-card-${cards_id}`}
         className="consultation-card"
         style={img_style}
         alt={`Карта «${cards_name}»`}
         title={`Карта «${cards_name}»`}
-        // onMouseDown={setDraggbleON}
-        // onMouseUp={setDraggbleOFF} 
-        // onMouseMove={changePositionMouseDown} 
-        // onDragStart={()=>{return false}} 
-        // onMouseLeave={setDraggbleOFF}
       />
     </div>
   )
@@ -138,6 +155,7 @@ export default connect(
   },
   {
     saveCardThisSession: saveCardThisSession,
-    setCardInUse: setCardInUse
+    setCardInUse: setCardInUse,
+    saveCardPropsThisSession: saveCardPropsThisSession
   }
 )(ConsultationCard)
