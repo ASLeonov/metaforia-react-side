@@ -2,9 +2,9 @@
   display: flex;
   justify-content: space-between;
   box-sizing: border-box;
-  height: 150px;
-  padding: 10px 10px;
-  border-top: 1px solid cadetblue;
+  height: 180px;
+  padding: 15px 15px 20px 15px;
+  /* border-top: 1px solid cadetblue; */
 }
 
 .consultation_low .consultation-cards {
@@ -18,6 +18,8 @@
 .consultation-cards-center {
   position: relative;
   flex-grow: 1;
+  border-top: 1px solid rgb(196, 196, 196);
+  border-bottom: 1px solid rgb(196, 196, 196);
 }
 
 .consultation-cards-center-wrapper {
@@ -28,6 +30,9 @@
   overflow-y: hidden;
   white-space: nowrap;
   width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
 }
 
 .consultation_low .consultation-card {
@@ -35,27 +40,69 @@
 }
 
 .consultation-cards-tools {
-  width: 80px;
+  box-sizing: border-box;
+  width: 110px;
   height: 100%;
-  background-color: chocolate;
+  border: 1px solid rgb(196, 196, 196);
+  border-radius: 4px;
+}
+
+.consultation-cards-tools span {
+  opacity: 0.5;
+  transition: opacity 0.3s;
+}
+
+.consultation-cards-tools span:hover {
+  opacity: 1;
+}
+
+.consultation-cards-tools-item {
+  box-sizing: border-box;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.consultation-cards-tools-item span{
+  text-align: center;
+  cursor: pointer;
+}
+
+.consultation-cards-tools-divider {
+  border-top: 1px solid rgb(196, 196, 196);
 }
 
 
 .consultation-cards-leftBtn, .consultation-cards-rightBtn {
-  box-sizing: border-box;
-  width: 80px;
-  height: 80px;
-  background-repeat: no-repeat;
-  background-size: 60px 60px;
-  background-position: 50% 40%;
-  transition: all 0.1s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60px;
+  font-size: 350%;
   cursor: pointer;
-  background-image: url('../../../images/btn85.png');
+  user-select: none;
+  border: 1px solid rgb(196, 196, 196);
 }
 
 .consultation-cards-leftBtn {
-  transform: rotate(-90deg);
+  margin: 0 0 0 18px;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-right: none;
 }
 .consultation-cards-rightBtn {
-  transform: rotate(90deg);
+  margin-left: 0;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-left: none;
+}
+
+.consultation-cards-leftBtn span, .consultation-cards-rightBtn span {
+  opacity: 0.4;
+  transition: opacity 0.4s;
+}
+
+.consultation-cards-leftBtn span:hover, .consultation-cards-rightBtn span:hover {
+  opacity: 1;
 }

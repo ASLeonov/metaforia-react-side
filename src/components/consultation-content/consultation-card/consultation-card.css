@@ -1,5 +1,8 @@
 .consultation-card-wrapper {
   display: inline-block;
+  width: 100px;
+  height: 134px;
+  transition: width 0.7s;
 }
 
 .consultation-card-wrapper:hover {
@@ -9,6 +12,7 @@
 .consultation-card {
   box-sizing: border-box;
   width: 100px;
+  /* height: 134px; */
   border: 5px solid transparent;
   border-radius: 5px;
   /* margin: 10px; */

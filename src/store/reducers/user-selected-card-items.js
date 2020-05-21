@@ -6,12 +6,9 @@ export const userSelectedCardReducer =
 // ---------------------------- А не замутить ли иммутабле ??? Типа объект в объекте и все такое...
     switch (action.type) {
       case 'ADD_SELECTED_CARD_ITEMS': {
-        console.log('ADD_SELECTED_CARD_ITEMS')
+        // console.log('ADD_SELECTED_CARD_ITEMS')
         const new_cardBoxes = userSelectedCardItemsState.cardBoxes[action.payload.cardsBox_id]
         const isLoaded_new = new_cardBoxes === undefined ? false : true
-
-        // console.log(action.payload.cardsBox_id, new_cardBoxes, isLoaded_new)
-
         return {
           isLoaded: isLoaded_new,
           isLoading: false,
@@ -21,7 +18,7 @@ export const userSelectedCardReducer =
         }
       }
       case 'GET_SELECTED_CARD_ITEMS__LOADING': {
-        console.log('GET_SELECTED_CARD_ITEMS__LOADING')
+        // console.log('GET_SELECTED_CARD_ITEMS__LOADING')
         return {
           isLoaded: false,
           isLoading: true,
@@ -31,7 +28,7 @@ export const userSelectedCardReducer =
         }
       }
       case 'GET_SELECTED_CARD_ITEMS__SUCCESS': {
-        console.log('GET_SELECTED_CARD_ITEMS__SUCCESS')
+        // console.log('GET_SELECTED_CARD_ITEMS__SUCCESS')
         const data_new = {...userSelectedCardItemsState.data}
           action.response.forEach(element => {
             data_new[element.cards_id] = {
@@ -63,7 +60,7 @@ export const userSelectedCardReducer =
         }
       }
       case 'SET_IN_USE_SELECTED_CARD_ITEMS': {
-        console.log('SET_IN_USE_SELECTED_CARD_ITEMS')
+        // console.log('SET_IN_USE_SELECTED_CARD_ITEMS', action.payload.cards_id)
         const data_new = {...userSelectedCardItemsState.data}
         data_new[action.payload.cards_id].cardInUse = true
         return {

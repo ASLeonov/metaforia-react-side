@@ -66,14 +66,15 @@ function ConsultationContent(props) {
     setShowChangeCards(!showChangeCards)
   }
 
-  // console.log('HOC element - cons-content')
-
   return (
     <div className={window_CN}>
       <div className="consultation-header">
         <div className="consultation-header-buttons">
           <span className="consultation-header-button" onClick={setCards} style={showChangeCards ? {backgroundColor:'#f5deb3'} : {}}>
             {showChangeCards ? 'Скрыть вкладку' : 'Сменить колоду'}
+          </span>
+          <span className="consultation-header-button">
+            Пауза для клиента
           </span>
           <span className="consultation-header-button">
             Закрыть сессию

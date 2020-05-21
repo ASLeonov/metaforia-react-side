@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
-import {selectUserSelectedCards, selectThisSessionCards} from '../../../store/selectors/cards'
+import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {getSelectedCardItems, addSelectedCardItems} from '../../../store/action-creators'
 import {getCardsThisSession} from '../../../store/action-creators/cards-actions'
 import ConsultationCard from '../consultation-card'
@@ -8,11 +8,11 @@ import Loader from '../../loader'
 import './consultation-cards.css'
 
 function ConsultationCards(props) {
-  const [isLoadedAll, setIsLoadedAll] = useState(false)
   const [xPosition, setXPosition] = useState(0)
   const {isLoaded, isLoading, activeCardsBox, data} = props.userSelectedCards
   const thisSessionCards = props.thisSessionCards
-  let fetched, fetched_already_exist
+  const thisSessionCardsLocal = props.thisSessionCardsLocal
+  let fetched, fetched_already_exist, local_already_exist
 
   const rightScrollClick = () => {
     const wrapper_element = document.querySelector('.consultation-cards-center-wrapper')
@@ -47,39 +47,43 @@ function ConsultationCards(props) {
 
   const thisSessionCardsJSX = () => {
     fetched_already_exist = []
-      if (!isLoadedAll) {
-        for (const key in thisSessionCards.data) {
-          if (thisSessionCards.data.hasOwnProperty(key)) {
-            const element = thisSessionCards.data[key]
-              fetched_already_exist.push(
+      for (const key in thisSessionCards.data) {
+        if (thisSessionCards.data.hasOwnProperty(key)) {
+          const element = thisSessionCards.data[key]
+            fetched_already_exist.push(
+              <ConsultationCard
+                key={`exist-card-${key}`}
+                style_1={{}}
+                card={element.card}
+                position_left={element.position_left}
+                position_top={element.position_top}
+                scale={element.scale}
+                exist_card={true}
+              />
+            )
+        }
+      }
+    return fetched_already_exist
+  }
+
+  const thisSessionCardsLocalJSX = () => {
+    local_already_exist = []
+        for (const key in thisSessionCardsLocal) {
+          if (thisSessionCardsLocal.hasOwnProperty(key)) {
+            const element = thisSessionCardsLocal[key]
+              local_already_exist.push(
                 <ConsultationCard
-                  key={`exist-card-${key}`}
+                  key={`exist-card-local-${key}`}
                   style_1={{}}
                   card={element.card}
                   position_left={element.position_left}
                   position_top={element.position_top}
                   scale={element.scale}
-                  exist_card={true}
+                  exist_card_local={true}
                 />
               )
           }
         }
-      } 
-      // else {
-      //   if (Object.keys(data).length > 0) {
-      //       for (const key in data) {
-      //         if (data.hasOwnProperty(key)) {
-      //           const element = data[key]
-      //             if (element.cards_box === activeCardsBox && element.cardInUse) {      // && !element.cardInUse
-      //               fetched.push(
-      //                 <ConsultationCard key={`exist-card-${key}`} style_1={{}} card={element} position_left={200} position_top={200} scale={1} exist_card={true} />
-      //               )
-      //             }
-      //         }
-      //       }
-      //   }
-      // }
-
     return fetched_already_exist
   }
 
@@ -98,29 +102,46 @@ function ConsultationCards(props) {
   }
 
   if (thisSessionCards.isLoaded) {
-    if (!isLoaded && !isLoading) {
+    if ( (!isLoaded && !isLoading) ) { 
       props.getSelectedCards(props.activeCards_id)
     } else if (isLoading) {
       fetched = <Loader fullscreen={true} />
     } else if (isLoaded) {
-      if (!thisSessionCards.data["ERROR"]) {
-        thisSessionCardsJSX()
-        // if (!isLoadedAll )setIsLoadedAll(true)
-      } else {}                                             // прописать errors...  
+
+        if (activeCardsBox !== props.activeCards_id) {
+          props.addSelectedCards(props.activeCards_id)
+        } else {
+          if (!thisSessionCards.data["ERROR"]) {
+            thisSessionCardsJSX()
+            thisSessionCardsLocalJSX()
+          } else {}   // прописать errors...  
+        }
     }
   }
-
+  
   return (
     <div className="consultation-cards">
-      <div className="consultation-cards-tools"></div>
-      <div className="consultation-cards-leftBtn" onClick={leftScrollClick}></div>
+      <div className="consultation-cards-tools">
+        <div className="consultation-cards-tools-item">
+          <span>Перемешать карты</span>
+        </div>
+        <div className="consultation-cards-tools-item consultation-cards-tools-divider">
+          <span>Случайная карта</span>
+        </div>
+      </div>
+      <div className="consultation-cards-leftBtn" onClick={leftScrollClick}>
+        <span>❮</span>
+      </div>
       <div className="consultation-cards-center">
         <div className="consultation-cards-center-wrapper">
           {fetched}
           {fetched_already_exist}
+          {local_already_exist}
         </div>
       </div>
-        <div className="consultation-cards-rightBtn" onClick={rightScrollClick}></div>
+      <div className="consultation-cards-rightBtn" onClick={rightScrollClick}>
+        <span>❯</span>
+      </div>
     </div>
   )
 }
@@ -129,7 +150,8 @@ export default connect(
   state => {
     return {
       userSelectedCards: selectUserSelectedCards(state),
-      thisSessionCards: selectThisSessionCards(state)
+      thisSessionCards: selectThisSessionCards(state), 
+      thisSessionCardsLocal: selectThisSessionCardsLocal(state)
     }
   },
   {
