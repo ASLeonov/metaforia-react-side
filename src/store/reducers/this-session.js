@@ -1,15 +1,15 @@
 export const thisSessionReducer = (thisSessionState = { isLoaded: false, isLoading: false, data: {} }, action) => {  
     switch (action.type) {
       case 'GET_CARDS_THIS_SESSIONS__LOADING': {
-        // console.log('GET_CARDS_THIS_SESSIONS__LOADING')
+        console.log('GET_CARDS_THIS_SESSIONS__LOADING')
         return {
           isLoaded: false,
           isLoading: true,
-          data: {...thisSessionState.data}
+          data: {}
         }
       }
       case 'GET_CARDS_THIS_SESSIONS__SUCCESS': {
-        // console.log('GET_CARDS_THIS_SESSIONS__SUCCESS')
+        console.log('GET_CARDS_THIS_SESSIONS__SUCCESS')
         const data_new = {...thisSessionState.data}
           action.response.forEach(element => {
             data_new[element.cards_id] = {
@@ -30,11 +30,19 @@ export const thisSessionReducer = (thisSessionState = { isLoaded: false, isLoadi
         }
       }
       case 'GET_CARDS_THIS_SESSIONS__FAILED': {
-        // console.log('GET_CARDS_THIS_SESSIONS__FAILED')
+        console.log('GET_CARDS_THIS_SESSIONS__FAILED')
         return {
           isLoaded: true,
           isLoading: false,
           data: {"ERROR": action.error}
+        }
+      }
+      case 'UPDATE_IS_NEEDED': {
+        console.log('this session -> UPDATE_IS_NEEDED')
+        return {
+          isLoaded: false,
+          isLoading: false,
+          data: {}
         }
       }
       default: {

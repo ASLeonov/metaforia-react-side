@@ -5,6 +5,9 @@ import {getSelectedCardItems, addSelectedCardItems} from '../../../store/action-
 import {getCardsThisSession} from '../../../store/action-creators/cards-actions'
 import ConsultationCard from '../consultation-card'
 import Loader from '../../loader'
+
+import {api_path} from '../../../store/common'
+
 import './consultation-cards.css'
 
 function ConsultationCards(props) {
@@ -13,6 +16,12 @@ function ConsultationCards(props) {
   const thisSessionCards = props.thisSessionCards
   const thisSessionCardsLocal = props.thisSessionCardsLocal
   let fetched, fetched_already_exist, local_already_exist
+
+  console.log('render Cards ALL')
+
+  if (isLoaded && thisSessionCards.isLoaded) {
+
+  }
 
   const rightScrollClick = () => {
     const wrapper_element = document.querySelector('.consultation-cards-center-wrapper')
@@ -32,7 +41,7 @@ function ConsultationCards(props) {
           for (const key in data) {
             if (data.hasOwnProperty(key)) {
               const element = data[key]
-                if (element.cards_box === activeCardsBox && !element.cardInUse) {      // && !element.cardInUse
+                if (element.cards_box === activeCardsBox && !thisSessionCards.data[key] && !thisSessionCardsLocal[key]) {     // !element.cardInUse
                   i++
                   const style_1 = (i <= xPosition) ? {width:'0', margin:'0'} : {}
                   fetched.push(
@@ -63,7 +72,7 @@ function ConsultationCards(props) {
             )
         }
       }
-    return fetched_already_exist
+    //return fetched_already_exist
   }
 
   const thisSessionCardsLocalJSX = () => {
@@ -71,6 +80,7 @@ function ConsultationCards(props) {
         for (const key in thisSessionCardsLocal) {
           if (thisSessionCardsLocal.hasOwnProperty(key)) {
             const element = thisSessionCardsLocal[key]
+            // console.log('thisSessionCardsLocalJSX', element.scale)
               local_already_exist.push(
                 <ConsultationCard
                   key={`exist-card-local-${key}`}
@@ -84,7 +94,7 @@ function ConsultationCards(props) {
               )
           }
         }
-    return fetched_already_exist
+    return local_already_exist
   }
 
   if (!isLoaded && !isLoading) {
@@ -112,12 +122,30 @@ function ConsultationCards(props) {
           props.addSelectedCards(props.activeCards_id)
         } else {
           if (!thisSessionCards.data["ERROR"]) {
+
+              let timerId = setTimeout(function tick() {
+                fetch(`${api_path}cards.php?name=tanyaleo81@yandex.ru&type=synchro`)
+                .then(response => response.text())
+                .then(data => {
+                  if (data === 'UPDATE_IS_NO_NEEDED') {
+                    console.log('synchro -> UPDATE_IS_NO_NEEDED')
+                      timerId = setTimeout(tick, 5000);
+                  } else if (data === 'UPDATE_IS_NEEDED') {
+                    console.log('synchro -> UPDATE_IS_NEEDED')
+                    props.getCardsThisSession()
+                  }
+                })
+                .catch(err => console.log('error', err))
+              }, 5000)
+
             thisSessionCardsJSX()
             thisSessionCardsLocalJSX()
           } else {}   // прописать errors...  
         }
     }
   }
+
+ 
   
   return (
     <div className="consultation-cards">
@@ -134,9 +162,23 @@ function ConsultationCards(props) {
       </div>
       <div className="consultation-cards-center">
         <div className="consultation-cards-center-wrapper">
-          {fetched}
-          {fetched_already_exist}
+          
+          {/* {(fetched_already_exist && fetched_already_exist.length===4) ? 
+            fetched_already_exist.map(element => (
+              <ConsultationCard 
+                key={element.key}
+                style_1={{}}
+                card={element.card}
+                position_left={element.position_left}
+                position_top={element.position_top}
+                scale={element.scale}
+                exist_card={true}
+              />
+            )) : "-----------------------------------------"} */}
+
           {local_already_exist}
+          {fetched_already_exist}
+          {fetched}
         </div>
       </div>
       <div className="consultation-cards-rightBtn" onClick={rightScrollClick}>
@@ -157,6 +199,6 @@ export default connect(
   {
     getSelectedCards: getSelectedCardItems,
     addSelectedCards: addSelectedCardItems,
-    getCardsThisSession: getCardsThisSession
+    getCardsThisSession: getCardsThisSession,
   }
 )(ConsultationCards)

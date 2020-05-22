@@ -71,6 +71,16 @@ export const userSelectedCardReducer =
           data: {...data_new}
         }
       }
+      case 'UPDATE_IS_NEEDED': {
+        console.log('selected card items -> UPDATE_IS_NEEDED')
+        return {
+          isLoaded: false,
+          isLoading: false,
+          activeCardsBox: userSelectedCardItemsState.activeCardsBox,
+          cardBoxes: {...userSelectedCardItemsState.cardBoxes},
+          data: {}
+        }
+      }
       default: {
         return {
           ...userSelectedCardItemsState
