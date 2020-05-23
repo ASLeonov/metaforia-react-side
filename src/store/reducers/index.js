@@ -7,7 +7,8 @@ import { payCardsReducer } from './pay-cards'
 import { userCardsReducer } from './user-cards'
 import { userSelectedCardReducer } from './user-selected-card-items'
 import { thisSessionReducer } from './this-session'
-import { thisSessionLocalReducer } from './this-session-local'
+import { thisSessionCardsReducer } from './this-session-cards'
+import { thisSessionLocalCardsReducer } from './this-session-local-cards'
 import { contactsReducer } from './contacts'
 
 export const reducer = combineReducers({
@@ -22,11 +23,13 @@ export const reducer = combineReducers({
 
   userCards: userCardsReducer,
 
+  thisSession: thisSessionReducer,
+
   userSelectedCards: userSelectedCardReducer,
 
-  cardsThisSession: thisSessionReducer,
+  cardsThisSession: thisSessionCardsReducer,
   
-  cardsThisSessionLocal: thisSessionLocalReducer,
+  cardsThisSessionLocal: thisSessionLocalCardsReducer,
 
   contacts: contactsReducer
   

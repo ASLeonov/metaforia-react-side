@@ -35,10 +35,13 @@ export const saveCardThisSession = (card, position_left, position_top, scale) =>
     .then(response => response.text())
     .then(data => {
       if (data === 'INSERT_CARD_THIS_SESSION') {
+        dispatch({
+          type: 'INCREASE_THIS_SESSION'
+        })
         // console.log('Card', card.cards_id ,'added/updated successfull')
         // задиспатчить экшн на получение данных от бэка когда надо
         // dispatch({
-        //   type: 'SAVE_CARD_THIS_SESSION'
+        //   type: '...'
         // })
       } else {
         console.log('php ->', data)
@@ -58,21 +61,3 @@ export const saveCardThisSessionLocal = (card, position_left, position_top, scal
     }
   }
 }
-
-// export const synchro = () => (dispatch, getState) => {
-//   const user_login = getState().user.login
-
-//     fetch(`${api_path}cards.php?name=${user_login}&type=synchro`)
-//     .then(response => response.text())
-//     .then(data => {
-//       if (data === 'UPDATE_IS_NO_NEEDED') {
-//         console.log('synchro -> UPDATE_IS_NO_NEEDED')
-//       } else if (data === 'UPDATE_IS_NEEDED') {
-//         console.log('synchro -> UPDATE_IS_NEEDED')
-//           dispatch({
-//             type: 'GET_CARDS_THIS_SESSIONS__RERERELOADING'
-//           })
-//       }
-//     })
-//     .catch(err => console.log('error', err))
-// }

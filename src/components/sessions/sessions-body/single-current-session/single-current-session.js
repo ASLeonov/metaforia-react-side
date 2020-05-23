@@ -4,10 +4,14 @@ import {api_path} from '../../../../store/common'
 import './single-current-session.css'
 
 function SingleCurrentSession(props) {
-  const {session_id, session_date, client_name, client_surname, session_descr} = props.session
+  const {session_id, session_date, client_name, client_surname, session_descr, last_version} = props.session
 
   const inviteClick = () => {
     console.log('invite client')
+  }
+
+  const setSession = () => {
+    props.setThisSession(session_id, last_version)
   }
 
   const closeClick = () => {
@@ -55,7 +59,7 @@ function SingleCurrentSession(props) {
       <div className="sessions-item-right">
         <button className="sessions-item-button" onClick={inviteClick}>Пригласить</button>
         <Link to='./consultation'>
-          <button className="sessions-item-button">Войти</button>
+          <button className="sessions-item-button" onClick={setSession}>Войти</button>
         </Link>
         <button className="sessions-item-button" onClick={closeClick}>Закрыть</button>
         <button className="sessions-item-button" onClick={deleteClick}>Удалить</button>

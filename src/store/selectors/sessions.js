@@ -5,6 +5,8 @@ import Messages from '../../components/messages'
 export const selectCurrentSessions = state => state.currentSessions
 export const selectLastSessions = state => state.lastSessions
 
+export const selectThisSession = state => state.thisSession
+
 export const selectLastSessionsJSX = createSelector(
   selectLastSessions,
   (lastSessions, result) => {

@@ -1,8 +1,10 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
+import {selectThisSession} from '../../../store/selectors/sessions'
 import {getSelectedCardItems, addSelectedCardItems} from '../../../store/action-creators'
 import {getCardsThisSession} from '../../../store/action-creators/cards-actions'
+import {setThisSession} from '../../../store/action-creators/sessions-actions'
 import ConsultationCard from '../consultation-card'
 import Loader from '../../loader'
 
@@ -12,16 +14,13 @@ import './consultation-cards.css'
 
 function ConsultationCards(props) {
   const [xPosition, setXPosition] = useState(0)
+  const [timer, setTimer] = useState(0)
   const {isLoaded, isLoading, activeCardsBox, data} = props.userSelectedCards
   const thisSessionCards = props.thisSessionCards
   const thisSessionCardsLocal = props.thisSessionCardsLocal
   let fetched, fetched_already_exist, local_already_exist
 
-  console.log('render Cards ALL')
-
-  if (isLoaded && thisSessionCards.isLoaded) {
-
-  }
+  // console.log('render Cards ALL')
 
   const rightScrollClick = () => {
     const wrapper_element = document.querySelector('.consultation-cards-center-wrapper')
@@ -51,7 +50,6 @@ function ConsultationCards(props) {
             }
           }
       }
-    return fetched
   }
 
   const thisSessionCardsJSX = () => {
@@ -72,7 +70,6 @@ function ConsultationCards(props) {
             )
         }
       }
-    //return fetched_already_exist
   }
 
   const thisSessionCardsLocalJSX = () => {
@@ -80,7 +77,6 @@ function ConsultationCards(props) {
         for (const key in thisSessionCardsLocal) {
           if (thisSessionCardsLocal.hasOwnProperty(key)) {
             const element = thisSessionCardsLocal[key]
-            // console.log('thisSessionCardsLocalJSX', element.scale)
               local_already_exist.push(
                 <ConsultationCard
                   key={`exist-card-local-${key}`}
@@ -94,7 +90,6 @@ function ConsultationCards(props) {
               )
           }
         }
-    return local_already_exist
   }
 
   if (!isLoaded && !isLoading) {
@@ -123,20 +118,7 @@ function ConsultationCards(props) {
         } else {
           if (!thisSessionCards.data["ERROR"]) {
 
-              let timerId = setTimeout(function tick() {
-                fetch(`${api_path}cards.php?name=tanyaleo81@yandex.ru&type=synchro`)
-                .then(response => response.text())
-                .then(data => {
-                  if (data === 'UPDATE_IS_NO_NEEDED') {
-                    console.log('synchro -> UPDATE_IS_NO_NEEDED')
-                      timerId = setTimeout(tick, 5000);
-                  } else if (data === 'UPDATE_IS_NEEDED') {
-                    console.log('synchro -> UPDATE_IS_NEEDED')
-                    props.getCardsThisSession()
-                  }
-                })
-                .catch(err => console.log('error', err))
-              }, 5000)
+
 
             thisSessionCardsJSX()
             thisSessionCardsLocalJSX()
@@ -144,6 +126,55 @@ function ConsultationCards(props) {
         }
     }
   }
+
+  useEffect( () => {
+
+    console.log('useEffect', isLoaded, thisSessionCards.isLoaded)
+
+    if (isLoaded && thisSessionCards.isLoaded && !isLoading && !thisSessionCards.isLoading) {
+
+      // console.log(props.thisSession.session_id, props.thisSession.last_version)
+      
+      const maxId = setInterval( () => {} )
+        for(let i=0; i < maxId; i+=1) { 
+          clearInterval(i);
+        }
+
+        let timerId = setInterval( () => {
+
+          fetch(`${api_path}cards.php?name=tanyaleo81@yandex.ru&type=synchro&session_id=${props.thisSession.session_id}&changeValue=${props.thisSession.last_version}`)
+          .then(response => response.text())
+          .then(data => {
+
+            if (data === 'UPDATE_IS_NO_NEEDED') {
+
+              console.log(timerId, '-> UPDATE_IS_NO_NEEDED')     // timerId = setTimeout(tick, 7000); // рекурсивный вызов, если обновление не нужно
+                
+            } else if (data.includes('UPDATE_IS_NEEDED_')) {
+
+              const str = 'UPDATE_IS_NEEDED_'
+
+              console.log(data.slice(str.length))
+
+              console.log(timerId, '-> UPDATE_IS_NEEDED')
+              // clearInterval(timerId)
+              props.getCardsThisSession()
+              setTimeout( () => {
+                props.setThisSession(props.thisSession.session_id, data.slice(str.length))
+              }, 1100)
+                 
+              // подумать про промис тут, а то мало ли в какой последовательности что произойдет, или запихать setThisSession в getCardThisSession?
+              
+            }
+            
+          })
+
+          .catch(err => console.log('error', err))
+          
+        }, 7000)
+
+    }
+  }, [props.thisSession.last_version])      // isLoaded - грузится последним, поэтому от него ставим зависимость      api_path
 
  
   
@@ -162,20 +193,6 @@ function ConsultationCards(props) {
       </div>
       <div className="consultation-cards-center">
         <div className="consultation-cards-center-wrapper">
-          
-          {/* {(fetched_already_exist && fetched_already_exist.length===4) ? 
-            fetched_already_exist.map(element => (
-              <ConsultationCard 
-                key={element.key}
-                style_1={{}}
-                card={element.card}
-                position_left={element.position_left}
-                position_top={element.position_top}
-                scale={element.scale}
-                exist_card={true}
-              />
-            )) : "-----------------------------------------"} */}
-
           {local_already_exist}
           {fetched_already_exist}
           {fetched}
@@ -193,12 +210,14 @@ export default connect(
     return {
       userSelectedCards: selectUserSelectedCards(state),
       thisSessionCards: selectThisSessionCards(state), 
-      thisSessionCardsLocal: selectThisSessionCardsLocal(state)
+      thisSessionCardsLocal: selectThisSessionCardsLocal(state),
+      thisSession: selectThisSession(state)
     }
   },
   {
     getSelectedCards: getSelectedCardItems,
     addSelectedCards: addSelectedCardItems,
     getCardsThisSession: getCardsThisSession,
+    setThisSession: setThisSession
   }
 )(ConsultationCards)

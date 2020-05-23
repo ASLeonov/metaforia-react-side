@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
-// import {setCardInUse} from '../../../store/action-creators'
+// import {setCardInUse} from '../../../store/action-creators/sessions-actions'
 import {saveCardThisSession, saveCardThisSessionLocal} from '../../../store/action-creators/cards-actions'
 import './consultation-card.css'
 

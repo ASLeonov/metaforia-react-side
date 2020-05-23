@@ -1,6 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {getCurrentSessions, clearCurrentSessions, clearLastSessions} from '../../../../store/action-creators'
+import {setThisSession} from '../../../../store/action-creators/sessions-actions'
 import {selectCurrentSessions} from '../../../../store/selectors/sessions'
 import {selectUser} from '../../../../store/selectors'
 import SingleCurrentSession from '../single-current-session'
@@ -9,7 +10,7 @@ import Loader from '../../../loader'
 import './current-sessions.css'
 
 function CurrentSessions(props) {
-  const {sessions_data, getCurrentSessions, clearCurrentSessions, clearLastSessions, user} = props
+  const {user, sessions_data, getCurrentSessions, clearCurrentSessions, clearLastSessions, setThisSession} = props
   let fetched
 
   if (!sessions_data.isLoading && !sessions_data.isLoaded) {
@@ -30,6 +31,7 @@ function CurrentSessions(props) {
             user={user}
             clearCurrentSessions={clearCurrentSessions} 
             clearLastSessions={clearLastSessions}
+            setThisSession={setThisSession}
           />
         ))
       } else {
@@ -60,7 +62,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   getCurrentSessions: getCurrentSessions,
   clearCurrentSessions: clearCurrentSessions,
-  clearLastSessions: clearLastSessions
+  clearLastSessions: clearLastSessions,
+  setThisSession: setThisSession
 }
 
 export default connect(
