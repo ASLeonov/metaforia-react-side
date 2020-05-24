@@ -14,6 +14,9 @@ export const thisSessionLocalCardsReducer = (thisSessionLocalState = {}, action)
           ...new_state
         }
       }
+      case 'CLEAR_CARD_THIS_SESSION_LOCAL': {
+        return {}
+      }
       default: {
         return {
           ...thisSessionLocalState

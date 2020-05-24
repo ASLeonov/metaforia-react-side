@@ -1,8 +1,10 @@
 .consultation-card-wrapper {
   display: inline-block;
   width: 100px;
-  height: 134px;
-  transition: width 0.7s;
+  /* height: 134px;
+  Убрал условие, т.к. это самый быстрый способ сохранение пропорций этого блока при изменениях вложенного img.
+  В принципе можно будет добавить в style рассчетный height*/
+  transition: width 0.3s;
 }
 
 .consultation-card-wrapper:hover {
@@ -17,9 +19,10 @@
   border-radius: 5px;
   /* margin: 10px; */
   transition: all 0.3s;
+  pointer-events: none; /* Убиваем drag'n'drop браузера */
 }
 
-.consultation-card:hover {
+.consultation-card-wrapper:hover .consultation-card {
   border: 5px solid chocolate;
 }
 

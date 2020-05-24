@@ -1,6 +1,7 @@
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {api_path} from '../../../../store/common'
+import ConsultationPage from '../../../../routes/consultation-page'
 import './single-current-session.css'
 
 function SingleCurrentSession(props) {
@@ -58,7 +59,7 @@ function SingleCurrentSession(props) {
       </div>
       <div className="sessions-item-right">
         <button className="sessions-item-button" onClick={inviteClick}>Пригласить</button>
-        <Link to='./consultation'>
+        <Link to={`./consultation/${session_id}`}>
           <button className="sessions-item-button" onClick={setSession}>Войти</button>
         </Link>
         <button className="sessions-item-button" onClick={closeClick}>Закрыть</button>

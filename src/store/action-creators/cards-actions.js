@@ -2,13 +2,14 @@ import {api_path} from '../common'
 
 export const getCardsThisSession = () => (dispatch, getState) => {
   const user_login = getState().user.login
+  const session_id = getState().thisSession.session_id
   setTimeout( () => {
     dispatch({
       type: 'GET_CARDS_THIS_SESSIONS__LOADING'
     })
   })
   setTimeout( () => {
-    fetch(`${api_path}cards.php?name=${user_login}&type=getCardsThisSessions`)
+    fetch(`${api_path}cards.php?name=${user_login}&type=getCardsThisSessions&session_id=${session_id}`)
     .then(res => res.json())
     .then(res =>
       dispatch({
@@ -59,5 +60,11 @@ export const saveCardThisSessionLocal = (card, position_left, position_top, scal
       position_top,
       scale
     }
+  }
+}
+
+export const clearCardThisSessionLocal = (card, position_left, position_top, scale) => {
+  return {
+    type: 'CLEAR_CARD_THIS_SESSION_LOCAL'
   }
 }

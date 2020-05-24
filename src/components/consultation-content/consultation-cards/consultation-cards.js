@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
 import {getSelectedCardItems, addSelectedCardItems} from '../../../store/action-creators'
-import {getCardsThisSession} from '../../../store/action-creators/cards-actions'
+import {getCardsThisSession, clearCardThisSessionLocal} from '../../../store/action-creators/cards-actions'
 import {setThisSession} from '../../../store/action-creators/sessions-actions'
 import ConsultationCard from '../consultation-card'
 import Loader from '../../loader'
@@ -14,7 +14,6 @@ import './consultation-cards.css'
 
 function ConsultationCards(props) {
   const [xPosition, setXPosition] = useState(0)
-  const [timer, setTimer] = useState(0)
   const {isLoaded, isLoading, activeCardsBox, data} = props.userSelectedCards
   const thisSessionCards = props.thisSessionCards
   const thisSessionCardsLocal = props.thisSessionCardsLocal
@@ -158,13 +157,13 @@ function ConsultationCards(props) {
 
               console.log(timerId, '-> UPDATE_IS_NEEDED')
               // clearInterval(timerId)
+              props.clearCardThisSessionLocal()
               props.getCardsThisSession()
               setTimeout( () => {
                 props.setThisSession(props.thisSession.session_id, data.slice(str.length))
               }, 1100)
-                 
               // подумать про промис тут, а то мало ли в какой последовательности что произойдет, или запихать setThisSession в getCardThisSession?
-              
+              // также не реализована перезагрузка колоды - вдруг смена колоды?              
             }
             
           })
@@ -218,6 +217,7 @@ export default connect(
     getSelectedCards: getSelectedCardItems,
     addSelectedCards: addSelectedCardItems,
     getCardsThisSession: getCardsThisSession,
+    clearCardThisSessionLocal: clearCardThisSessionLocal,
     setThisSession: setThisSession
   }
 )(ConsultationCards)
