@@ -64,7 +64,7 @@ function SingleCurrentSession(props) {
         </Link>
         <button className="sessions-item-button" onClick={closeClick}>Закрыть</button>
         <button className="sessions-item-button" onClick={deleteClick}>Удалить</button>
-      </div>      
+      </div>    
     </div>
   )
 }

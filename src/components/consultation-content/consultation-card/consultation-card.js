@@ -29,20 +29,20 @@ function ConsultationCard(props) {
         setPosition([false, position[1], position[2], position[3], position[4], position[5], position[6]])
         !playMode && setPlayMode(true)
         if (props.exist_card) {
-          if (isMove) {  
+          if (isMove) {
           // Такая особенность. Если на поле загружены существующие карты, они подвиганы/масштабируемы и сменена колода, то координаты этих карт и масштаб будут взяты не из измененных значений, а из значений бд на момент загрузки. Если перезагрузить страницу, то обновлятся данные из бд и все отобразится в соответствии с ними. То есть этот баг вылазит только при наличии загруженных карт сессии, затем их изменении, затем переключении колод.
-            props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale)
+            props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale, props.session_id)
             setIsMove(false)
           }
         } else if (props.exist_card_local) {
           if (isMove) {
             console.log('card local isMove=true')
-            props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale)
+            props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale, props.session_id)
             props.saveCardThisSessionLocal({cards_id, cards_name, cards_img}, position[1], position[2], scale)
             setIsMove(false)
           }
         } else {
-            props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale)
+            props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale, props.session_id)
             props.saveCardThisSessionLocal({cards_id, cards_name, cards_img}, position[1], position[2], scale)
         }
       } else {
@@ -80,7 +80,7 @@ function ConsultationCard(props) {
       if (props.exist_card_local) {
         props.saveCardThisSessionLocal({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)
       }
-      props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)
+      props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale, props.session_id)
     }
   }
   const decreaseScale = () => {
@@ -91,7 +91,7 @@ function ConsultationCard(props) {
       if (props.exist_card_local) {
         props.saveCardThisSessionLocal({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)
       }
-      props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)
+      props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale, props.session_id)
     }
   }
   const img_width = 100*scale + 'px'
@@ -99,7 +99,7 @@ function ConsultationCard(props) {
 
   const hideCard = () => {
     setPosition([false, -1000, -1000, position[3], position[4], position[5], position[6]])
-    props.saveCardThisSession(cards_id, {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img}, -1000, -1000)
+    props.saveCardThisSession(cards_id, {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img}, -1000, -1000, props.session_id)
   }
 
   const currentStyle = (position[1] !== 0 && position[2] !== 0) ?

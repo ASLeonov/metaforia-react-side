@@ -59,19 +59,27 @@ export const userSelectedCardReducer =
           data: {"ERROR": action.error}     // Если одна колода загружена и вторая валится, то все валится?
         }
       }
-      case 'SET_IN_USE_SELECTED_CARD_ITEMS': {
-        // console.log('SET_IN_USE_SELECTED_CARD_ITEMS', action.payload.cards_id)
-        const data_new = {...userSelectedCardItemsState.data}
-        data_new[action.payload.cards_id].cardInUse = true
+      case 'CLEAR_SELECTED_CARD_ITEMS': {
         return {
-          isLoaded: userSelectedCardItemsState.isLoaded,
-          isLoading: userSelectedCardItemsState.isLoading,
-          activeCardsBox: userSelectedCardItemsState.activeCardsBox,
-          cardBoxes: {...userSelectedCardItemsState.cardBoxes},
-          data: {...data_new}
+          isLoaded: false,
+          isLoading: false,
+          activeCardsBox: false,
+          cardBoxes: {},
+          data: {}
         }
       }
-      case 'UPDATE_IS_NEEDED': {
+      // case 'SET_IN_USE_SELECTED_CARD_ITEMS': {
+      //   const data_new = {...userSelectedCardItemsState.data}
+      //   data_new[action.payload.cards_id].cardInUse = true
+      //   return {
+      //     isLoaded: userSelectedCardItemsState.isLoaded,
+      //     isLoading: userSelectedCardItemsState.isLoading,
+      //     activeCardsBox: userSelectedCardItemsState.activeCardsBox,
+      //     cardBoxes: {...userSelectedCardItemsState.cardBoxes},
+      //     data: {...data_new}
+      //   }
+      // }
+      case 'UPDATE_IS_NEEDED': {      // Надо ли этот экшн? По-моему нет...
         console.log('selected card items -> UPDATE_IS_NEEDED')
         return {
           isLoaded: false,

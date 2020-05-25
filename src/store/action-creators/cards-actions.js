@@ -1,5 +1,7 @@
 import {api_path} from '../common'
 
+// ----------
+
 export const getCardsThisSession = () => (dispatch, getState) => {
   const user_login = getState().user.login
   const session_id = getState().thisSession.session_id
@@ -26,12 +28,21 @@ export const getCardsThisSession = () => (dispatch, getState) => {
   })
 }
 
-export const saveCardThisSession = (card, position_left, position_top, scale) => (dispatch, getState) => {
+export const clearCardsThisSession = () => {
+  return {
+    type: 'CLEAR_CARDS_THIS_SESSION'
+  }
+}
+
+
+// ----------
+
+export const saveCardThisSession = (card, position_left, position_top, scale, session_id) => (dispatch, getState) => {
   const user_login = getState().user.login
   fetch(`${api_path}cards.php`, {
     method: 'POST',
     headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-    body: `saveCardThisSession=ok&name=${user_login}&cards_id=${card.cards_id}&cards_name=${card.cards_name}&cards_img=${card.cards_img}&position_left=${position_left}&position_top=${position_top}&scale=${scale}`
+    body: `saveCardThisSession=ok&name=${user_login}&session_id=${session_id}&cards_id=${card.cards_id}&cards_name=${card.cards_name}&cards_img=${card.cards_img}&position_left=${position_left}&position_top=${position_top}&scale=${scale}`
   })
     .then(response => response.text())
     .then(data => {

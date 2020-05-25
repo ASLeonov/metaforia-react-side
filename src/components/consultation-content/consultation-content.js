@@ -20,15 +20,16 @@ function ConsultationContent(props) {
     setSelectCards(cardsBox_id)
   }
 
-  const userCardsJSX = (data, result) => {
+  const userCardsJSX = (data, mode, result) => {
     if (data.length > 0) {
       result = data.map(
         element => (
           <CardsBox
             key={element.cards_id}
             cards={element}
-            mode="consult_mode"
+            mode={mode}
             callback={onSelectCardsClick}
+            // hideMenu={() => setShowChangeCards(false)}
           />
         )
       )
@@ -47,7 +48,7 @@ function ConsultationContent(props) {
   } else if (isLoaded) {
     if (data[0] !== "ERROR") {
       if (data.length > 0) {
-        fetched = userCardsJSX(data)
+        fetched = userCardsJSX(data, "consult-mode-enter")
       } else {
         fetched = <Messages caption="message_freeCardsNone" />
       }
@@ -82,7 +83,7 @@ function ConsultationContent(props) {
         </div>
           <div className="consultation-header-setCards-wrapper" style={showChangeCards ? {display:'block'} : {}}>
             <div className="consultation-header-setCards">
-              {(!isLoading && isLoaded && data[0] !== "ERROR") ? userCardsJSX(data) : ''}     {/* // провреить условия */}
+              {(!isLoading && isLoaded && data[0] !== "ERROR") ? userCardsJSX(data, "consult-mode-play") : ''}     {/* // провреить условия */}
               {/* Еще варианты сюда */}
             </div>
           </div>

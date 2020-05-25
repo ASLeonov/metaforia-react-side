@@ -15,6 +15,13 @@ export const thisSessionReducer = (thisSessionState = { session_id: null, last_v
           last_version: new_version,
         }
       }
+      case 'CLEAR_THIS_SESSION': {
+        console.log('CLEAR_THIS_SESSION')
+        return {
+          session_id: null,
+          last_version: null,
+        }
+      }
       default: {
         return {
           ...thisSessionState

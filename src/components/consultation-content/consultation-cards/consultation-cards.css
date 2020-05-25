@@ -30,14 +30,13 @@
   overflow-y: hidden;
   white-space: nowrap;
   width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
 }
 
-.consultation_low .consultation-card {
+/* .consultation_low .consultation-card {
   display: none;
-}
+} */
 
 .consultation-cards-tools {
   box-sizing: border-box;

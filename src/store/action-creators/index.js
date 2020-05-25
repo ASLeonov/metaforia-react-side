@@ -143,6 +143,9 @@ export const getUserCards = () => (dispatch, getState) => {
 }
 
 export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
+
+    // Тут походу на беке захардкоден user --- беда.
+
   setTimeout( () => {
     dispatch({
       type: 'GET_SELECTED_CARD_ITEMS__LOADING'
@@ -175,6 +178,12 @@ export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {
       }
     })
   })
+}
+
+export const clearSelectedCardItems = () => {
+  return {
+    type: 'CLEAR_SELECTED_CARD_ITEMS'
+  }
 }
 
 export const setCardInUse = (cards_id) => (dispatch) => {

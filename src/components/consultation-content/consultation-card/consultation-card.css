@@ -13,13 +13,23 @@
 
 .consultation-card {
   box-sizing: border-box;
+  /* width: 0px; */
   width: 100px;
   /* height: 134px; */
   border: 5px solid transparent;
   border-radius: 5px;
   /* margin: 10px; */
   transition: all 0.3s;
-  pointer-events: none; /* Убиваем drag'n'drop браузера */
+  pointer-events: none; /* Убиваем drag'n'drop и прочие события браузера */
+  animation: proba 2s;
+  /* animation: name duration timing-function delay iteration-count direction fill-mode; */
+}
+
+
+@keyframes proba {
+  0% {opacity: 0;}
+  40% {opacity: 0;}
+  100% {opacity: 1;}
 }
 
 .consultation-card-wrapper:hover .consultation-card {

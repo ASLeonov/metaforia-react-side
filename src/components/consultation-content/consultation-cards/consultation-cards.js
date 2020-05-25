@@ -2,14 +2,13 @@ import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
-import {getSelectedCardItems, addSelectedCardItems} from '../../../store/action-creators'
-import {getCardsThisSession, clearCardThisSessionLocal} from '../../../store/action-creators/cards-actions'
-import {setThisSession} from '../../../store/action-creators/sessions-actions'
+import {getSelectedCardItems, addSelectedCardItems, clearSelectedCardItems} from '../../../store/action-creators'
+import {getCardsThisSession, clearCardsThisSession, clearCardThisSessionLocal} from '../../../store/action-creators/cards-actions'
+import {setThisSession, clearThisSession} from '../../../store/action-creators/sessions-actions'
 import ConsultationCard from '../consultation-card'
 import Loader from '../../loader'
-
 import {api_path} from '../../../store/common'
-
+import { CSSTransition } from 'react-transition-group'
 import './consultation-cards.css'
 
 function ConsultationCards(props) {
@@ -18,8 +17,6 @@ function ConsultationCards(props) {
   const thisSessionCards = props.thisSessionCards
   const thisSessionCardsLocal = props.thisSessionCardsLocal
   let fetched, fetched_already_exist, local_already_exist
-
-  // console.log('render Cards ALL')
 
   const rightScrollClick = () => {
     const wrapper_element = document.querySelector('.consultation-cards-center-wrapper')
@@ -43,7 +40,12 @@ function ConsultationCards(props) {
                   i++
                   const style_1 = (i <= xPosition) ? {width:'0', margin:'0'} : {}
                   fetched.push(
-                    <ConsultationCard key={element.cards_id} style_1={style_1} card={element} />
+                    <ConsultationCard
+                      key={element.cards_id}
+                      style_1={style_1}
+                      card={element}
+                      session_id={props.thisSession.session_id}
+                    />
                   )
                 }
             }
@@ -65,6 +67,7 @@ function ConsultationCards(props) {
                 position_top={element.position_top}
                 scale={element.scale}
                 exist_card={true}
+                session_id={props.thisSession.session_id}
               />
             )
         }
@@ -85,6 +88,7 @@ function ConsultationCards(props) {
                   position_top={element.position_top}
                   scale={element.scale}
                   exist_card_local={true}
+                  session_id={props.thisSession.session_id}
                 />
               )
           }
@@ -97,7 +101,7 @@ function ConsultationCards(props) {
 
   if (isLoaded) {
     if (!data["ERROR"]) {
-      userSelectedCardsJSX()
+      // userSelectedCardsJSX()     убрал, тестим скачки карт для выбора
     } else {}   // прописать errors...
   }
 
@@ -116,11 +120,9 @@ function ConsultationCards(props) {
           props.addSelectedCards(props.activeCards_id)
         } else {
           if (!thisSessionCards.data["ERROR"]) {
-
-
-
             thisSessionCardsJSX()
             thisSessionCardsLocalJSX()
+            userSelectedCardsJSX()
           } else {}   // прописать errors...  
         }
     }
@@ -128,18 +130,18 @@ function ConsultationCards(props) {
 
   useEffect( () => {
 
-    console.log('useEffect', isLoaded, thisSessionCards.isLoaded)
+    // console.log('useEffect ->', isLoaded, thisSessionCards.isLoaded)
 
     if (isLoaded && thisSessionCards.isLoaded && !isLoading && !thisSessionCards.isLoading) {
 
-      // console.log(props.thisSession.session_id, props.thisSession.last_version)
-      
       const maxId = setInterval( () => {} )
-        for(let i=0; i < maxId; i+=1) { 
-          clearInterval(i);
+        for (let i=0; i < maxId; i+=1) { 
+          clearInterval(i)
         }
 
-        let timerId = setInterval( () => {
+// Возможно здесь лучше рекурсивный setTimeOut? Что если сервер будет отвечать долго?
+// Посыпятся потом ответы? Или что вообще будет?
+        let timerId = setInterval( () => {    
 
           fetch(`${api_path}cards.php?name=tanyaleo81@yandex.ru&type=synchro&session_id=${props.thisSession.session_id}&changeValue=${props.thisSession.last_version}`)
           .then(response => response.text())
@@ -156,7 +158,6 @@ function ConsultationCards(props) {
               console.log(data.slice(str.length))
 
               console.log(timerId, '-> UPDATE_IS_NEEDED')
-              // clearInterval(timerId)
               props.clearCardThisSessionLocal()
               props.getCardsThisSession()
               setTimeout( () => {
@@ -173,10 +174,28 @@ function ConsultationCards(props) {
         }, 7000)
 
     }
-  }, [props.thisSession.last_version])      // isLoaded - грузится последним, поэтому от него ставим зависимость      api_path
+  }, [isLoaded, props.thisSession.last_version]) // isLoaded - грузится последним
 
- 
-  
+  useEffect ( () => {
+    // console.log('activeCardsBox')    && isLoaded && thisSessionCards.isLoaded
+    if (xPosition !== 0) {
+      // console.log('activeCardsBox -> setXPosition(0)')
+      setXPosition(0)
+    }
+  }, [activeCardsBox])
+
+  useEffect ( () => () => {
+    // Такая форма записи useEffect => сработает только при unMount
+    const maxId = setInterval( () => {} )
+    for (let i=0; i < maxId; i+=1) { 
+      clearInterval(i)
+    }
+    props.clearCardsThisSession()
+    props.clearThisSession()
+    props.clearSelectedCardItems()
+    props.clearCardThisSessionLocal()
+  }, [])
+   
   return (
     <div className="consultation-cards">
       <div className="consultation-cards-tools">
@@ -191,7 +210,7 @@ function ConsultationCards(props) {
         <span>❮</span>
       </div>
       <div className="consultation-cards-center">
-        <div className="consultation-cards-center-wrapper">
+        <div className={"consultation-cards-center-wrapper"}>
           {local_already_exist}
           {fetched_already_exist}
           {fetched}
@@ -216,8 +235,14 @@ export default connect(
   {
     getSelectedCards: getSelectedCardItems,
     addSelectedCards: addSelectedCardItems,
+    clearSelectedCardItems: clearSelectedCardItems,
+
     getCardsThisSession: getCardsThisSession,
+    clearCardsThisSession: clearCardsThisSession,
+
     clearCardThisSessionLocal: clearCardThisSessionLocal,
-    setThisSession: setThisSession
+
+    setThisSession: setThisSession,
+    clearThisSession: clearThisSession
   }
 )(ConsultationCards)

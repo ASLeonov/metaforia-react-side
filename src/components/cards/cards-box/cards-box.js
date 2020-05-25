@@ -1,15 +1,35 @@
 import React from 'react'
+import {connect} from 'react-redux'
+import {clearCardsThisSession, clearCardThisSessionLocal} from '../../../store/action-creators/cards-actions'
 import './cards-box.css'
 
 function CardsBox(props) {
   const {cards, mode, callback} = props
 
   const selectCardsBox = () => {
-    callback(cards.cards_id)
+    switch (mode) {
+      case 'consult-mode-enter':
+        callback(cards.cards_id)
+        break
+      case 'consult-mode-play':
+        props.clearCardsThisSession()
+        props.clearCardThisSessionLocal()
+        // clearSelectedCardItems()  пока решил не сносить state скачанных карт из колод
+        // props.hideMenu()
+        callback(cards.cards_id)
+        break
+      default:
+        break
+    }
+    
   }
 
   return(
-    <div className="cardsBox-item" key={cards.cards_id} onClick={mode === "consult_mode" ? selectCardsBox : selectCardsBox}>
+    <div
+      className="cardsBox-item"
+      key={cards.cards_id}
+      onClick={selectCardsBox}
+    >
       <img
         src={`../images/cards-pack/${cards.cards_img}`}
         className="cardsBox-item-img"
@@ -24,4 +44,10 @@ function CardsBox(props) {
   )
 }
 
-export default CardsBox
+export default connect(
+  () => ({}),
+  {
+    clearCardsThisSession: clearCardsThisSession,
+    clearCardThisSessionLocal: clearCardThisSessionLocal
+  }
+)(CardsBox)
