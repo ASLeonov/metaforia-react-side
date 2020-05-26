@@ -112,11 +112,9 @@ export default connect(
   state => {
     return {
       userCards: selectUserCards(state),
-      // thisSessionCards: selectThisSessionCards(state) 
     }
   },
   {
-    getUserCards: getUserCards,
-    // getCardsThisSession: getCardsThisSession
+    getUserCards
   }
 )(ConsultationContent)

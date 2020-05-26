@@ -142,64 +142,16 @@ export const getUserCards = () => (dispatch, getState) => {
   })
 }
 
-export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
-
-    // Тут походу на беке захардкоден user --- беда.
-
-  setTimeout( () => {
-    dispatch({
-      type: 'GET_SELECTED_CARD_ITEMS__LOADING'
-    })
-  })
-  setTimeout( () => {
-    fetch(`${api_path}cards.php?name=user&type=userSelectedCards&payload=${cards_id}`)
-    .then(res => res.json())
-    .then(res =>
-      dispatch({
-        type: 'GET_SELECTED_CARD_ITEMS__SUCCESS',
-        response: res,
-      })
-    )
-    .catch(error => {
-      dispatch({
-        type: 'GET_SELECTED_CARD_ITEMS__FAILED',
-        error,
-      })
-    })
-  })
-}
-
-export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {
-  setTimeout( () => {
-    dispatch({
-      type: 'ADD_SELECTED_CARD_ITEMS',
-      payload: {
-        cardsBox_id: cardsBox_id
-      }
-    })
-  })
-}
-
-export const clearSelectedCardItems = () => {
-  return {
-    type: 'CLEAR_SELECTED_CARD_ITEMS'
-  }
-}
-
-export const setCardInUse = (cards_id) => (dispatch) => {
-  setTimeout( () => {
-    dispatch({
-      type: 'SET_IN_USE_SELECTED_CARD_ITEMS',
-      payload: {
-        cards_id: cards_id
-      }
-    })
-  })
-}
-
-
-
-
+// export const setCardInUse = (cards_id) => (dispatch) => {
+//   setTimeout( () => {
+//     dispatch({
+//       type: 'SET_IN_USE_SELECTED_CARD_ITEMS',
+//       payload: {
+//         cards_id: cards_id
+//       }
+//     })
+//   })
+// }
 
 export const getContacts = () => (dispatch, getState) => {
   const user_login = getState().user.login
@@ -232,18 +184,6 @@ export const getContacts = () => (dispatch, getState) => {
 // export const addPlayerScore = () => {
 //     return {
 //         type: 'INCREMENT_PLAYER_SCORE',
-//     }
-// }
-
-// export const addBotScore = () => {
-//     return {
-//         type: 'INCREMENT_BOT_SCORE',
-//     }
-// }
-
-// export const clearScores = () => {
-//     return {
-//         type: 'CLEAR_SCORES',
 //     }
 // }
 

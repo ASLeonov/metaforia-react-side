@@ -2,13 +2,11 @@ import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
-import {getSelectedCardItems, addSelectedCardItems, clearSelectedCardItems} from '../../../store/action-creators'
-import {getCardsThisSession, clearCardsThisSession, clearCardThisSessionLocal} from '../../../store/action-creators/cards-actions'
-import {setThisSession, clearThisSession} from '../../../store/action-creators/sessions-actions'
+import {getSelectedCardItems, addSelectedCardItems, getCardsThisSession} from '../../../store/action-creators/cards-actions'
+import {setThisSession} from '../../../store/action-creators/sessions-actions'
 import ConsultationCard from '../consultation-card'
 import Loader from '../../loader'
 import {api_path} from '../../../store/common'
-import { CSSTransition } from 'react-transition-group'
 import './consultation-cards.css'
 
 function ConsultationCards(props) {
@@ -177,25 +175,12 @@ function ConsultationCards(props) {
   }, [isLoaded, props.thisSession.last_version]) // isLoaded - грузится последним
 
   useEffect ( () => {
-    // console.log('activeCardsBox')    && isLoaded && thisSessionCards.isLoaded
     if (xPosition !== 0) {
       // console.log('activeCardsBox -> setXPosition(0)')
       setXPosition(0)
     }
   }, [activeCardsBox])
-
-  useEffect ( () => () => {
-    // Такая форма записи useEffect => сработает только при unMount
-    const maxId = setInterval( () => {} )
-    for (let i=0; i < maxId; i+=1) { 
-      clearInterval(i)
-    }
-    props.clearCardsThisSession()
-    props.clearThisSession()
-    props.clearSelectedCardItems()
-    props.clearCardThisSessionLocal()
-  }, [])
-   
+  
   return (
     <div className="consultation-cards">
       <div className="consultation-cards-tools">
@@ -235,14 +220,7 @@ export default connect(
   {
     getSelectedCards: getSelectedCardItems,
     addSelectedCards: addSelectedCardItems,
-    clearSelectedCardItems: clearSelectedCardItems,
-
-    getCardsThisSession: getCardsThisSession,
-    clearCardsThisSession: clearCardsThisSession,
-
-    clearCardThisSessionLocal: clearCardThisSessionLocal,
-
-    setThisSession: setThisSession,
-    clearThisSession: clearThisSession
+    getCardsThisSession,
+    setThisSession,
   }
 )(ConsultationCards)

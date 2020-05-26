@@ -2,8 +2,7 @@ import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {getCurrentSessions, clearCurrentSessions, clearLastSessions} from '../../../../store/action-creators'
 import {setThisSession, clearThisSession} from '../../../../store/action-creators/sessions-actions'
-import {clearCardsThisSession, clearCardThisSessionLocal} from '../../../../store/action-creators/cards-actions'
-import {clearSelectedCardItems} from '../../../../store/action-creators'
+import {clearSelectedCardItems, clearCardsThisSession, clearCardThisSessionLocal} from '../../../../store/action-creators/cards-actions'
 import {selectCurrentSessions} from '../../../../store/selectors/sessions'
 import {selectUser} from '../../../../store/selectors'
 import SingleCurrentSession from '../single-current-session'
@@ -81,19 +80,14 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = {
-  getCurrentSessions: getCurrentSessions,
-  clearCurrentSessions: clearCurrentSessions,
-
-  clearLastSessions: clearLastSessions,
-
-  setThisSession: setThisSession,
-  clearThisSession: clearThisSession,
-
-  clearCardsThisSession: clearCardsThisSession,
-
-  clearCardThisSessionLocal: clearCardThisSessionLocal,
-
-  clearSelectedCardItems: clearSelectedCardItems
+  getCurrentSessions,
+  clearCurrentSessions,
+  clearLastSessions,
+  setThisSession,
+  clearThisSession,
+  clearCardsThisSession,
+  clearCardThisSessionLocal,
+  clearSelectedCardItems
 }
 
 export default connect(

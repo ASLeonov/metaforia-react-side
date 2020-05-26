@@ -79,3 +79,50 @@ export const clearCardThisSessionLocal = (card, position_left, position_top, sca
     type: 'CLEAR_CARD_THIS_SESSION_LOCAL'
   }
 }
+
+
+// ---------- SELECTED CARD ITEMS Карты из выбранной для работы колоды ---------- //
+
+export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
+  // Тут походу на беке захардкоден user --- беда.
+  setTimeout( () => {
+    dispatch({
+      type: 'GET_SELECTED_CARD_ITEMS__LOADING'
+    })
+  })
+  setTimeout( () => {
+    fetch(`${api_path}cards.php?name=user&type=userSelectedCards&payload=${cards_id}`)
+    .then(res => res.json())
+    .then(res =>
+      dispatch({
+        type: 'GET_SELECTED_CARD_ITEMS__SUCCESS',
+        response: res,
+      })
+    )
+    .catch(error => {
+      dispatch({
+        type: 'GET_SELECTED_CARD_ITEMS__FAILED',
+        error,
+      })
+    })
+  })
+}
+
+export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {
+  setTimeout( () => {
+    dispatch({
+      type: 'ADD_SELECTED_CARD_ITEMS',
+      payload: {
+        cardsBox_id: cardsBox_id
+      }
+    })
+  })
+}
+
+export const clearSelectedCardItems = () => {
+  return {
+    type: 'CLEAR_SELECTED_CARD_ITEMS'
+  }
+}
+
+// ---------- END OF SELECTED CARD ITEMS ---------- //

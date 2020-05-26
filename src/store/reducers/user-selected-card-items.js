@@ -68,27 +68,6 @@ export const userSelectedCardReducer =
           data: {}
         }
       }
-      // case 'SET_IN_USE_SELECTED_CARD_ITEMS': {
-      //   const data_new = {...userSelectedCardItemsState.data}
-      //   data_new[action.payload.cards_id].cardInUse = true
-      //   return {
-      //     isLoaded: userSelectedCardItemsState.isLoaded,
-      //     isLoading: userSelectedCardItemsState.isLoading,
-      //     activeCardsBox: userSelectedCardItemsState.activeCardsBox,
-      //     cardBoxes: {...userSelectedCardItemsState.cardBoxes},
-      //     data: {...data_new}
-      //   }
-      // }
-      case 'UPDATE_IS_NEEDED': {      // Надо ли этот экшн? По-моему нет...
-        console.log('selected card items -> UPDATE_IS_NEEDED')
-        return {
-          isLoaded: false,
-          isLoading: false,
-          activeCardsBox: userSelectedCardItemsState.activeCardsBox,
-          cardBoxes: {...userSelectedCardItemsState.cardBoxes},
-          data: {}
-        }
-      }
       default: {
         return {
           ...userSelectedCardItemsState
