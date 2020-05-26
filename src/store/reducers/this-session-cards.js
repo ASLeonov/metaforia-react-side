@@ -1,7 +1,7 @@
 export const thisSessionCardsReducer = (thisSessionState = { isLoaded: false, isLoading: false, data: {} }, action) => {  
     switch (action.type) {
       case 'GET_CARDS_THIS_SESSIONS__LOADING': {
-        // console.log('GET_CARDS_THIS_SESSIONS__LOADING')
+        console.log('GET_CARDS_THIS_SESSIONS__LOADING')
         return {
           isLoaded: false,
           isLoading: true,
@@ -9,7 +9,7 @@ export const thisSessionCardsReducer = (thisSessionState = { isLoaded: false, is
         }
       }
       case 'GET_CARDS_THIS_SESSIONS__SUCCESS': {
-        // console.log('GET_CARDS_THIS_SESSIONS__SUCCESS')
+        console.log('GET_CARDS_THIS_SESSIONS__SUCCESS')
         const data_new = {...thisSessionState.data}
           action.response.forEach(element => {
             data_new[element.cards_id] = {

@@ -67,6 +67,8 @@ function ConsultationContent(props) {
     setShowChangeCards(!showChangeCards)
   }
 
+  console.log('render Consultation content', isLoaded, isLoading, data)
+
   return (
     <div className={window_CN}>
       <div className="consultation-header">

@@ -27,6 +27,7 @@ function CurrentSessions(props) {
   let fetched
 
   if (!sessions_data.isLoading && !sessions_data.isLoaded) {
+    console.log('Запускаем fetch сессий')
     getCurrentSessions()
   }
 
@@ -42,7 +43,7 @@ function CurrentSessions(props) {
             key={element.session_id}
             session={element}
             user={user}
-            clearCurrentSessions={clearCurrentSessions} 
+            clearCurrentSessions={clearCurrentSessions}
             clearLastSessions={clearLastSessions}
             setThisSession={setThisSession}
           />
@@ -55,7 +56,7 @@ function CurrentSessions(props) {
     }
   }
 
-  // const reload = () => clearCurrentSessions()
+  const reload = () => clearCurrentSessions()
 
   useEffect( () => {
     clearThisSession()
@@ -64,33 +65,37 @@ function CurrentSessions(props) {
     clearCardThisSessionLocal()
   }, [])
 
+  console.log('render Current Sessions', sessions_data)
+
   return (
     <div className="sessions-list">
       {fetched}
-      {/* <button onClick={reload}>Обновить список сессий</button> */}
+      <button onClick={reload}>Обновить список сессий</button>
     </div>
   )
 }
 
-const mapStateToProps = state => {
-  return {
+export default connect(
+  state => ({
     sessions_data: selectCurrentSessions(state),
     user: selectUser(state)
+  }),
+  {
+    getCurrentSessions,
+    clearCurrentSessions,
+    clearLastSessions,
+    setThisSession,
+    clearThisSession,
+    clearCardsThisSession,
+    clearCardThisSessionLocal,
+    clearSelectedCardItems
   }
-}
-
-const mapDispatchToProps = {
-  getCurrentSessions,
-  clearCurrentSessions,
-  clearLastSessions,
-  setThisSession,
-  clearThisSession,
-  clearCardsThisSession,
-  clearCardThisSessionLocal,
-  clearSelectedCardItems
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
 )(CurrentSessions)
+
+// Корректная работа:
+// При заходе на страницу вначале она рендерится, затем очищаем все данные по текущей сессии. Этот useEffect срабатывает один раз при монтировании компонента.
+// Это сделано для контроля в случае, если пользователь из страницы консультации перейдет в новую вкладку с текущими сессиями.
+// При первой загрузке страницы лишних рендеров нет.
+// При переходе по ссылкам с других страниц есть один дополнительный рендер, связываю его с измением store после всех чисток в useEffect. Хотя изменяемые states не законнекчены здесь.
+// Fetch на сервер один, проблем нет.
+// Рендер каждого компонента-консультации (SingleCurrentSession) тоже один. Проблем нет.

@@ -1,7 +1,7 @@
 export const currentSessionsReducer = (sessionsState = {isLoaded: false, isLoading: false, data: []}, action) => {
   switch (action.type) {
     case 'CLEAR_SESSIONS_CURRENT': {
-      // console.log('GET_SESSIONS_CURRENT__CLEAR')
+      console.log('GET_SESSIONS_CURRENT__CLEAR')
       return {
         isLoaded: false,
         isLoading: false,
@@ -9,7 +9,7 @@ export const currentSessionsReducer = (sessionsState = {isLoaded: false, isLoadi
       }
     }
     case 'GET_SESSIONS_CURRENT__LOADING': {
-      // console.log('GET_SESSIONS_CURRENT__LOADING')
+      console.log('GET_SESSIONS_CURRENT__LOADING')
       return {
         isLoaded: false,
         isLoading: true,
@@ -17,7 +17,7 @@ export const currentSessionsReducer = (sessionsState = {isLoaded: false, isLoadi
       }
     }
     case 'GET_SESSIONS_CURRENT__SUCCESS': {
-      // console.log('GET_SESSIONS_CURRENT__SUCCESS')
+      console.log('GET_SESSIONS_CURRENT__SUCCESS')
       return {
         isLoaded: true,
         isLoading: false,
@@ -25,7 +25,7 @@ export const currentSessionsReducer = (sessionsState = {isLoaded: false, isLoadi
       }
     }
     case 'GET_SESSIONS_CURRENT__FAILED': {
-      // console.log('GET_SESSIONS_CURRENT__FAILED')
+      console.log('GET_SESSIONS_CURRENT__FAILED')
       return {
         isLoaded: true,
         isLoading: false,

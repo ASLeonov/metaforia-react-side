@@ -8,9 +8,10 @@ import {clearSelectedCardItems, clearCardsThisSession, clearCardThisSessionLocal
 import './consultation.css'
 
 function Consultation(props) {
-  const data = props.thisSession.session_id ? 
-    <ConsultationContent /> : 
-      <Messages caption="message_currentSessionError" />
+  const data = <ConsultationContent /> 
+  // const data = props.thisSession.session_id ? 
+  //   <ConsultationContent /> : 
+  //     <Messages caption="message_currentSessionError" />
 
   useEffect ( () => () => {   // Такая форма записи useEffect => сработает только при unMount
     const maxId = setInterval( () => {} )
@@ -22,6 +23,8 @@ function Consultation(props) {
     props.clearSelectedCardItems()
     props.clearCardThisSessionLocal()
   }, [])
+
+  console.log('render Consultation', props.thisSession, data)
 
   return (
     <>{data}</>

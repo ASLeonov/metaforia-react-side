@@ -9,12 +9,9 @@ export const getUser = () => {
 
 export const getCurrentSessions = () => (dispatch, getState) => {
   const user_login = getState().user.login
-  setTimeout( () => {
     dispatch({
       type: 'GET_SESSIONS_CURRENT__LOADING'
     })
-  })
-  setTimeout( () => {
     fetch(`${api_path}sessions.php?name=${user_login}&type=currentSessions`)
     .then(res => res.json())
     .then(res =>
@@ -29,7 +26,6 @@ export const getCurrentSessions = () => (dispatch, getState) => {
         error,
       })
     })
-  })
 }
 
 export const clearCurrentSessions = () => (dispatch, getState) => {
@@ -133,7 +129,6 @@ export const getUserCards = () => (dispatch, getState) => {
       })
     )
     .catch(error => {
-      // console.log(error)
       dispatch({
         type: 'GET_USER_CARDS__FAILED',
         error,

@@ -14,22 +14,15 @@ function CardsBox(props) {
       case 'consult-mode-play':
         props.clearCardsThisSession()
         props.clearCardThisSessionLocal()
-        // clearSelectedCardItems()  пока решил не сносить state скачанных карт из колод
-        // props.hideMenu()
         callback(cards.cards_id)
         break
       default:
         break
     }
-    
   }
 
   return(
-    <div
-      className="cardsBox-item"
-      key={cards.cards_id}
-      onClick={selectCardsBox}
-    >
+    <div className="cardsBox-item" key={cards.cards_id} onClick={selectCardsBox}>
       <img
         src={`../images/cards-pack/${cards.cards_img}`}
         className="cardsBox-item-img"
@@ -47,7 +40,6 @@ function CardsBox(props) {
 export default connect(
   () => ({}),
   {
-    clearCardsThisSession: clearCardsThisSession,
-    clearCardThisSessionLocal: clearCardThisSessionLocal
+    clearCardsThisSession, clearCardThisSessionLocal
   }
 )(CardsBox)

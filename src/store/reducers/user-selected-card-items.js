@@ -34,7 +34,6 @@ export const userSelectedCardReducer =
             data_new[element.cards_id] = {
               cards_id: element.cards_id,
               cards_box: element.cards_box,
-              cardInUse: false,
               cards_name: element.cards_name,
               cards_img: element.cards_img,
             }
