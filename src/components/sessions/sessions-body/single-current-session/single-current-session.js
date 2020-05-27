@@ -28,7 +28,7 @@ function SingleCurrentSession(props) {
           props.clearLastSessions()
         }
       })
-      .catch(e => console.log('catch error =>', e))    
+      .catch(e => console.log('catch error =>', e))
   }
 
   const deleteClick = () => {
@@ -48,10 +48,10 @@ function SingleCurrentSession(props) {
     <div className="sessions-item">
       <div className="sessions-item-left">
         <div className="sessions-item-caption">
-          <span className="sessions-item-caption__1stelement">
+          <span className="sessions-item-caption__1stelement no_wrap">
             {session_date}
           </span>
-          <span className="sessions-item-caption__2ndelement">
+          <span className="sessions-item-caption__2ndelement no_wrap">
             {`${client_name} ${client_surname}`} 
           </span>
         </div>

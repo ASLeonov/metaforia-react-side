@@ -19,7 +19,7 @@ function ConsultationCards(props) {
     props.getSelectedCards(props.activeCards_id)
   }
 
-  if (!thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
+  if (selectedCards.isLoaded && !selectedCards.isLoading && !thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
     props.getCardsThisSession()
   }
 
@@ -92,9 +92,9 @@ function ConsultationCards(props) {
           
         })
         .catch(err => console.log('error', err))
-      }, 7000)
+      }, 700000)
     }
-  }, [selectedCards.isLoaded, thisSession.last_version]) // selectedCards.isLoaded - грузится последним
+  }, [thisSessionCards.isLoaded, thisSession.last_version]) // thisSessionCards.isLoaded - грузится последним
  
   return (
     <div className="consultation-cards">
@@ -129,3 +129,6 @@ export default connect(
     setThisSession,
   }
 )(ConsultationCards)
+
+
+// По fetch - все ok, один раз грузим selectedCards (набор карт из выбранной колоды) и один раз thisSessionCards (если есть ранее использованные карты в этой сессии)

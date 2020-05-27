@@ -85,12 +85,12 @@ export const clearCardThisSessionLocal = (card, position_left, position_top, sca
 
 export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
   // Тут походу на беке захардкоден user --- беда.
-  setTimeout( () => {
+  // setTimeout( () => {
     dispatch({
       type: 'GET_SELECTED_CARD_ITEMS__LOADING'
     })
-  })
-  setTimeout( () => {
+  // })
+  // setTimeout( () => {
     fetch(`${api_path}cards.php?name=user&type=userSelectedCards&payload=${cards_id}`)
     .then(res => res.json())
     .then(res =>
@@ -105,7 +105,7 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
         error,
       })
     })
-  })
+  // })
 }
 
 export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {

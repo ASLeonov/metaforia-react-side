@@ -14,6 +14,7 @@
 }
 
 .sessions-item-caption__1stelement {
+  display: inline-block;
   margin-right: 25px;
 }
 

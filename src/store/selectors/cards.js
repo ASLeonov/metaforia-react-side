@@ -14,10 +14,10 @@ export const selectUserCardsJSX = createSelector(
       if (userCards.data.length > 0) {
         result = userCards.data.map(
           element => (
-            <div className="freeCards-item" key={element.cards_id}>
+            <div className="cardsBox-item" key={element.cards_id}>
               <img
                 src={`../images/cards-pack/${element.cards_img}`}
-                className="freeCards-item-img"
+                className="cardsBox-item-img"
                 alt={`Колода «${element.cards_name}»`}
                 title={`Колода «${element.cards_name}»`}
               />
@@ -42,10 +42,10 @@ export const selectPayCardsJSX = createSelector(
       if (payCards.data.length > 0) {
         result = payCards.data.map(
           element => (
-            <div className="freeCards-item" key={element.cards_id}>
+            <div className="cardsBox-item" key={element.cards_id}>
               <img
                 src={`../images/cards-pack/${element.cards_img}`}
-                className="freeCards-item-img"
+                className="cardsBox-item-img"
                 alt={`Колода «${element.cards_name}», стоимость ${element.cards_pay}₽/месяц`}
                 title={`Колода «${element.cards_name}», стоимость ${element.cards_pay}₽/месяц`}
               />

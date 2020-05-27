@@ -27,7 +27,6 @@ function CurrentSessions(props) {
   let fetched
 
   if (!sessions_data.isLoading && !sessions_data.isLoaded) {
-    console.log('Запускаем fetch сессий')
     getCurrentSessions()
   }
 
@@ -65,8 +64,6 @@ function CurrentSessions(props) {
     clearCardThisSessionLocal()
   }, [])
 
-  console.log('render Current Sessions', sessions_data)
-
   return (
     <div className="sessions-list">
       {fetched}
@@ -91,6 +88,8 @@ export default connect(
     clearSelectedCardItems
   }
 )(CurrentSessions)
+
+// ПРОВЕРЕНО ЛОКАЛЬНО
 
 // Корректная работа:
 // При заходе на страницу вначале она рендерится, затем очищаем все данные по текущей сессии. Этот useEffect срабатывает один раз при монтировании компонента.

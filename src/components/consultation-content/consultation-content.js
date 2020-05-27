@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
-import {selectUserCards} from '../../store/selectors/cards'
+import {selectUserCards, selectUserSelectedCards} from '../../store/selectors/cards'
 import {getUserCards} from '../../store/action-creators'
 import CardsBox from '../cards/cards-box'
 import ConsultationCards from './consultation-cards'
@@ -17,7 +17,7 @@ function ConsultationContent(props) {
   let fetched
 
   const onSelectCardsClick = cardsBox_id => {
-    setSelectCards(cardsBox_id)
+    props.userSelectedCards.activeCardsBox !== cardsBox_id && setSelectCards(cardsBox_id)
   }
 
   const userCardsJSX = (data, mode, result) => {
@@ -45,7 +45,7 @@ function ConsultationContent(props) {
 
   if (isLoading) {
     fetched = <Loader />
-  } else if (isLoaded) {
+  } else if (isLoaded && !props.userSelectedCards.isLoaded && !props.userSelectedCards.isLoading && !selectCards) {
     if (data[0] !== "ERROR") {
       if (data.length > 0) {
         fetched = userCardsJSX(data, "consult-mode-enter")
@@ -67,7 +67,8 @@ function ConsultationContent(props) {
     setShowChangeCards(!showChangeCards)
   }
 
-  console.log('render Consultation content', isLoaded, isLoading, data)
+  // console.log('render Consultation content', isLoaded, isLoading, data)
+  console.log(`render Consultation Content - ${!isLoaded && !isLoading ? 'Колоды не загружены' : ''}${!isLoaded && isLoading ? 'Колоды загружаются' : ''}${isLoaded && !isLoading ? 'Колоды загружены' : ''} Карты из колоды -> ${props.userSelectedCards.isLoaded} ${props.userSelectedCards.isLoading}`)
 
   return (
     <div className={window_CN}>
@@ -85,7 +86,7 @@ function ConsultationContent(props) {
         </div>
           <div className="consultation-header-setCards-wrapper" style={showChangeCards ? {display:'block'} : {}}>
             <div className="consultation-header-setCards">
-              {(!isLoading && isLoaded && data[0] !== "ERROR") ? userCardsJSX(data, "consult-mode-play") : ''}     {/* // провреить условия */}
+              {(showChangeCards && !isLoading && isLoaded && data[0] !== "ERROR") ? userCardsJSX(data, "consult-mode-play") : ''}     {/* // провреить условия */}
               {/* Еще варианты сюда */}
             </div>
           </div>
@@ -111,12 +112,16 @@ function ConsultationContent(props) {
 }
 
 export default connect(
-  state => {
-    return {
+  state => ({
       userCards: selectUserCards(state),
-    }
-  },
+      userSelectedCards: selectUserSelectedCards(state)
+  }),
   {
     getUserCards
   }
 )(ConsultationContent)
+
+
+// Надо решить проблему жуткого перерендеривания (плюс любимой ошибки, лечащейся setTimeout в action-creators), которое возникает при подгрузке новых карт из выбранной новой колоды. 
+// Пока главная мысль - тупо загрузить все карты из доступных колод, но не много ли..........
+// Конечно, и при переключении на уже закачанную колоду есть лишний Consultation Content и всех его детей, но его я хотя бы замаскировал анимацией css... А при нескольких обновлениях store, все жутко моргает конечно.

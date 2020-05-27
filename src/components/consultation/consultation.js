@@ -8,10 +8,9 @@ import {clearSelectedCardItems, clearCardsThisSession, clearCardThisSessionLocal
 import './consultation.css'
 
 function Consultation(props) {
-  const data = <ConsultationContent /> 
-  // const data = props.thisSession.session_id ? 
-  //   <ConsultationContent /> : 
-  //     <Messages caption="message_currentSessionError" />
+  const data = props.thisSession.session_id ? 
+    <ConsultationContent /> : 
+      <Messages caption="message_currentSessionError" />
 
   useEffect ( () => () => {   // Такая форма записи useEffect => сработает только при unMount
     const maxId = setInterval( () => {} )
@@ -24,7 +23,7 @@ function Consultation(props) {
     props.clearCardThisSessionLocal()
   }, [])
 
-  console.log('render Consultation', props.thisSession, data)
+  console.log('render Consultation')
 
   return (
     <>{data}</>
@@ -32,12 +31,12 @@ function Consultation(props) {
 }
 
 export default connect(
-  state => {
-    return {
-      thisSession: selectThisSession(state)
-    }
-  },
+  state => ({
+    thisSession: selectThisSession(state)
+  }),
   {
     clearThisSession, clearSelectedCardItems, clearCardsThisSession, clearCardThisSessionLocal
   }
 )(Consultation)
+
+// БАГ. Если зайти на страницу напрямую, не через текущие сессии, то при переходе по ссылке в сообщении на текущие сессии вылазит Warning: Cannot update a component (`ConnectFunction`) while rendering a different component (`CurrentSessions`)...........
