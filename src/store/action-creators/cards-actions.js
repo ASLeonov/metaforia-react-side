@@ -48,7 +48,13 @@ export const saveCardThisSession = (card, position_left, position_top, scale, se
     .then(data => {
       if (data === 'INSERT_CARD_THIS_SESSION') {
         dispatch({
-          type: 'INCREASE_THIS_SESSION'
+          type: 'INCREASE_THIS_SESSION',
+          payload: {
+            card,
+            position_left,
+            position_top,
+            scale
+          }
         })
         // console.log('Card', card.cards_id ,'added/updated successfull')
         // задиспатчить экшн на получение данных от бэка когда надо

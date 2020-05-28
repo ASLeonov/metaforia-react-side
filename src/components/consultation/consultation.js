@@ -17,10 +17,10 @@ function Consultation(props) {
     for (let i=0; i < maxId; i+=1) { 
       clearInterval(i)
     }
-    props.clearThisSession()
-    props.clearCardsThisSession()
-    props.clearSelectedCardItems()
-    props.clearCardThisSessionLocal()
+    // props.clearThisSession()
+    // props.clearCardsThisSession()
+    // props.clearSelectedCardItems()
+    // props.clearCardThisSessionLocal()
   }, [])
 
   console.log('render Consultation')
