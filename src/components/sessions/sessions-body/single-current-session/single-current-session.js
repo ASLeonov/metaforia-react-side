@@ -1,10 +1,12 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {Link} from 'react-router-dom'
+import Alerts from '../../../alerts'
 import {api_path} from '../../../../store/common'
 // import ConsultationPage from '../../../../routes/consultation-page'
 import './single-current-session.css'
 
 function SingleCurrentSession(props) {
+  const [confirm, setConfirm] = useState([])
   const {session_id, session_date, client_name, client_surname, session_descr, last_version} = props.session
 
   const inviteClick = () => {
@@ -24,7 +26,7 @@ function SingleCurrentSession(props) {
       .then(response => response.text())
       .then(data => {
         if (data === 'CLOSE_SESSION') {
-          props.clearCurrentSessions()
+          props.getCurrentSessions()
           props.clearLastSessions()
         }
       })
@@ -38,11 +40,14 @@ function SingleCurrentSession(props) {
       body: `delete=ok&user_name=${props.user.login}&session_id=${session_id}`
     })
       .then(response => response.text())
-      .then(data => (data === 'DELETE_SESSION') && props.clearCurrentSessions())
+      .then(data => (data === 'DELETE_SESSION') && props.getCurrentSessions())
       .catch(e => console.log('catch error =>', e))
   }
 
-  console.log('render Single current session')
+  let confirm_message = confirm.length === 2 ?
+    <Alerts confirmText={confirm[0]} applyChanges={confirm[1]} discardChanges={() => setConfirm([])}/> : null
+
+  console.log('render Single current session', confirm)
 
   return (
     <div className="sessions-item">
@@ -62,12 +67,12 @@ function SingleCurrentSession(props) {
       <div className="sessions-item-right">
         <button className="sessions-item-button" onClick={inviteClick}>Пригласить</button>
         <Link to={`./consultation`}>       {/* /${session_id} */}
-        
           <button className="sessions-item-button" onClick={setSession}>Войти</button>
         </Link>
-        <button className="sessions-item-button" onClick={closeClick}>Закрыть</button>
-        <button className="sessions-item-button" onClick={deleteClick}>Удалить</button>
-      </div>    
+        <button className="sessions-item-button" onClick={() => setConfirm(['закрыть сессию и перенести ее в архив', closeClick])}>Закрыть</button>
+        <button className="sessions-item-button" onClick={() => setConfirm(['удалить сессию', deleteClick])}>Удалить</button>
+      </div>
+      {confirm_message}
     </div>
   )
 }

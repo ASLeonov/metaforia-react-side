@@ -28,9 +28,9 @@ export const getCardsThisSession = () => (dispatch, getState) => {
   })
 }
 
-export const clearCardsThisSession = () => {
+export const clearAllCardsThisSession = () => {   // И существующие и локал кардс
   return {
-    type: 'CLEAR_CARDS_THIS_SESSION'
+    type: 'CLEAR_ALL_CARDS_THIS_SESSION'
   }
 }
 
@@ -68,24 +68,17 @@ export const saveCardThisSession = (card, position_left, position_top, scale, se
     .catch(e => console.log('catch error =>', e))
 }
 
-export const saveCardThisSessionLocal = (card, position_left, position_top, scale) => {
-  return {
-    type: 'SAVE_CARD_THIS_SESSION_LOCAL',
-    payload: {
-      card,
-      position_left,
-      position_top,
-      scale
-    }
-  }
-}
-
-export const clearCardThisSessionLocal = (card, position_left, position_top, scale) => {
-  return {
-    type: 'CLEAR_CARD_THIS_SESSION_LOCAL'
-  }
-}
-
+// export const saveCardThisSessionLocal = (card, position_left, position_top, scale) => {
+//   return {
+//     type: 'SAVE_CARD_THIS_SESSION_LOCAL',
+//     payload: {
+//       card,
+//       position_left,
+//       position_top,
+//       scale
+//     }
+//   }
+// }
 
 // ---------- SELECTED CARD ITEMS Карты из выбранной для работы колоды ---------- //
 

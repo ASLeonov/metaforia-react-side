@@ -6,7 +6,7 @@ export const selectUserCards = state => state.userCards
 export const selectPayCards = state => state.payCards
 export const selectUserSelectedCards = state => state.userSelectedCards
 export const selectThisSessionCards = state => state.thisSession.cardsThisSession
-export const selectThisSessionCardsLocal = state => state.cardsThisSessionLocal
+export const selectThisSessionCardsLocal = state => state.thisSession.cardsThisSessionLocal
 
 export const selectUserCardsJSX = createSelector(
   selectUserCards,

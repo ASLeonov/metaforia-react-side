@@ -63,8 +63,10 @@ function ConsultationContent(props) {
   }
   const window_CN = windowFullScreen ? "consultation_large" : "consultation_low"
 
-  const setCards = () => {
-    setShowChangeCards(!showChangeCards)
+  const setCards = (event) => {
+    if (event.target === event.currentTarget) {
+      setShowChangeCards(!showChangeCards)
+    }
   }
 
   // console.log('render Consultation content', isLoaded, isLoading, data)
@@ -84,7 +86,7 @@ function ConsultationContent(props) {
             Закрыть сессию
           </span>
         </div>
-          <div className="consultation-header-setCards-wrapper" style={showChangeCards ? {display:'block'} : {}}>
+          <div className="consultation-header-setCards-wrapper" onClick={setCards} style={showChangeCards ? {display:'block'} : {}}>
             <div className="consultation-header-setCards">
               {(showChangeCards && !isLoading && isLoaded && data[0] !== "ERROR") ? userCardsJSX(data, "consult-mode-play") : ''}     {/* // провреить условия */}
               {/* Еще варианты сюда */}

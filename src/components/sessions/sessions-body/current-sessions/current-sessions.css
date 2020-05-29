@@ -1,8 +1,26 @@
 .sessions-list {
+  text-align: center;
   animation: sessions-list-animate 400ms ease-in forwards;
 }
 
 @keyframes sessions-list-animate {
   0% {opacity: 0;}
   100% {opacity: 1;}
+}
+
+.sessions-standart-button {
+  box-sizing: border-box;
+  font-size: 95%;
+  /* color: white; */
+  margin-top: 50px;
+  padding: 14px;
+  background-color: rgb(180, 180, 180);
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
+.sessions-standart-button:hover {
+  opacity: 0.75;
 }

@@ -1,8 +1,7 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
-// import {setCardInUse} from '../../../store/action-creators/sessions-actions'
-import {saveCardThisSession, saveCardThisSessionLocal} from '../../../store/action-creators/cards-actions'
+import {saveCardThisSession} from '../../../store/action-creators/cards-actions'
 import './consultation-card.css'
 
 function ConsultationCard(props) {
@@ -28,22 +27,13 @@ function ConsultationCard(props) {
       if (move_DOM.bottom < border_DOM.bottom) {
         setPosition([false, position[1], position[2], position[3], position[4], position[5], position[6]])
         !playMode && setPlayMode(true)
-        if (props.exist_card) {
+        if (props.exist_card || props.exist_card_local) {
           if (isMove) {
-          // Такая особенность. Если на поле загружены существующие карты, они подвиганы/масштабируемы и сменена колода, то координаты этих карт и масштаб будут взяты не из измененных значений, а из значений бд на момент загрузки. Если перезагрузить страницу, то обновлятся данные из бд и все отобразится в соответствии с ними. То есть этот баг вылазит только при наличии загруженных карт сессии, затем их изменении, затем переключении колод.
             props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale, props.session_id)
-            setIsMove(false)
-          }
-        } else if (props.exist_card_local) {
-          if (isMove) {
-            console.log('card local isMove=true')
-            props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale, props.session_id)
-            props.saveCardThisSessionLocal({cards_id, cards_name, cards_img}, position[1], position[2], scale)
             setIsMove(false)
           }
         } else {
             props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale, props.session_id)
-            props.saveCardThisSessionLocal({cards_id, cards_name, cards_img}, position[1], position[2], scale)
         }
       } else {
         setPosition([false, 0, 0, 0, 0, 0, 0])
@@ -68,34 +58,22 @@ function ConsultationCard(props) {
     setPlayMode(true)
   }
 
-  //if (props.exist_card_local && scale !== props.scale) {    // Либо это условие, либо setScale(new_scale) при каждом increase/decrease - переделал на 2-й вариант, фиксил баг не изм масштаб при таймере в компоненте верхнего уровня
-  //  setScale(props.scale)
-  //}
-
   const increaseScale = () => {
     if (scale < 2) {
       const new_scale = Number((scale + 0.2).toFixed(1))
-      // console.log('card local increaseScale')
       setScale(new_scale)
-      if (props.exist_card_local) {
-        props.saveCardThisSessionLocal({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)
-      }
       props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale, props.session_id)
     }
   }
   const decreaseScale = () => {
     if (scale > 1) {
       const new_scale = Number((scale - 0.2).toFixed(1))
-      // console.log('card local decreaseScale')
       setScale(new_scale)
-      if (props.exist_card_local) {
-        props.saveCardThisSessionLocal({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)
-      }
       props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale, props.session_id)
     }
   }
   const img_width = 100*scale + 'px'
-  const img_style = {width: img_width}
+  const img_style = {width: img_width}      //, animation: 'cards-fadeIn 1.2s'
 
   const hideCard = () => {
     setPosition([false, -1000, -1000, position[3], position[4], position[5], position[6]])
@@ -107,6 +85,7 @@ function ConsultationCard(props) {
       position: 'fixed',
       left: position[1],
       top: position[2],
+      animation: 'cards-fadeIn  1.2s',
       // margin: '50px',
       ...img_style,
       ...props.style_1
@@ -146,14 +125,11 @@ function ConsultationCard(props) {
 }
 
 export default connect(
-  state => {
-    return {
-      userSelectedCards: selectUserSelectedCards(state),
-      thisSessionCardsLocal: selectThisSessionCardsLocal(state)
-    }
-  },
+  state => ({
+    userSelectedCards: selectUserSelectedCards(state),
+    thisSessionCardsLocal: selectThisSessionCardsLocal(state)
+  }),
   {
-    saveCardThisSession: saveCardThisSession,
-    saveCardThisSessionLocal: saveCardThisSessionLocal
+    saveCardThisSession
   }
 )(ConsultationCard)

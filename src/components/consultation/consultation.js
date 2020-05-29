@@ -4,7 +4,7 @@ import Messages from '../messages'
 import {connect} from 'react-redux'
 import {selectThisSession} from '../../store/selectors/sessions'
 import {clearThisSession} from '../../store/action-creators/sessions-actions'
-import {clearSelectedCardItems, clearCardsThisSession, clearCardThisSessionLocal} from '../../store/action-creators/cards-actions'
+import {clearSelectedCardItems, clearCardsThisSession} from '../../store/action-creators/cards-actions'
 import './consultation.css'
 
 function Consultation(props) {
@@ -17,10 +17,8 @@ function Consultation(props) {
     for (let i=0; i < maxId; i+=1) { 
       clearInterval(i)
     }
-    // props.clearThisSession()
-    // props.clearCardsThisSession()
-    // props.clearSelectedCardItems()
-    // props.clearCardThisSessionLocal()
+    props.clearThisSession()
+    props.clearSelectedCardItems()
   }, [])
 
   console.log('render Consultation')
@@ -35,7 +33,7 @@ export default connect(
     thisSession: selectThisSession(state)
   }),
   {
-    clearThisSession, clearSelectedCardItems, clearCardsThisSession, clearCardThisSessionLocal
+    clearThisSession, clearSelectedCardItems
   }
 )(Consultation)
 

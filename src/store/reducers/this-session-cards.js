@@ -1,5 +1,5 @@
-export const thisSessionCardsReducer = (thisSessionState = { isLoaded: false, isLoading: false, data: {} }, action) => {  
-    switch (action.type) {
+// export const thisSessionCardsReducer = (thisSessionState = { isLoaded: false, isLoading: false, data: {} }, action) => {  
+//     switch (action.type) {
       // case 'GET_CARDS_THIS_SESSIONS__LOADING': {
       //   console.log('GET_CARDS_THIS_SESSIONS__LOADING')
       //   return {
@@ -45,10 +45,10 @@ export const thisSessionCardsReducer = (thisSessionState = { isLoaded: false, is
       //     data: {}
       //   }
       // }
-      default: {
-        return {
-          ...thisSessionState
-        }
-      }
-    }
-  }
+  //     default: {
+  //       return {
+  //         ...thisSessionState
+  //       }
+  //     }
+  //   }
+  // }

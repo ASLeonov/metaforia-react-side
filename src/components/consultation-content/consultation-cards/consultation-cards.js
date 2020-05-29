@@ -20,6 +20,7 @@ function ConsultationCards(props) {
   }
 
   if (selectedCards.isLoaded && !selectedCards.isLoading && !thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
+    console.log('props.getCardsThisSession() props.getCardsThisSession()')
     props.getCardsThisSession()
   }
 

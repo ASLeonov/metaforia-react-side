@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
-import {getContacts, clearCurrentSessions} from '../../../store/action-creators'
+import {getContacts} from '../../../store/action-creators'
 import {selectContacts} from '../../../store/selectors/contacts'
 import {selectUser} from '../../../store/selectors'
 import ContactsList from '../contacts-list'
@@ -67,7 +67,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = {
   getContacts: getContacts,
-  clearCurrentSessions: clearCurrentSessions
 }
 
 export default connect(

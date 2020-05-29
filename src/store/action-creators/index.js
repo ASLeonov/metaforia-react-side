@@ -7,63 +7,11 @@ export const getUser = () => {
   }
 }
 
-export const getCurrentSessions = () => (dispatch, getState) => {
-  const user_login = getState().user.login
-    dispatch({
-      type: 'GET_SESSIONS_CURRENT__LOADING'
-    })
-    fetch(`${api_path}sessions.php?name=${user_login}&type=currentSessions`)
-    .then(res => res.json())
-    .then(res =>
-      dispatch({
-        type: 'GET_SESSIONS_CURRENT__SUCCESS',
-        response: res,
-      })
-    )
-    .catch(error => {
-      dispatch({
-        type: 'GET_SESSIONS_CURRENT__FAILED',
-        error,
-      })
-    })
-}
-
-export const clearCurrentSessions = () => (dispatch, getState) => {
-  dispatch({
-    type: 'CLEAR_SESSIONS_CURRENT',
-  })
-}
-
-export const getLastSessions = () => (dispatch, getState) => {
-  const user_login = getState().user.login
-  setTimeout( () => {
-    dispatch({
-      type: 'GET_SESSIONS_LAST__LOADING'
-    })
-  })
-  setTimeout( () => {
-  fetch(`${api_path}sessions.php?name=${user_login}&type=lastSessions`)
-    .then(res => res.json())
-    .then(res =>
-      dispatch({
-        type: 'GET_SESSIONS_LAST__SUCCESS',
-        response: res,
-      })
-    )
-    .catch(error => {
-      dispatch({
-        type: 'GET_SESSIONS_LAST__FAILED',
-        error,
-      })
-    })
-  })
-}
-
-export const clearLastSessions = () => (dispatch, getState) => {
-  dispatch({
-    type: 'CLEAR_SESSIONS_LAST',
-  })
-}
+// export const clearLastSessions = () => (dispatch, getState) => {
+//   dispatch({
+//     type: 'CLEAR_SESSIONS_LAST',
+//   })
+// }
 
 
 
