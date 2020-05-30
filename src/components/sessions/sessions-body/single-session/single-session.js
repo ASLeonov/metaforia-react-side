@@ -3,14 +3,20 @@ import {Link} from 'react-router-dom'
 import Alerts from '../../../alerts'
 import {api_path} from '../../../../store/common'
 // import ConsultationPage from '../../../../routes/consultation-page'
-import './single-current-session.css'
+import './single-session.css'
 
-function SingleCurrentSession(props) {
+function SingleSession(props) {
   const [confirm, setConfirm] = useState([])
   const {session_id, session_date, client_name, client_surname, session_descr, last_version} = props.session
 
   const inviteClick = () => {
     console.log('invite client')
+    fetch(`http://metaforia-react-side.leonovlab.ru/api/mailer.php`)
+      .then(response => response.text())
+      .then(data => {
+        console.log('mailer response ->', data)
+      })
+      .catch(e => console.log('catch error =>', e))
   }
 
   const setSession = () => {
@@ -27,7 +33,7 @@ function SingleCurrentSession(props) {
       .then(data => {
         if (data === 'CLOSE_SESSION') {
           props.getCurrentSessions()
-          props.clearLastSessions()
+          props.getLastSessions()
         }
       })
       .catch(e => console.log('catch error =>', e))
@@ -40,14 +46,19 @@ function SingleCurrentSession(props) {
       body: `delete=ok&user_name=${props.user.login}&session_id=${session_id}`
     })
       .then(response => response.text())
-      .then(data => (data === 'DELETE_SESSION') && props.getCurrentSessions())
-      .catch(e => console.log('catch error =>', e))
+      .then(data => {
+        if (data === 'DELETE_SESSION') {      // если другой ответ сервера - ничего не делаем
+          props.type === 'current_session'  && props.getCurrentSessions() 
+          props.type === 'last_session'     && props.getLastSessions() 
+        }
+      })
+      .catch(e => console.log('catch error DELETE_SESSION =>', e))
   }
 
   let confirm_message = confirm.length === 2 ?
     <Alerts confirmText={confirm[0]} applyChanges={confirm[1]} discardChanges={() => setConfirm([])}/> : null
 
-  console.log('render Single current session', confirm)
+  console.log('render Single current session')
 
   return (
     <div className="sessions-item">
@@ -65,16 +76,25 @@ function SingleCurrentSession(props) {
         </div>
       </div>
       <div className="sessions-item-right">
-        <button className="sessions-item-button" onClick={inviteClick}>Пригласить</button>
-        <Link to={`./consultation`}>       {/* /${session_id} */}
-          <button className="sessions-item-button" onClick={setSession}>Войти</button>
-        </Link>
-        <button className="sessions-item-button" onClick={() => setConfirm(['закрыть сессию и перенести ее в архив', closeClick])}>Закрыть</button>
-        <button className="sessions-item-button" onClick={() => setConfirm(['удалить сессию', deleteClick])}>Удалить</button>
+        {props.type === 'current_session' ? 
+          <button className="sessions-item-button" onClick={inviteClick}>Пригласить</button> : ''}
+        {props.type === 'current_session' ? 
+          <Link to={`./consultation`}><button className="sessions-item-button" onClick={setSession}>Войти</button></Link> : ''} {/* /${session_id} */}
+        {props.type === 'current_session' ? 
+          <button className="sessions-item-button" onClick={() => setConfirm(['Закрыть сессию и перенести ее в архив', closeClick])}>Закрыть</button> : ''}  
+        <button
+          className="sessions-item-button"
+          onClick={() => setConfirm(['Удалить сессию безвозвратно', deleteClick])}
+        >
+          Удалить
+        </button>
+        {confirm_message}
       </div>
-      {confirm_message}
     </div>
   )
 }
 
-export default SingleCurrentSession
+export default SingleSession
+
+
+// Из базы удаляет и закрывает сессии корректно. Лишних рендеров и фетчей нет.

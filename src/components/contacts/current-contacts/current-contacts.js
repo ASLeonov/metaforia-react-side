@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
 import {getContacts} from '../../../store/action-creators'
+import {getCurrentSessions} from '../../../store/action-creators/sessions-actions'
 import {selectContacts} from '../../../store/selectors/contacts'
 import {selectUser} from '../../../store/selectors'
 import ContactsList from '../contacts-list'
@@ -11,7 +12,7 @@ import './current-contacts.css'
 
 function CurrentContacts(props) {
   const [activeContact, setActiveContact] = useState('')
-  const {contacts_data, getContacts, clearCurrentSessions, user} = props
+  const {contacts_data, getContacts, getCurrentSessions, user} = props
   let contacts_list, contact_item
 
   const changeActiveContact = contactId => {
@@ -38,7 +39,7 @@ function CurrentContacts(props) {
             activeContact={contacts_data.data.filter(element => element.client_id === activeContact)} 
             user={user} 
             getContacts={getContacts}
-            clearCurrentSessions={clearCurrentSessions}
+            getCurrentSessions={getCurrentSessions}
           />
       }
     } else {
@@ -58,18 +59,13 @@ function CurrentContacts(props) {
   )
 }
 
-const mapStateToProps = (state) => {
-  return {
+export default connect(
+  state => ({
     contacts_data: selectContacts(state),
     user: selectUser(state)
+  }),
+  {
+    getContacts,
+    getCurrentSessions
   }
-}
-
-const mapDispatchToProps = {
-  getContacts: getContacts,
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
 )(CurrentContacts)

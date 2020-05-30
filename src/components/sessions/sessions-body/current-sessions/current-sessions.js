@@ -5,13 +5,13 @@ import {getCurrentSessions, getLastSessions} from '../../../../store/action-crea
 import {setThisSession} from '../../../../store/action-creators/sessions-actions'
 import {selectCurrentSessions} from '../../../../store/selectors/sessions'
 import {selectUser} from '../../../../store/selectors'
-import SingleCurrentSession from '../single-current-session'
+import SingleSession from '../single-session'
 import Messages from '../../../messages'
 import Loader from '../../../loader'
 import './current-sessions.css'
 
 function CurrentSessions(props) {
-  const {user, sessions_data, getCurrentSessions, clearLastSessions, setThisSession} = props
+  const {user, sessions_data, getCurrentSessions, getLastSessions, setThisSession} = props
 
   console.log('Render Current sessions')
 
@@ -24,9 +24,10 @@ function CurrentSessions(props) {
   if (sessions_data.isLoaded) {
     if (sessions_data.data[0] !== "ERROR") {
       if (sessions_data.data.length > 0) {
-        fetched = sessions_data.data.map( element => (
-          <SingleCurrentSession
+        fetched = sessions_data.data.map(element => (
+          <SingleSession
             key={element.session_id}
+            type={'current_session'}
             session={element}
             user={user}
             getCurrentSessions={getCurrentSessions}
@@ -51,7 +52,8 @@ function CurrentSessions(props) {
   return (
     <div className="sessions-list">
       {fetched}
-      {fetched.length > 0 ? <Link to='/contacts'><button className="sessions-standart-button">Выбрать клиента и создать сессию</button></Link> : ''}
+      {fetched.length > 0 ? 
+        <Link to='/contacts'><button className="sessions-standart-button">Выбрать клиента и создать сессию</button></Link> : ''}
     </div>
   )
 }

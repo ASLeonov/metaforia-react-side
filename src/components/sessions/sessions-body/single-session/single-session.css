@@ -6,7 +6,9 @@
 }
 
 .sessions-item-left {
-  width: 60%;
+  box-sizing: border-box;
+  width: 40%;
+  padding-right: 15px;
   text-align: left;
 }
 
@@ -25,7 +27,11 @@
 
 .sessions-item-right {
   display: flex;
+  position: relative;
+  justify-content: flex-end;
   align-items: center;
+  overflow: hidden;
+  width: 60%;
 }
 
 .sessions-item-button {

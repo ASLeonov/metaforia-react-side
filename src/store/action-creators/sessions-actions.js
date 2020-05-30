@@ -23,12 +23,9 @@ export const getCurrentSessions = () => (dispatch, getState) => {
 
 export const getLastSessions = () => (dispatch, getState) => {
   const user_login = getState().user.login
-  setTimeout( () => {
-    dispatch({
-      type: 'GET_SESSIONS_LAST__LOADING'
-    })
+  dispatch({
+    type: 'GET_SESSIONS_LAST__LOADING'
   })
-  setTimeout( () => {
   fetch(`${api_path}sessions.php?name=${user_login}&type=lastSessions`)
     .then(res => res.json())
     .then(res =>
@@ -43,7 +40,6 @@ export const getLastSessions = () => (dispatch, getState) => {
         error,
       })
     })
-  })
 }
 
 

@@ -60,7 +60,8 @@ function ContactItem(props) {
       .then(data => {
         if (data === 'INSERT_SESSION') {
           let promise = new Promise(function(resolve, reject) {
-            resolve(props.clearCurrentSessions())
+        // В принципе промис совсем не обязательно, т.к. после обновления стора страница текущих сессий перерендерится в любом случае.
+            resolve(props.getCurrentSessions())
           })
           promise.then(         // resolve запустит первую функцию, переданную в .then
             () => redirectBtn.current.click(),

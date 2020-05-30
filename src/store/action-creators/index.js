@@ -7,13 +7,6 @@ export const getUser = () => {
   }
 }
 
-// export const clearLastSessions = () => (dispatch, getState) => {
-//   dispatch({
-//     type: 'CLEAR_SESSIONS_LAST',
-//   })
-// }
-
-
 
 // export const getFreeCards = () => (dispatch, getState) => {
 //   const user_login = getState().user.login

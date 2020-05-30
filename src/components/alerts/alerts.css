@@ -1,14 +1,14 @@
-.confirm_wrapper {
-  position: fixed;
+.confirm {
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.25);
+  background-color: rgb(255, 255, 255);
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  animation: confirm-fadeIn 0.5s;
+  animation: confirm-fadeIn 0.3s;
 }
 
 @keyframes confirm-fadeIn {
@@ -16,42 +16,35 @@
   100% {opacity: 1;}
 }
 
-.confirm {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  width: 50%;
-  height: 50%;
-  padding: 10px 15px;
-  background-color: rgb(224, 165, 93);
-  border-radius: 10px;
-}
-
 .confirm_message {
-  padding: 0 30px;
-  font-size: 130%;
-  margin-bottom: 30px;
+  flex-grow: 1;
+  padding: 0;
+  font-size: 110%;
+  text-align: right;
+  margin-right: 25px;
 }
 
 .confirm_buttons {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  width: 70%;
-  height: 100px;
+  width: 130px;
+  height: 100%;
+  margin-right: 25px;;
 }
 
 .confirm_button {
-  min-width: 110px;
-  font-size: 140%;
-  padding: 15px;
+  box-sizing: border-box;
+  width: 55px;
+  border: 1px solid rgb(170, 170, 170);
+  font-size: 120%;
+  padding: 10px 0;
   border-radius: 5px;
   opacity: 0.7;
-  transition: opacity 0.3s;
+  transition: opacity 0.3s, border 0.3s;
 }
 
 .confirm_button:hover {
   opacity: 1;
+  border: 1px solid rgb(70, 70, 70);
 }
