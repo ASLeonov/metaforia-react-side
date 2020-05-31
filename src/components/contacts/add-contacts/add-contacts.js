@@ -38,7 +38,7 @@ function AddContacts(props) {
       .then(data => {
         if (data === 'INSERT_CLIENT') {
           props.getContacts()
-          console.log('INSERT_CLIENT')
+          // console.log('INSERT_CLIENT')
         }
       })
       .catch(e => console.log('catch error =>', e))

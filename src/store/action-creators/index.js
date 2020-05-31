@@ -3,8 +3,28 @@ import {api_path} from '../common'
 export const getUser = () => {
   return {
       type: 'GET_USER',
-      // callApi: `${api_path}`,
   }
+}
+
+export const getContacts = () => (dispatch, getState) => {
+  const user_login = getState().user.login
+    dispatch({
+      type: 'GET_CONTACTS__LOADING'
+    })
+    fetch(`${api_path}clients.php?${user_login}`)
+    .then(res => res.json())
+    .then(res =>
+      dispatch({
+        type: 'GET_CONTACTS__SUCCESS',
+        response: res,
+      })
+    )
+    .catch(error => {
+      dispatch({
+        type: 'GET_CONTACTS__FAILED',
+        error,
+      })
+    })
 }
 
 
@@ -77,56 +97,3 @@ export const getUserCards = () => (dispatch, getState) => {
     })
   })
 }
-
-// export const setCardInUse = (cards_id) => (dispatch) => {
-//   setTimeout( () => {
-//     dispatch({
-//       type: 'SET_IN_USE_SELECTED_CARD_ITEMS',
-//       payload: {
-//         cards_id: cards_id
-//       }
-//     })
-//   })
-// }
-
-export const getContacts = () => (dispatch, getState) => {
-  const user_login = getState().user.login
-
-  setTimeout( () => {   // фиксил непонятный баг
-    dispatch({
-      type: 'GET_CONTACTS__LOADING'
-    })
-  })
-
-  setTimeout( () => {
-    fetch(`${api_path}clients.php?${user_login}`)
-    .then(res => res.json())
-    .then(res =>
-      dispatch({
-        type: 'GET_CONTACTS__SUCCESS',
-        response: res,
-      })
-    )
-    .catch(error => {
-      dispatch({
-        type: 'GET_CONTACTS__FAILED',
-        error,
-      })
-    })
-  })
-}
-
-
-// export const addPlayerScore = () => {
-//     return {
-//         type: 'INCREMENT_PLAYER_SCORE',
-//     }
-// }
-
-// export const getSessions = () => {
-//     return {
-//         type: 'GET_SESSIONS',
-//         callApi: `${api_path}`,
-//     }
-
-// }

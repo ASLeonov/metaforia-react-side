@@ -2,8 +2,8 @@
 // import {createSelector} from 'reselect'
 // import Messages from '../../components/messages'
 
-export const selectCurrentSessions = state => state.currentSessions
-export const selectLastSessions = state => state.lastSessions
+export const selectCurrentSessions  = state => state.sessionsCurrent
+export const selectLastSessions     = state => state.sessionsLast
 
 export const selectThisSession = state => state.thisSession
 

@@ -4,7 +4,7 @@ import Messages from '../messages'
 import {connect} from 'react-redux'
 import {selectThisSession} from '../../store/selectors/sessions'
 import {clearThisSession} from '../../store/action-creators/sessions-actions'
-import {clearSelectedCardItems, clearCardsThisSession} from '../../store/action-creators/cards-actions'
+import {clearSelectedCardItems} from '../../store/action-creators/cards-actions'
 import './consultation.css'
 
 function Consultation(props) {
@@ -12,7 +12,7 @@ function Consultation(props) {
     <ConsultationContent /> : 
       <Messages caption="message_currentSessionError" />
 
-  useEffect ( () => () => {   // Такая форма записи useEffect => сработает только при unMount
+  useEffect ( () => () => {   // '() => () => ' - сработает только при unMount
     const maxId = setInterval( () => {} )
     for (let i=0; i < maxId; i+=1) { 
       clearInterval(i)

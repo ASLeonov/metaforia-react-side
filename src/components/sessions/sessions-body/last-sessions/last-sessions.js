@@ -11,6 +11,8 @@ function LastSessions(props) {
   const {user, sessions_data, getLastSessions} = props
   let fetched
 
+  console.log('Render Last sessions')
+
   if (sessions_data.isLoading) {
     fetched = <Loader />
   }
@@ -57,3 +59,11 @@ export default connect(
     getLastSessions
   }
 )(LastSessions)
+
+// ПРОВЕРЕНО ЛОКАЛЬНО
+
+// Корректная работа:
+// После первого рендера, один раз вызываем useEffect - при необходимости диспатчим экшн загрузки данных.
+// Лишних рендеров нет как при первой загрузке, так и при переходе по ссылкам.
+// Fetch на сервер один, проблем нет.
+// Рендер каждого компонента-консультации (SingleSession) тоже один. Проблем нет.
