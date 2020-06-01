@@ -1,5 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react'
-import {Link} from "react-router-dom"
+import {Link} from 'react-router-dom'
+import Alerts from '../../alerts'
+import {validateField} from '../../../functions/form-validate'
 import {CSSTransition} from 'react-transition-group'
 import {api_path} from '../../../store/common'
 import './contact-item.css'
@@ -12,6 +14,7 @@ function ContactItem(props) {
   const [isEdit, setIsEdit] = useState(false)
   const [badValues, setBadValues] = useState({})
   const [animate, setAnimate] = useState(false)
+  const [showMessage, setShowMessage] = useState([])
 
   const redirectBtn = useRef(null)
 
@@ -31,60 +34,67 @@ function ContactItem(props) {
       .catch(e => console.log('catch error =>', e))
   }
 
+  const onCancelClick = event => {
+    event.preventDefault()
+    setClientData({name:'', surname:'', gend:'', email:'', descr:''})
+    setBadValues({name:'initial', email:'initial'})
+  }
+
   const onEditClick = event => {
     event.preventDefault()
     isEdit && setClientData({name:client_name, surname:client_surname, gend:client_gender, email:client_email, descr:client_descr})
-    setIsEdit(!isEdit)
+    if (isEdit) {
+      setIsEdit(false)
+      setBadValues({})
+    } else {
+      setIsEdit(true)
+    }
   }
   const formElementCN = isEdit ? "form__isEdit" : "form__noEdit"
 
   const handleChange = event => {
     if (!isEdit) return
-      if (event.target.name === 'name' || event.target.name === 'email') {
-        if (event.target.value.replace(/<\/?[a-zA-Z]+>/gi,'').length === 0 || event.target.value.replace(/ /gi,'').length === 0) {
-          setBadValues({...badValues, [event.target.name]: `-${event.target.value}-`})
-        } else {
-          const new_bad_values = {...badValues}
-          delete new_bad_values[event.target.name]
-          console.log('new_bad_values', new_bad_values)
-          setBadValues({...new_bad_values})
-        }
+
+    const isRequired = (event.target.name === 'name' || event.target.name === 'email') ? true : false
+      if (validateField([event.target.name, event.target.value, isRequired])) {
+        const new_bad_values = {...badValues}
+        delete new_bad_values[event.target.name]
+        setBadValues({...new_bad_values})
       } else {
-        const value_with_tags = event.target.value.match(/<\/?[a-zA-Z]+>/gi)
-        if (value_with_tags && value_with_tags.length !== 0) {
-          console.log('value_with_tags', value_with_tags)
-          setBadValues({...badValues, [event.target.name]: `-${event.target.value}-`})
-        } else {
-          const new_bad_values = {...badValues}
-          delete new_bad_values[event.target.name]
-          setBadValues({...new_bad_values})
-        }
+        setBadValues({...badValues, [event.target.name]: `-${event.target.value}-`})
       }
+    
     setClientData({...clientData, [event.target.name]: event.target.value})
   }
 
   const handleSubmit = event => {
     event.preventDefault()
-    if (Object.keys(badValues).length > 0) return
+    if (Object.keys(badValues).length > 0 || String(Object.values(clientData)).replace(/,/g,'').length === 0) return
     if  (clientData.name === client_name && clientData.surname === client_surname && clientData.gend === client_gender && // Нажали сохранить ничего не изменив
         clientData.email === client_email && clientData.descr === client_descr) {
           setIsEdit(false)
           return
         }
 
-    const client_name_Up    = clientData.name.trim()[0].toUpperCase()    + clientData.name.trim().slice(1)
-    const client_surname_Up = clientData.surname.trim()[0].toUpperCase() + clientData.surname.trim().slice(1)
-    const client_gender_Up  = clientData.gend.trim() ? clientData.gend.trim()[0].toUpperCase()  + clientData.gend.trim().slice(1) : ''
+    const client_name_Up    = clientData.name.trim() ? clientData.name.trim()[0].toUpperCase()        + clientData.name.trim().slice(1)     : ''
+    const client_surname_Up = clientData.surname.trim() ? clientData.surname.trim()[0].toUpperCase()  + clientData.surname.trim().slice(1)  : ''
+    const client_gender_Up  = clientData.gend.trim() ? clientData.gend.trim()[0].toUpperCase()        + clientData.gend.trim().slice(1)     : ''
 
     fetch(`${api_path}clients.php`, {
       method: 'POST',
       headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-      body: `update=ok&user_name=${props.user.login}&client_id=${client_id}&client_name=${client_name_Up}&client_surname=${client_surname_Up}&client_gender=${client_gender_Up}&client_email=${clientData.email}&client_descr=${clientData.descr}`
+      body: `${props.type === 'add_contact' ? 'insert' :'update'}=ok&user_name=${props.user.login}&client_id=${client_id}&client_name=${client_name_Up}&client_surname=${client_surname_Up}&client_gender=${client_gender_Up}&client_email=${clientData.email}&client_descr=${clientData.descr}`
     })
       .then(response => response.text())
       .then(data => {
         if (data === 'UPDATE_CLIENT') {
           props.getContacts()
+        }
+        if (data === 'INSERT_CLIENT') {
+          props.getContacts()
+          setClientData({name:'', surname:'', gend:'', email:'', descr:''})
+          setBadValues({name:'initial', email:'initial'})
+          setShowMessage(['Клиент успешно добавлен', ()=>console.log('add...')])
         }
       })
       .catch(e => console.log('catch error =>', e))
@@ -118,37 +128,64 @@ function ContactItem(props) {
       <form autoComplete="off" onSubmit={handleSubmit}>
         <label>
           <span>Имя<sup>*</sup>:</span>
-          <input type="text" className={formElementCN} name="name" value={clientData.name} onChange={handleChange} placeholder="Обязательное поле"/>
+          <input type="text" className={formElementCN} name="name" value={clientData.name} onChange={handleChange} placeholder="Введите имя клиента (обязательно)" />
           <span className="item-form-verification" style={badValues["name"] ? {color:'red'} : {color:'green'}}>{badValues["name"] ? '❗' : '✔'}</span>
         </label>
         <label>
           <span>Фамилия:</span>
-          <input type="text" className={formElementCN} name="surname" value={clientData.surname} onChange={handleChange} />
+          <input type="text" className={formElementCN} name="surname" value={clientData.surname} onChange={handleChange} placeholder="Введите фамилию клиента" />
           <span className="item-form-verification" style={badValues["surname"] ? {color:'red'} : {color:'green'}}>{badValues["surname"] ? '❗' : '✔'}</span>
         </label>
         <label>
           <span>Пол:</span>
-          <input type="text" className={formElementCN} name="gend" value={clientData.gend} onChange={handleChange} />
-          <span className="item-form-verification" style={badValues["gender"] ? {color:'red'} : {color:'green'}}>{badValues["gender"] ? '❗' : '✔'}</span>
+          <input type="text" className={formElementCN} name="gend" value={clientData.gend} onChange={handleChange} placeholder="Введите пол клиента" />
+          <span className="item-form-verification" style={badValues["gend"] ? {color:'red'} : {color:'green'}}>{badValues["gend"] ? '❗' : '✔'}</span>
         </label>
         <label>
           <span>E-mail<sup>*</sup>:</span>
-          <input type="text" className={formElementCN} name="email" value={clientData.email} onChange={handleChange} />
+          <input type="text" className={formElementCN} name="email" value={clientData.email} onChange={handleChange} placeholder="Введите e-mail клиента (обязательно)" autoComplete="->" />
           <span className="item-form-verification" style={badValues["email"] ? {color:'red'} : {color:'green'}}>{badValues["email"] ? '❗' : '✔'}</span>
         </label>
         <label className="content-contacts-list__item___description">
           <span>Примечание:</span>
-          <textarea className={formElementCN} name="descr" value={clientData.descr} onChange={handleChange} />
+          <textarea className={formElementCN} name="descr" value={clientData.descr} onChange={handleChange} placeholder="Введите примечания по клиенту" />
+          <span className="item-form-verification-top" style={badValues["descr"] ? {color:'red'} : {color:'green'}}>{badValues["descr"] ? '❗' : '✔'}</span>
         </label>
         <p><span style={{fontSize: '110%', fontWeight: 'bold', color: 'red'}}>*</span> - обязательно для заполнения</p>
-        <div className="content-item-form___buttons">
-          <input type="button" className={isEdit ? "content-item-form___button hide_button" : "content-item-form___button"} value="Начать сессию" onClick={startSession}/>
-          <input type="button" className={isEdit ? "content-item-form___button hide_button" : "content-item-form___button"} value="Редактировать" onClick={onEditClick} />
-          <input type="submit" className={isEdit ? "content-item-form___button" : "content-item-form___button hide_button"} value="Сохранить" />
-          <input type="button" className={isEdit ? "content-item-form___button" : "content-item-form___button hide_button"} value="Отменить" onClick={onEditClick} />
-          <input type="button" className={isEdit ? "content-item-form___button" : "content-item-form___button hide_button"} value="Удалить" onClick={onDeleteClick} />
+        <div className="contact-form-buttons">
+          {props.type !== "add_contact" ?
+            <>
+              <input type="button" className={isEdit ? "contact-form-button contact-form-button_hide" : "contact-form-button"} value="Начать сессию" onClick={startSession}/>
+              <input type="button" className={isEdit ? "contact-form-button contact-form-button_hide" : "contact-form-button"} value="Редактировать" onClick={onEditClick} />
+              <input type="submit" className={isEdit ? "contact-form-button" : "contact-form-button contact-form-button_hide"} value="Сохранить" />
+              <input type="button" className={isEdit ? "contact-form-button" : "contact-form-button contact-form-button_hide"} value="Отменить" onClick={onEditClick} />
+              <input type="button" className={isEdit ? "contact-form-button" : "contact-form-button contact-form-button_hide"} value="Удалить" onClick={onDeleteClick} />
+            </> : 
+            <>
+              <input
+                type="submit"
+                className={
+                  ((String(Object.values(clientData)).replace(/,/g,'').length === 0) || Object.keys(badValues).length > 0) ? 
+                  "contact-form-button contact-form-button_disabled" : "contact-form-button"
+                }
+                value="Сохранить"
+              />
+              <input
+                type="button"
+                className={(String(Object.values(clientData)).replace(/,/g,'').length > 0) ? "contact-form-button" : "contact-form-button contact-form-button_disabled"}
+                value="Отменить"
+                onClick={onCancelClick}
+              />
+            </>
+          }
+
         </div>
       </form>
+      <div className={showMessage.length > 0 ? "contact-form-message" : "contact-form-message_hide"}>
+        <span>{showMessage[0]}</span>
+        <button className="contact-form-button" onClick={() => setShowMessage([])}>OK</button>
+        <Alerts confirmText={showMessage[0]} applyChanges={() => setShowMessage([])} discardChanges={() => console.log('discard...')} />
+      </div>
     </div>
   )
 
@@ -156,16 +193,20 @@ function ContactItem(props) {
     setClientData({name:client_name, surname:client_surname, gend:client_gender, email:client_email, descr:client_descr})
     setIsEdit(false)
     if (!animate) setAnimate(true)
+    if (props.type === "add_contact") {
+      setIsEdit(true)
+      setBadValues({name:'initial', email:'initial'})
+    }
   }, [client_id, client_name, client_surname, client_gender, client_email, client_descr])
 
-console.log('badValues', badValues)
+    console.log('render form')
 
   return (
     <div>
       {animate ? 
         <CSSTransition in={animate} timeout={700} classNames="contact-item-animate" appear={true}>    
           {client_data}
-        </CSSTransition> : <p></p>
+        </CSSTransition> : ''
       }
       <Link style={{display:'none'}} ref={redirectBtn} to="/current-sessions" />
     </div>

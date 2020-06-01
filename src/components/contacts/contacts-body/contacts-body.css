@@ -1,4 +1,6 @@
 .content-contacts-body {
+  display: flex;
+  justify-content: center;
   padding-left: 20px;
   padding-top: 10px;
 }

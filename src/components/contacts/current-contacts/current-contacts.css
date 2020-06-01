@@ -1,5 +1,6 @@
 .content-contacts-body-currentContacts {
   display: flex;
+  flex-grow: 1;
   justify-content: space-around;
   padding-bottom: 10px;
   /* animation: contacts_fadeIn 600ms;    keyframes in contacts-body.css  */

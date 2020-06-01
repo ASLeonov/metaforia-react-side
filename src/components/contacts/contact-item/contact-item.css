@@ -16,6 +16,7 @@
   flex-direction: column;
   margin: 4px 15px 4px 0;
   padding: 4px 0 6px 0;
+  position: relative;
 }
 
 .content-item-form form {
@@ -46,10 +47,21 @@
   position: relative;
 }
 
+.content-item-form label span{
+  font-weight: bold;
+}
+
 .item-form-verification {
   position: absolute;
   right: 10px;
   bottom: 0;
+  font-size: 150%;
+}
+
+.item-form-verification-top {
+  position: absolute;
+  right: 10px;
+  top: 0;
   font-size: 150%;
 }
 
@@ -62,8 +74,8 @@
   overflow-y: auto;
   width: 100%;
   border: none;
-  border-bottom: 1px solid gray;
-  border-right: 1px solid gray;
+  border-bottom: 1px solid rgb(179, 175, 175);
+  border-right: 1px solid rgb(179, 175, 175);
   border-bottom-right-radius: 5px;
 }
 
@@ -75,14 +87,14 @@
   opacity: 1;
 }
 
-.content-item-form___buttons {
+.contact-form-buttons {
   width: 100%;
   display: flex;
   justify-content: space-around;
   margin-top: 30px;
 }
 
-.content-item-form___button {
+.contact-form-button {
   box-sizing: border-box;
   width: 130px;
   padding: 10px 15px;
@@ -95,10 +107,47 @@
   cursor: pointer;
 }
 
-.content-item-form___button:hover {
+.contact-form-button:hover {
   background-color: rgb(184, 101, 101);
 }
 
-.hide_button {
+.contact-form-button_disabled {
+  opacity: 0.3;
+  cursor: no-drop;
+}
+
+.contact-form-button_disabled:hover {
+  background-color: lightcoral;
+}
+
+.contact-form-button_hide {
+  display: none;
+}
+
+.contact-form-message {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  animation: contact-message 500ms;
+}
+
+.contact-form-message span {
+  font-size: 150%;
+  margin-bottom: 30px;
+}
+
+@keyframes contact-message {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+.contact-form-message_hide {
   display: none;
 }
