@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {getContacts} from '../../../store/action-creators'
 import {getCurrentSessions} from '../../../store/action-creators/sessions-actions'
+import {selectCurrentSessions} from '../../../store/selectors/sessions'
 import {selectContacts} from '../../../store/selectors/contacts'
 import {selectUser} from '../../../store/selectors'
 import ContactsList from '../contacts-list'
@@ -12,14 +13,12 @@ import './current-contacts.css'
 
 function CurrentContacts(props) {
   const [activeContact, setActiveContact] = useState('')
-  const {contacts_data, getContacts, getCurrentSessions, user} = props
+  const {contacts_data, getContacts, getCurrentSessions, currentSessions, user} = props
   let contacts_list, contact_item
 
   const changeActiveContact = contactId => {
     setActiveContact(contactId)
   }
-
-  console.log('activeContact', activeContact)
 
   if (contacts_data.isLoading) {
     contacts_list = <Loader />
@@ -44,6 +43,7 @@ function CurrentContacts(props) {
               user={user} 
               getContacts={getContacts}
               getCurrentSessions={getCurrentSessions}
+              currentSessions={currentSessions}
             />
         }
       } else {
@@ -61,6 +61,8 @@ function CurrentContacts(props) {
     }
   }, [])
 
+  console.log('render current contacts', '    activeContact ->', activeContact)
+
   return (
     <div className="content-contacts-body-currentContacts">
       <div className="contacts-list" style={activeContact ? {} : {display:'none'}}>
@@ -75,8 +77,9 @@ function CurrentContacts(props) {
 
 export default connect(
   state => ({
+    user: selectUser(state),
     contacts_data: selectContacts(state),
-    user: selectUser(state)
+    currentSessions: selectCurrentSessions(state)
   }),
   {
     getContacts,
@@ -85,3 +88,9 @@ export default connect(
 )(CurrentContacts)
 
 // 
+
+// Корректная работа:
+// После первого рендера срабатывает useEffect и при необходимости фетчим данные с сервера.
+// Фетч один, все нормально.
+// Если данные уже загружены ранее, то проверяем установлен ли ранее активный клиент (к-й выделен в <ContactsList /> и отображается в <ContactItem />) - если он выбран ранее, от это значение из state этого компонента, в противном случае берем первую запись по клиентам из store (редюсер contacts).
+// Количество рендеров соответствует количеству обновлений store и state (4 при монтировании с фетчем данных).

@@ -11,6 +11,11 @@
   animation: confirm-fadeIn 0.3s;
 }
 
+.confirm_column {
+  flex-direction: column;
+  justify-content: center;
+}
+
 @keyframes confirm-fadeIn {
   0% {opacity: 0;}
   100% {opacity: 1;}
@@ -22,6 +27,13 @@
   font-size: 110%;
   text-align: right;
   margin-right: 25px;
+  line-height: 2;
+}
+
+.confirm_message_column {
+  flex-grow: initial;
+  margin: 0 0 25px 0;
+  text-align: center;
 }
 
 .confirm_buttons {
@@ -30,18 +42,30 @@
   align-items: center;
   width: 130px;
   height: 100%;
-  margin-right: 25px;;
+  margin-right: 25px;
+}
+
+.confirm_buttons_column {
+  height: auto;
+  width: auto;
+  justify-content: center;
+  margin: 0;
 }
 
 .confirm_button {
   box-sizing: border-box;
   width: 55px;
+  min-width: 55px;
   border: 1px solid rgb(170, 170, 170);
   font-size: 120%;
   padding: 10px 0;
   border-radius: 5px;
   opacity: 0.7;
   transition: opacity 0.3s, border 0.3s;
+}
+
+.confirm_button_column {
+  margin: 0 10px;
 }
 
 .confirm_button:hover {
