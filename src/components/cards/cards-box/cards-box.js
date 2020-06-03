@@ -15,6 +15,9 @@ function CardsBox(props) {
       case 'consult-mode-play':
         callback(cards.cards_id)
         break
+      case 'cards-page':
+        callback()
+        break
       default:
         break
     }

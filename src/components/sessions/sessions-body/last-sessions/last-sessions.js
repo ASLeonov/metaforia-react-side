@@ -41,6 +41,7 @@ function LastSessions(props) {
     if (!sessions_data.isLoading && !sessions_data.isLoaded) {
       getLastSessions()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

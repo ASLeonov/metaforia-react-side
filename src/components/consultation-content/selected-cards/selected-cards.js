@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import ConsultationCard from '../consultation-card'
 
 function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, thisSessionCardsLocal}) {

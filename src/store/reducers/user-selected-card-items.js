@@ -9,10 +9,11 @@ export const userSelectedCardReducer =
         console.log('ADD_SELECTED_CARD_ITEMS')
         const new_cardBoxes = userSelectedCardItemsState.cardBoxes[action.payload.cardsBox_id]
         const isLoaded_new = new_cardBoxes === undefined ? false : true
+        const activeCardsBox_new = isLoaded_new ===  true ? action.payload.cardsBox_id : userSelectedCardItemsState.activeCardsBox
         return {
           isLoaded: isLoaded_new,
           isLoading: false,
-          activeCardsBox: action.payload.cardsBox_id,
+          activeCardsBox: activeCardsBox_new,
           cardBoxes: {...userSelectedCardItemsState.cardBoxes},
           data: {...userSelectedCardItemsState.data}
         }

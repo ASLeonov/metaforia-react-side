@@ -1,10 +1,9 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserCards, selectUserSelectedCards} from '../../store/selectors/cards'
-import {getUserCards} from '../../store/action-creators'
-import CardsBox from '../cards/cards-box'
+import {getUserCards} from '../../store/action-creators/cards-actions'
+import {cardsJSX} from '../../functions/cards-box-jsx'
 import ConsultationCards from './consultation-cards'
-import Messages from '../messages'
 import Loader from '../loader'
 import './consultation-content.css'
 
@@ -20,41 +19,10 @@ function ConsultationContent(props) {
     props.userSelectedCards.activeCardsBox !== cardsBox_id && setSelectCards(cardsBox_id)
   }
 
-  const userCardsJSX = (data, mode, result) => {
-    if (data.length > 0) {
-      result = data.map(
-        element => (
-          <CardsBox
-            key={element.cards_id}
-            cards={element}
-            mode={mode}
-            callback={onSelectCardsClick}
-            // hideMenu={() => setShowChangeCards(false)}
-          />
-        )
-      )
-    } else {
-      result = <Messages caption="message_freeCardsNone" />
-    }
-    return result
-  }
-
-  if (!isLoaded && !isLoading) {
-    props.getUserCards()
-  }
-
   if (isLoading) {
     fetched = <Loader />
   } else if (isLoaded && !props.userSelectedCards.isLoaded && !props.userSelectedCards.isLoading && !selectCards) {
-    if (data[0] !== "ERROR") {
-      if (data.length > 0) {
-        fetched = userCardsJSX(data, "consult-mode-enter")
-      } else {
-        fetched = <Messages caption="message_freeCardsNone" />
-      }
-    } else {
-      fetched = <Messages caption="message_freeCardsError" />
-    }
+    fetched = cardsJSX(data, 'consult-mode-enter', 'freeCards', onSelectCardsClick)
   }
 
   const onChangeWindow = () => {
@@ -72,6 +40,13 @@ function ConsultationContent(props) {
   // console.log('render Consultation content', isLoaded, isLoading, data)
   console.log(`render Consultation Content - ${!isLoaded && !isLoading ? 'Колоды не загружены' : ''}${!isLoaded && isLoading ? 'Колоды загружаются' : ''}${isLoaded && !isLoading ? 'Колоды загружены' : ''} Карты из колоды -> ${props.userSelectedCards.isLoaded} ${props.userSelectedCards.isLoading}`)
 
+  useEffect( () => {
+    if (!isLoaded && !isLoading) {
+      props.getUserCards()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
     <div className={window_CN}>
       <div className="consultation-header">
@@ -88,7 +63,10 @@ function ConsultationContent(props) {
         </div>
           <div className="consultation-header-setCards-wrapper" onClick={setCards} style={showChangeCards ? {display:'block'} : {}}>
             <div className="consultation-header-setCards">
-              {(showChangeCards && !isLoading && isLoaded && data[0] !== "ERROR") ? userCardsJSX(data, "consult-mode-play") : ''}     {/* // провреить условия */}
+              {(showChangeCards && !isLoading && isLoaded && data[0] !== "ERROR") ? 
+                cardsJSX(data, 'consult-mode-play', 'freeCards', onSelectCardsClick) : ''}
+              {/* userCardsJSX(data, "consult-mode-play") : ''} */}
+                {/* // провреить условия */}
               {/* Еще варианты сюда */}
             </div>
           </div>
@@ -124,6 +102,6 @@ export default connect(
 )(ConsultationContent)
 
 
-// Надо решить проблему жуткого перерендеривания (плюс любимой ошибки, лечащейся setTimeout в action-creators), которое возникает при подгрузке новых карт из выбранной новой колоды. 
+// Надо решить проблему жуткого перерендеривания , которое возникает при подгрузке новых карт из выбранной новой колоды. 
 // Пока главная мысль - тупо загрузить все карты из доступных колод, но не много ли..........
 // Конечно, и при переключении на уже закачанную колоду есть лишний Consultation Content и всех его детей, но его я хотя бы замаскировал анимацией css... А при нескольких обновлениях store, все жутко моргает конечно.

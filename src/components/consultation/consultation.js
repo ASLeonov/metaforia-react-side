@@ -8,6 +8,8 @@ import {clearSelectedCardItems} from '../../store/action-creators/cards-actions'
 import './consultation.css'
 
 function Consultation(props) {
+  const {clearThisSession, clearSelectedCardItems} = props
+
   const data = props.thisSession.session_id ? 
     <ConsultationContent /> : 
       <Messages caption="message_currentSessionError" />
@@ -17,8 +19,9 @@ function Consultation(props) {
     for (let i=0; i < maxId; i+=1) { 
       clearInterval(i)
     }
-    props.clearThisSession()
-    props.clearSelectedCardItems()
+    clearThisSession()
+    clearSelectedCardItems()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   console.log('render Consultation')

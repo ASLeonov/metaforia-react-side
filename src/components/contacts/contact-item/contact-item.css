@@ -1,22 +1,10 @@
-.contact-item-animate-appear {
-  opacity: 0;
-}
-
-.contact-item-animate-appear-active {
-  opacity: 1;
-  transition: all 600ms ease;
-}
-
-.contact-item-animate-appear-done {
-  opacity: 1;
-}
-
 .content-item-form {
   display: flex;
   flex-direction: column;
   margin: 4px 15px 4px 0;
   padding: 4px 0 6px 0;
   position: relative;
+  animation: contacts_fadeIn 600ms;
 }
 
 .content-item-form form {

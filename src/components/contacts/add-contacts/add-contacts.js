@@ -33,3 +33,5 @@ export default connect(
     getContacts
   }
 )(AddContacts)
+
+// ПРОВЕРЕНО ЛОКАЛЬНО

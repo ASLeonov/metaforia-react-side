@@ -1,14 +1,7 @@
 export const payCardsReducer = (cardsState = {isLoaded: false, isLoading: false, data: []}, action) => {
   switch (action.type) {
-    // case 'CLEAR_SESSIONS_CURRENT': {
-    //   // console.log('GET_SESSIONS_CURRENT__CLEAR')
-    //   return {
-    //     isLoaded: false,
-    //     isLoading: false,
-    //     data: []
-    //   }
-    // }
     case 'GET_CARDS_PAY__LOADING': {
+      console.log('GET_CARDS_PAY__LOADING')
       return {
         isLoaded: false,
         isLoading: true,
@@ -16,6 +9,7 @@ export const payCardsReducer = (cardsState = {isLoaded: false, isLoading: false,
       }
     }
     case 'GET_CARDS_PAY__SUCCESS': {
+      console.log('GET_CARDS_PAY__SUCCESS')
       return {
         isLoaded: true,
         isLoading: false,
@@ -23,6 +17,7 @@ export const payCardsReducer = (cardsState = {isLoaded: false, isLoading: false,
       }
     }
     case 'GET_CARDS_PAY__FAILED': {
+      console.log('GET_CARDS_PAY__FAILED')
       return {
         isLoaded: true,
         isLoading: false,

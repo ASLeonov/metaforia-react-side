@@ -59,6 +59,7 @@ function CurrentContacts(props) {
     if (!contacts_data.isLoaded && !contacts_data.isLoading) {
       getContacts()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   console.log('render current contacts', '    activeContact ->', activeContact)
@@ -87,7 +88,7 @@ export default connect(
   }
 )(CurrentContacts)
 
-// 
+// ПРОВЕРЕНО ЛОКАЛЬНО
 
 // Корректная работа:
 // После первого рендера срабатывает useEffect и при необходимости фетчим данные с сервера.

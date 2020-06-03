@@ -1,6 +1,59 @@
 import {api_path} from '../common'
 
-// ----------
+
+// ---------- GET USER CARDS Все колоды карт (бесплатные и оплаченные) пользователя ---------- //
+
+export const getUserCards = () => (dispatch, getState) => {
+  const user_login = getState().user.login
+    dispatch({
+      type: 'GET_USER_CARDS__LOADING'
+    })
+    fetch(`${api_path}cards.php?name=${user_login}&type=userPayCards`)
+    .then(res => res.json())
+    .then(res =>
+      dispatch({
+        type: 'GET_USER_CARDS__SUCCESS',
+        response: res,
+      })
+    )
+    .catch(error => {
+      dispatch({
+        type: 'GET_USER_CARDS__FAILED',
+        error,
+      })
+    })
+}
+
+// ---------- END OF GET USER CARDS ---------- //
+
+
+// ---------- GET PAY CARDS Все платные, но не оплаченные пользователем колоды карт ---------- //
+
+export const getPayCards = () => (dispatch, getState) => {
+  const user_login = getState().user.login
+  dispatch({
+    type: 'GET_CARDS_PAY__LOADING'
+  })
+  fetch(`${api_path}cards.php?name=${user_login}&type=payCards`)
+    .then(res => res.json())
+    .then(res =>
+      dispatch({
+        type: 'GET_CARDS_PAY__SUCCESS',
+        response: res,
+      })
+    )
+    .catch(error => {
+      dispatch({
+        type: 'GET_CARDS_PAY__FAILED',
+        error,
+      })
+    })
+}
+
+// ---------- END OF GET PAY CARDS ---------- //
+
+
+// ---------- CARDS THIS SESSION Вся логика по работе с картами сессии, записанными в БД ---------- //
 
 export const getCardsThisSession = () => (dispatch, getState) => {
   const user_login = getState().user.login
@@ -28,14 +81,11 @@ export const getCardsThisSession = () => (dispatch, getState) => {
   })
 }
 
-export const clearAllCardsThisSession = () => {   // И существующие и локал кардс
+export const clearAllCardsThisSession = () => {
   return {
-    type: 'CLEAR_ALL_CARDS_THIS_SESSION'
+    type: 'CLEAR_ALL_CARDS_THIS_SESSION'  // И существующие и локал кардс
   }
 }
-
-
-// ----------
 
 export const saveCardThisSession = (card, position_left, position_top, scale, session_id) => (dispatch, getState) => {
   const user_login = getState().user.login
@@ -80,16 +130,16 @@ export const saveCardThisSession = (card, position_left, position_top, scale, se
 //   }
 // }
 
+// ---------- END OF CARDS THIS SESSION ---------- //
+
+
 // ---------- SELECTED CARD ITEMS Карты из выбранной для работы колоды ---------- //
 
 export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
   // Тут походу на беке захардкоден user --- беда.
-  // setTimeout( () => {
     dispatch({
       type: 'GET_SELECTED_CARD_ITEMS__LOADING'
     })
-  // })
-  // setTimeout( () => {
     fetch(`${api_path}cards.php?name=user&type=userSelectedCards&payload=${cards_id}`)
     .then(res => res.json())
     .then(res =>
@@ -104,7 +154,6 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
         error,
       })
     })
-  // })
 }
 
 export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {

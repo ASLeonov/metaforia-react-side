@@ -2,7 +2,6 @@ import React, {useState, useEffect, useRef} from 'react'
 import {Link} from 'react-router-dom'
 import Alerts from '../../alerts'
 import {validateField} from '../../../functions/form-validate'
-import {CSSTransition} from 'react-transition-group'
 import {api_path} from '../../../store/common'
 import './contact-item.css'
 
@@ -13,8 +12,7 @@ function ContactItem(props) {
   const [clientData, setClientData] = useState({name:client_name, surname:client_surname, gend:client_gender, email:client_email, descr:client_descr})
   const [isEdit, setIsEdit] = useState(false)
   const [badValues, setBadValues] = useState({})
-  const [animate, setAnimate] = useState(false)
-  const [showMessage, setShowMessage] = useState([])
+  const [showAlert, setShowAlert] = useState([])
 
   const redirectBtn = useRef(null)
 
@@ -30,11 +28,11 @@ function ContactItem(props) {
           props.getContacts()
           props.getCurrentSessions()
         } else {
-          setShowMessage([
+          setShowAlert([
             'notification',
             'column',
             'alert_contactsDeleteError',
-            () => setShowMessage([])
+            () => setShowAlert([]),
           ])
         }
       })
@@ -42,8 +40,10 @@ function ContactItem(props) {
   }
 
   const onCancelClick = event => {
-    setClientData({name:'', surname:'', gend:'', email:'', descr:''})
-    setBadValues({name:'initial', email:'initial'})
+    if (String(Object.values(clientData)).replace(/,/g,'').length > 0) {
+      setClientData({name:'', surname:'', gend:'', email:'', descr:''})
+      setBadValues({name:'initial', email:'initial'})
+    } 
   }
 
   const onEditClick = event => {
@@ -97,14 +97,19 @@ function ContactItem(props) {
         } else if (data === 'INSERT_CLIENT') {
           setClientData({name:'', surname:'', gend:'', email:'', descr:''})
           setBadValues({name:'initial', email:'initial'})
-          setShowMessage(['notification', 'column', `Клиент ${client_name_Up + ' ' + client_surname_Up} успешно добавлен`, () => setShowMessage([])])
+          setShowAlert([
+            'notification',
+            'column',
+            'alert_contactsInsert',
+            () => setShowAlert([])
+          ])
           props.getContacts()
         } else {
-          setShowMessage([
+          setShowAlert([
             'notification',
             'column',
             'alert_contactsSubmitError',
-            () => setShowMessage([])
+            () => setShowAlert([])
           ])
         }
       })
@@ -123,18 +128,18 @@ function ContactItem(props) {
           redirectBtn.current.click()
           props.currentSessions.isLoaded && props.getCurrentSessions()
         } else if (data === 'DOUBLE_SESSION') {
-          setShowMessage([
+          setShowAlert([
             'notification',
             'column',
             'alert_contactsStartSessionDouble',
-            () => setShowMessage([])
+            () => setShowAlert([])
           ])
         } else {
-          setShowMessage([
+          setShowAlert([
             'notification',
             'column',
             'alert_contactsStartSessionError',
-            () => setShowMessage([])
+            () => setShowAlert([])
           ])
         }
       })
@@ -143,7 +148,7 @@ function ContactItem(props) {
 
   const client_data = (
     <div className="content-item-form">
-      <form autoComplete="off" onSubmit={handleSubmit} style={showMessage.length > 0 ? {opacity:'0'} : {}}>
+      <form autoComplete="off" onSubmit={handleSubmit} style={showAlert.length > 0 ? {opacity:'0'} : {}}>
         <label>
           <span>Имя<sup>*</sup>:</span>
           <input type="text" className={formElementCN} name="name" value={clientData.name} onChange={handleChange} placeholder="Введите имя клиента (обязательно)" />
@@ -181,7 +186,7 @@ function ContactItem(props) {
                 type="button"
                 className={isEdit ? "contact-form-button" : "contact-form-button contact-form-button_hide"}
                 value="Удалить"
-                onClick={() => setShowMessage(['request', 'column', 'alert_contactsDelete', onDeleteClick])} 
+                onClick={() => setShowAlert(['request', 'column', 'alert_contactsDelete', onDeleteClick, () => setShowAlert([])])}
               />
             </> : 
             <>
@@ -201,36 +206,30 @@ function ContactItem(props) {
               />
             </>
           }
-
         </div>
       </form>
-      {showMessage.length > 0 ? 
+      {showAlert.length > 0 ? 
         <Alerts
-          data = {{messageType: showMessage[0], direction: showMessage[1], text: showMessage[2]}}
-          applyChanges = {showMessage[3]}
-          discardChanges = { () => setShowMessage([]) }
+          data = {{messageType: showAlert[0], direction: showAlert[1], text: showAlert[2]}}
+          applyChanges = {showAlert[3]}
+          discardChanges = {showAlert[4]}
         /> : ''
       }
     </div>
   )
 
-  useEffect( () => {
-    if (!animate) setAnimate(true)
+  useEffect(() => {
     if (props.type === "add_contact") {
       setIsEdit(true)
       setBadValues({name:'initial', email:'initial'})
     }
-  }, [])
+  }, [props.type])
 
     console.log('render form')
 
   return (
     <div>
-      {animate ? 
-        <CSSTransition in={animate} timeout={700} classNames="contact-item-animate" appear={true}>    
-          {client_data}
-        </CSSTransition> : ''
-      }
+      {client_data}
       <Link style={{display:'none'}} ref={redirectBtn} to="/current-sessions" />
     </div>
   )
@@ -238,10 +237,12 @@ function ContactItem(props) {
 
 export default ContactItem
 
+// ПРОВЕРЕНО ЛОКАЛЬНО
+
 // КОРРЕКТНАЯ РАБОТА
 
 // При вызове из <CurrentContacts />:
-// Происходит два рендера компонента. Это так, потому что есть useEffect, срабатывающий после монтирования компонента. На нем завязана анимация и настройки для подключения в <AddContacts /> - добавление клиента (а именно установка в режим редактирования (isEdit) без нажатия пользователем кнопки 'Редактировать' и установка плохих значений (badValues) чтобы отсвечивать ошибки инпутов сразу при загрузке при подключении компонента в <AddContacts />).
+// Происходит один рендер компонента даже несмотря на имеющийся useEffect - в нем нет сетстейтов при загрузке из <CurrentContacts />, только из <AddContacts />, а зависимость props.type неизменна в пределах текущего вызова (props.type вписал, чтобы компилятор warning не выкидывал).
 // Работа кнопок в этом случае:
 // Нажатие 'Редактировать'. Один рендер, установка стейта isEdit = true (режим редактирования) -> ok. 
 // Нажатие 'Начать сессию'. Фетчим POST-запрос на добавление сессии. Если ok, то делаем редирект на страницу текущих сессий и проверяем, если текущие сессии уже загружены, то после редиректа еще раз загружаем их, если не загружены, то не загружаем - они сами подгрузятся при переходе на страницу текущих сессиий. Эта проверка нужна для того, чтобы убрать лишний рендер <CurrentContacts /> и всех его детей и избежать двойного фетча текущих сессий на сервер (что совсем плохо). Если не ok (есть дублирующие открытые сессии или вообще ошибка, то алерт).
@@ -251,12 +252,13 @@ export default ContactItem
 // При нажатии кнопок лишних рендеров и фетчей нет, все по делу.
 
 // При вызове из <AddContacts />:
-// Происходит два рендера компонента. Причина описана выше.
+// Происходит два рендера компонента. Это так, потому что есть useEffect, срабатывающий после монтирования компонента (в зависимостях указан также props.type, но это ни на что не влияет, т.к. эта пропса неизменна в пределах текущего вызова, вписал, чтобы компилятор warning не выкидывал). На нем завязаны настройки для подключения в <AddContacts /> (а именно установка в режим редактирования (isEdit) без нажатия пользователем кнопки 'Редактировать' и установка плохих значений (badValues) чтобы отсвечивать ошибки инпутов сразу при загрузке при подключении компонента в <AddContacts />). Эти сетстейты и вызовут второй рендер компонента.
 // Работа кнопок в этом случае:
 // Здесь кнопки свои, их две - сохранить и отменить. Начальное состояние кнопок - отключены.
 // Кнопка 'Отменить' активируется после любого ввода с клавиатуры и приводит компонент к исходному состоянию стейта.
-// Кнопка 'Сохранить' активируется только если валидация прошла успешно, приводит к POST-запросу на добавление клиента. Если клиент добавился - приводим стэйт к начальному состоянию, показываем алерт, фетчим клиентов. Здесь будет три рендера компонента из-за изменения стейтов (побороть не удалось, Реакт делает три сетстейта setClientData, setBadValues, setShowMessage отдельно - никакие манипуляции не помогли, придется оставить так; кстати поэтому и алерт идет последним, чтобы рендерится один раз, иначе тоже будет три рендера) и два рендера (тут все по делу) на обновление store после фетча клиентов.
+// Кнопка 'Сохранить' активируется только если валидация прошла успешно, приводит к POST-запросу на добавление клиента. Если клиент добавился - приводим стэйт к начальному состоянию, показываем алерт, фетчим клиентов. Здесь будет три рендера компонента из-за изменения стейтов (побороть не удалось, Реакт делает три сетстейта setClientData, setBadValues, setShowAlert отдельно - никакие манипуляции не помогли, придется оставить так; кстати поэтому и алерт идет последним, чтобы рендерится один раз, иначе тоже будет три рендера) и два рендера (тут все по делу) на обновление store после фетча клиентов.
 // При нажатии кнопок лишних рендеров и фетчей нет, все по делу.
 
-
-// Починить все алерты !!! Не все обновил по последнему стандарту !!!
+// Алерты.
+// Если есть непустой стейт showAlert (по дефолту пустой массив), то вызывется алерт с данными из этого стейта.
+// Структура массива: 0 - тип алерта(notification, request), 1 - расположение(column, row), 2 - текст сообщения из fixtures alerts.js, 3 - Функция принять изменения, 4 - Функция отменить изменения (не обязательный параметр, при notification можно не указывать).

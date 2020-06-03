@@ -1,16 +1,7 @@
 export const userCardsReducer = (userCardsState = {isLoaded: false, isLoading: false, data: []}, action) => {
   switch (action.type) {
-    // case 'CLEAR_SESSIONS_CURRENT': {
-    //   // console.log('GET_SESSIONS_CURRENT__CLEAR')
-    //   return {
-    //     isLoaded: false,
-    //     isLoading: false,
-    //     data: []
-    //   }
-    // }
     case 'GET_USER_CARDS__LOADING': {
       console.log('GET_USER_CARDS__LOADING')
-      console.log('-------------------------------------------------')
       return {
         isLoaded: false,
         isLoading: true,
@@ -19,7 +10,6 @@ export const userCardsReducer = (userCardsState = {isLoaded: false, isLoading: f
     }
     case 'GET_USER_CARDS__SUCCESS': {
       console.log('GET_USER_CARDS__SUCCESS')
-      console.log('-------------------------------------------------')
       return {
         isLoaded: true,
         isLoading: false,

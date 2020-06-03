@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
@@ -12,17 +12,8 @@ import {api_path} from '../../../store/common'
 import './consultation-cards.css'
 
 function ConsultationCards(props) {
-  const {thisSession, selectedCards, thisSessionCards, thisSessionCardsLocal} = props
+  const {thisSession, selectedCards, thisSessionCards, thisSessionCardsLocal, getCardsThisSession, clearCardThisSessionLocal, setThisSession} = props
   let fetched_selected, fetched_already_exist, local_already_exist
-
-  if (!selectedCards.isLoaded && !selectedCards.isLoading) {
-    props.getSelectedCards(props.activeCards_id)
-  }
-
-  if (selectedCards.isLoaded && !selectedCards.isLoading && !thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
-    console.log('props.getCardsThisSession() props.getCardsThisSession()')
-    props.getCardsThisSession()
-  }
 
   if (selectedCards.isLoading || thisSessionCards.isLoading) {
     fetched_selected = <Loader fullscreen={true} />
@@ -82,10 +73,10 @@ function ConsultationCards(props) {
             console.log(data.slice(str.length))
 
             console.log(timerId, '-> UPDATE_IS_NEEDED')
-            props.clearCardThisSessionLocal()
-            props.getCardsThisSession()
+            clearCardThisSessionLocal()
+            getCardsThisSession()
             setTimeout( () => {
-              props.setThisSession(thisSession.session_id, data.slice(str.length))
+              setThisSession(thisSession.session_id, data.slice(str.length))
             }, 1100)
             // подумать про промис тут, а то мало ли в какой последовательности что произойдет, или запихать setThisSession в getCardThisSession?
             // также не реализована перезагрузка колоды - вдруг смена колоды?              
@@ -95,7 +86,18 @@ function ConsultationCards(props) {
         .catch(err => console.log('error', err))
       }, 700000)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [thisSessionCards.isLoaded, thisSession.last_version]) // thisSessionCards.isLoaded - грузится последним
+
+  useEffect( () => {
+    if (!selectedCards.isLoaded && !selectedCards.isLoading) {
+      props.getSelectedCards(props.activeCards_id)
+    }
+    if (!thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
+      props.getCardsThisSession()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCards.isLoaded])
  
   return (
     <div className="consultation-cards">
@@ -115,14 +117,12 @@ function ConsultationCards(props) {
 }
 
 export default connect(
-  state => {
-    return {
-      selectedCards: selectUserSelectedCards(state),
-      thisSessionCards: selectThisSessionCards(state), 
-      thisSessionCardsLocal: selectThisSessionCardsLocal(state),
-      thisSession: selectThisSession(state)
-    }
-  },
+  state => ({
+    selectedCards: selectUserSelectedCards(state),
+    thisSessionCards: selectThisSessionCards(state), 
+    thisSessionCardsLocal: selectThisSessionCardsLocal(state),
+    thisSession: selectThisSession(state)
+  }),
   {
     getSelectedCards: getSelectedCardItems,
     addSelectedCards: addSelectedCardItems,
