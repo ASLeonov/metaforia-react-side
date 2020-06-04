@@ -14,7 +14,7 @@ function Consultation(props) {
     <ConsultationContent /> : 
       <Messages caption="message_currentSessionError" />
 
-  useEffect ( () => () => {   // '() => () => ' - сработает только при unMount
+  useEffect ( () => () => {
     const maxId = setInterval( () => {} )
     for (let i=0; i < maxId; i+=1) { 
       clearInterval(i)
@@ -40,4 +40,9 @@ export default connect(
   }
 )(Consultation)
 
-// БАГ. Если зайти на страницу напрямую, не через текущие сессии, то при переходе по ссылке в сообщении на текущие сессии вылазит Warning: Cannot update a component (`ConnectFunction`) while rendering a different component (`CurrentSessions`)...........
+// ПРОВЕРЕНО ЛОКАЛЬНО.
+
+// Корректная работа.
+// Это верхний компонент консультаций. В нем  проверяем, есть ли выбранная текущая сессия для работы. Если есть - грузим дальше, если нет - message.
+// Также при unMount сессии чистим store у текущей сессии (clearThisSession) и карты выбранных колод (clearSelectedCardItems) и установленные в <ConsultationCards /> таймеры.
+// Лишних рендеров нет, фетчей совсем нет.

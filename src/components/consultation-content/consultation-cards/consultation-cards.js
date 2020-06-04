@@ -42,6 +42,29 @@ function ConsultationCards(props) {
             thisSessionCards={thisSessionCards.data}
             thisSessionCardsLocal={thisSessionCardsLocal}
           />
+
+          // let eventSource  = new EventSource(`${api_path}sse.php`)
+
+          // eventSource.onopen = function(e) {
+            // console.log("Событие: open")
+          // }
+          // eventSource.onmessage = function(e) {
+            // console.log("Событие: message", e)
+          // }
+
+          // "wss://javascript.info/article/websocket/chat/ws"
+          let socket = new WebSocket("ws://echo.websocket.org")
+
+          socket.onopen = event => {
+            console.log('socket.onopen')
+            console.log(socket, socket.readyState)
+            socket.send("Connection...")
+          }        
+          
+          socket.onmessage = event => {
+            console.log('socket.onmessage', event.data)
+          }
+
       }
     } else {
       // прописать errors...
@@ -98,6 +121,8 @@ function ConsultationCards(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCards.isLoaded])
+
+  console.log('render Consultation cards')
  
   return (
     <div className="consultation-cards">
@@ -131,5 +156,8 @@ export default connect(
   }
 )(ConsultationCards)
 
+// ...
 
-// По fetch - все ok, один раз грузим selectedCards (набор карт из выбранной колоды) и один раз thisSessionCards (если есть ранее использованные карты в этой сессии)
+// Корректная работа.
+// После первого рендера срабатывает useEffect - при необходимости стартуем фетч карт из выбранной колоды (getSelectedCards, сейчас не должен срабатывать никогда, т.к. этот фетч запускается раньше при выборе колоды из компонента <CardsBox />, эта проверка оставлена на всякий случай и для показа возможностей функционирования), а также фетч ранее сохраненных в БД карт из текущей сессии (getCardsThisSession) - но нему ok, этот fetch на сервер один. На этом этапе кол-во рендеров соответствует изменениям в store, все ok.
+// 

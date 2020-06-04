@@ -16,7 +16,10 @@ function ConsultationContent(props) {
   let fetched
 
   const onSelectCardsClick = cardsBox_id => {
-    props.userSelectedCards.activeCardsBox !== cardsBox_id && setSelectCards(cardsBox_id)
+    if (props.userSelectedCards.activeCardsBox !== cardsBox_id) {
+      setShowChangeCards(false)   // скрытие вкладки выбора колоды - чтобы она не мигала при загрузке (при реальном фетче) новой колоды.
+      setSelectCards(cardsBox_id)
+    }      
   }
 
   if (isLoading) {
@@ -37,8 +40,8 @@ function ConsultationContent(props) {
     }
   }
 
-  // console.log('render Consultation content', isLoaded, isLoading, data)
-  console.log(`render Consultation Content - ${!isLoaded && !isLoading ? 'Колоды не загружены' : ''}${!isLoaded && isLoading ? 'Колоды загружаются' : ''}${isLoaded && !isLoading ? 'Колоды загружены' : ''} Карты из колоды -> ${props.userSelectedCards.isLoaded} ${props.userSelectedCards.isLoading}`)
+  console.log('render Consultation content')
+  // console.log(`render Consultation Content - ${!isLoaded && !isLoading ? 'Колоды не загружены' : ''}${!isLoaded && isLoading ? 'Колоды загружаются' : ''}${isLoaded && !isLoading ? 'Колоды загружены' : ''} Карты из колоды -> ${props.userSelectedCards.isLoaded} ${props.userSelectedCards.isLoading}`)
 
   useEffect( () => {
     if (!isLoaded && !isLoading) {
@@ -63,11 +66,8 @@ function ConsultationContent(props) {
         </div>
           <div className="consultation-header-setCards-wrapper" onClick={setCards} style={showChangeCards ? {display:'block'} : {}}>
             <div className="consultation-header-setCards">
-              {(showChangeCards && !isLoading && isLoaded && data[0] !== "ERROR") ? 
+              {(showChangeCards && !isLoading && isLoaded) ? 
                 cardsJSX(data, 'consult-mode-play', 'freeCards', onSelectCardsClick) : ''}
-              {/* userCardsJSX(data, "consult-mode-play") : ''} */}
-                {/* // провреить условия */}
-              {/* Еще варианты сюда */}
             </div>
           </div>
         <span className="consultation-header-closeButton" title={windowFullScreen ? "Свернуть окно" : "В полноэкранный режим"} onClick={onChangeWindow}>
@@ -101,7 +101,9 @@ export default connect(
   }
 )(ConsultationContent)
 
+// ПРОВЕРЕНО ЛОКАЛЬНО
 
-// Надо решить проблему жуткого перерендеривания , которое возникает при подгрузке новых карт из выбранной новой колоды. 
-// Пока главная мысль - тупо загрузить все карты из доступных колод, но не много ли..........
-// Конечно, и при переключении на уже закачанную колоду есть лишний Consultation Content и всех его детей, но его я хотя бы замаскировал анимацией css... А при нескольких обновлениях store, все жутко моргает конечно.
+// Корректная работа.
+// После монтирования срабатывает useEffect - при необходимости фетчим доступные для работы колоды (getUserCards) и отображаем их на экране с флагом 'consult-mode-enter', который говорит о том, что при клике на колоду, надо запустить ее фетч и сделать сетстейт компонента. На этом этапе лишних рендеров нет, фетч один - все ok.
+// При выборе рабочей колоды запускается ее фетч (из компонента <CardsBox />) и происходит сетстейт компонента (selectCards равно id колоды) и, так как, теперь есть selectCards, то будет рендер компонента <ConsultationCards />.
+// При изменении стейта showChangeCards (true - показ выбора колод в игровом режиме или false - в противном случае) перерендеривания <ConsultationCards /> не происходит - это хорошо. Перерендеривает <ConsultationCards /> только при реальном изменении колоды.
