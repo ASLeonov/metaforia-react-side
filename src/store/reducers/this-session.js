@@ -11,8 +11,8 @@ export const thisSessionReducer = (
           return {
             session_id: action.payload.session_id,
             last_version: Number(action.payload.last_version),
-            cardsThisSession: {},
-            cardsThisSessionLocal: {}
+            cardsThisSession: {...thisSessionState.cardsThisSession},
+            cardsThisSessionLocal: {...thisSessionState.cardsThisSessionLocal}
           }
         }
         case 'INCREASE_THIS_SESSION': {
@@ -60,25 +60,6 @@ export const thisSessionReducer = (
                   }
                 }
           }
-
-            // if (new_cards_modificate.data[action.payload.card.cards_id]) {
-              // new_cards_modificate.data[action.payload.card.cards_id] = {
-              //   card: action.payload.card,
-              //   position_left: action.payload.position_left,
-              //   position_top: action.payload.position_top,
-              //   scale: action.payload.scale
-              // }
-            // }
-          // return {
-          //   session_id: thisSessionState.session_id,
-          //   last_version: new_version,
-          //   cardsThisSession: {
-          //     ...new_cardsModificate
-          //   },
-          //   cardsThisSessionLocal: {
-          //     ...thisSessionState.cardsThisSessionLocal
-          //   }
-          // }
         }
         case 'CLEAR_THIS_SESSION': {
           console.log('CLEAR_THIS_SESSION')
@@ -156,31 +137,6 @@ export const thisSessionReducer = (
             cardsThisSessionLocal: {}
           }
         }
-
-        // case 'SAVE_CARD_THIS_SESSION_LOCAL': {
-        //   console.log('SAVE_CARD_THIS_SESSION_LOCAL')
-
-        //     const {card, position_left, position_top, scale} = action.payload
-        //       const new_state = {...thisSessionState.cardsThisSessionLocal}
-        //       new_state[card.cards_id] = {
-        //           card,
-        //           position_left,
-        //           position_top,
-        //           scale
-        //         }
-
-        //   return {
-        //     session_id: thisSessionState.session_id,
-        //     last_version: thisSessionState.last_version,
-        //     cardsThisSession: {
-        //       ...thisSessionState.cardsThisSession                
-        //     },
-        //     cardsThisSessionLocal: {
-        //       ...new_state
-        //     }
-        //   }
-        // }
-
         default: {
           return {
             ...thisSessionState

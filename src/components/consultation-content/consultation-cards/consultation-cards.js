@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
@@ -7,13 +7,13 @@ import {setThisSession} from '../../../store/action-creators/sessions-actions'
 import SelectedCards from '../selected-cards'
 import CardsThisSession from '../cards-this-session'
 import CardsThisSessionLocal from '../cards-this-session-local'
+import Messages from '../../messages'
 import Loader from '../../loader'
-import {api_path} from '../../../store/common'
 import './consultation-cards.css'
 
 function ConsultationCards(props) {
   const {thisSession, selectedCards, thisSessionCards, thisSessionCardsLocal, getCardsThisSession, clearCardThisSessionLocal, setThisSession} = props
-  let fetched_selected, fetched_already_exist, local_already_exist
+  let fetched_selected, fetched_already_exist, local_already_exist, eventSource
 
   if (selectedCards.isLoading || thisSessionCards.isLoading) {
     fetched_selected = <Loader fullscreen={true} />
@@ -42,75 +42,11 @@ function ConsultationCards(props) {
             thisSessionCards={thisSessionCards.data}
             thisSessionCardsLocal={thisSessionCardsLocal}
           />
-
-          // let eventSource  = new EventSource(`${api_path}sse.php`)
-
-          // eventSource.onopen = function(e) {
-            // console.log("Событие: open")
-          // }
-          // eventSource.onmessage = function(e) {
-            // console.log("Событие: message", e)
-          // }
-
-          // "wss://javascript.info/article/websocket/chat/ws"
-          let socket = new WebSocket("ws://echo.websocket.org")
-
-          socket.onopen = event => {
-            console.log('socket.onopen')
-            console.log(socket, socket.readyState)
-            socket.send("Connection...")
-          }        
-          
-          socket.onmessage = event => {
-            console.log('socket.onmessage', event.data)
-          }
-
       }
     } else {
-      // прописать errors...
+      fetched_selected = <Messages caption="message_consultCardsError" />
     }
   }
-
-  useEffect( () => {
-
-    if (selectedCards.isLoaded && thisSessionCards.isLoaded && !selectedCards.isLoading && !thisSessionCards.isLoading) {
-      const maxId = setInterval( () => {} )
-        for (let i=0; i < maxId; i+=1) { 
-          clearInterval(i)
-        }
-// Возможно здесь лучше рекурсивный setTimeOut? Что если сервер будет отвечать долго?
-// Посыпятся потом ответы? Или что вообще будет?
-      let timerId = setInterval( () => {    
-        fetch(`${api_path}cards.php?name=tanyaleo81@yandex.ru&type=synchro&session_id=${thisSession.session_id}&changeValue=${thisSession.last_version}`)
-        .then(response => response.text())
-        .then(data => {
-
-          if (data === 'UPDATE_IS_NO_NEEDED') {
-
-            console.log(timerId, '-> UPDATE_IS_NO_NEEDED')     // timerId = setTimeout(tick, 7000); // рекурсивный вызов, если обновление не нужно
-              
-          } else if (data.includes('UPDATE_IS_NEEDED_')) {
-
-            const str = 'UPDATE_IS_NEEDED_'
-
-            console.log(data.slice(str.length))
-
-            console.log(timerId, '-> UPDATE_IS_NEEDED')
-            clearCardThisSessionLocal()
-            getCardsThisSession()
-            setTimeout( () => {
-              setThisSession(thisSession.session_id, data.slice(str.length))
-            }, 1100)
-            // подумать про промис тут, а то мало ли в какой последовательности что произойдет, или запихать setThisSession в getCardThisSession?
-            // также не реализована перезагрузка колоды - вдруг смена колоды?              
-          }
-          
-        })
-        .catch(err => console.log('error', err))
-      }, 700000)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [thisSessionCards.isLoaded, thisSession.last_version]) // thisSessionCards.isLoaded - грузится последним
 
   useEffect( () => {
     if (!selectedCards.isLoaded && !selectedCards.isLoading) {
@@ -121,6 +57,18 @@ function ConsultationCards(props) {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCards.isLoaded])
+
+  props.sse.onmessage = e => {
+    if (thisSession.last_version !== Number(e.data)) {
+      console.log("id local не равно id server", thisSession.last_version, Number(e.data))
+      getCardsThisSession()
+      setThisSession(thisSession.session_id, Number(e.data))
+    } else {
+      console.log("id local равно id server")
+    }
+  }
+
+  useEffect( () => () => props.sse.close(), [])
 
   console.log('render Consultation cards')
  
@@ -161,3 +109,6 @@ export default connect(
 // Корректная работа.
 // После первого рендера срабатывает useEffect - при необходимости стартуем фетч карт из выбранной колоды (getSelectedCards, сейчас не должен срабатывать никогда, т.к. этот фетч запускается раньше при выборе колоды из компонента <CardsBox />, эта проверка оставлена на всякий случай и для показа возможностей функционирования), а также фетч ранее сохраненных в БД карт из текущей сессии (getCardsThisSession) - но нему ok, этот fetch на сервер один. На этом этапе кол-во рендеров соответствует изменениям в store, все ok.
 // 
+
+
+// SSE всякое ... 

@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
+import {selectUser} from '../../store/selectors'
 import {selectUserCards, selectUserSelectedCards} from '../../store/selectors/cards'
 import {getUserCards} from '../../store/action-creators/cards-actions'
 import {cardsJSX} from '../../functions/cards-box-jsx'
@@ -7,10 +8,13 @@ import ConsultationCards from './consultation-cards'
 import Loader from '../loader'
 import './consultation-content.css'
 
+import {api_path} from '../../store/common'
+
 function ConsultationContent(props) {
   const [windowFullScreen, setWindowFullScreen] = useState(false)
   const [showChangeCards, setShowChangeCards] = useState(false)
   const [selectCards, setSelectCards] = useState(null)
+  const [isSSE, setIsSSE] = useState(false)
   const {isLoaded, isLoading, data} = props.userCards
 
   let fetched
@@ -19,6 +23,12 @@ function ConsultationContent(props) {
     if (props.userSelectedCards.activeCardsBox !== cardsBox_id) {
       setShowChangeCards(false)   // скрытие вкладки выбора колоды - чтобы она не мигала при загрузке (при реальном фетче) новой колоды.
       setSelectCards(cardsBox_id)
+      if (!isSSE) {
+        let eventSource = new EventSource(`${api_path}sse.php?name=${props.user.login}&session_id=${props.session_id}`)
+        eventSource.onopen = e => console.log("Событие: open")
+        // eventSource.onmessage = e => console.log("Событие: message", e.data)
+        setIsSSE(eventSource)
+      }
     }      
   }
 
@@ -39,6 +49,15 @@ function ConsultationContent(props) {
       setShowChangeCards(!showChangeCards)
     }
   }
+
+  // if (selectCards) {
+  //   if (!isSSE) {
+  //     eventSource  = new EventSource(`${api_path}sse.php?session_id=${thisSession.session_id}`)
+  //     eventSource.onopen = e => console.log("Событие: open")
+  //     eventSource.onmessage = e => console.log("Событие: message", e.data)
+  //     setIsSSE(true)
+  //   }
+  // }
 
   console.log('render Consultation content')
   // console.log(`render Consultation Content - ${!isLoaded && !isLoading ? 'Колоды не загружены' : ''}${!isLoaded && isLoading ? 'Колоды загружаются' : ''}${isLoaded && !isLoading ? 'Колоды загружены' : ''} Карты из колоды -> ${props.userSelectedCards.isLoaded} ${props.userSelectedCards.isLoading}`)
@@ -86,13 +105,14 @@ function ConsultationContent(props) {
           </h4> : ''
         }
       </div>
-        {selectCards ? <ConsultationCards activeCards_id={selectCards}/> : ''}
+        {selectCards ? <ConsultationCards activeCards_id={selectCards} sse={isSSE} /> : ''}
     </div>
   )
 }
 
 export default connect(
   state => ({
+      user: selectUser(state),
       userCards: selectUserCards(state),
       userSelectedCards: selectUserSelectedCards(state)
   }),

@@ -1,0 +1,39 @@
+  // useEffect( () => {
+
+  //   if (selectedCards.isLoaded && thisSessionCards.isLoaded && !selectedCards.isLoading && !thisSessionCards.isLoading) {
+  //     const maxId = setInterval( () => {} )
+  //       for (let i=0; i < maxId; i+=1) { 
+  //         clearInterval(i)
+  //       }
+// Возможно здесь лучше рекурсивный setTimeOut? Что если сервер будет отвечать долго? Посыпятся потом ответы? Или что вообще будет?
+      // let timerId = setInterval( () => {    
+      //   fetch(`${api_path}cards.php?name=tanyaleo81@yandex.ru&type=synchro&session_id=${thisSession.session_id}&changeValue=${thisSession.last_version}`)
+      //   .then(response => response.text())
+      //   .then(data => {
+
+      //     if (data === 'UPDATE_IS_NO_NEEDED') {
+
+      //       console.log(timerId, '-> UPDATE_IS_NO_NEEDED')     // timerId = setTimeout(tick, 7000); // рекурсивный вызов, если обновление не нужно
+              
+      //     } else if (data.includes('UPDATE_IS_NEEDED_')) {
+
+      //       const str = 'UPDATE_IS_NEEDED_'
+
+      //       console.log(data.slice(str.length))
+
+      //       console.log(timerId, '-> UPDATE_IS_NEEDED')
+      //       clearCardThisSessionLocal()
+      //       getCardsThisSession()
+      //       setTimeout( () => {
+      //         setThisSession(thisSession.session_id, data.slice(str.length))
+      //       }, 1100)
+            // подумать про промис тут, а то мало ли в какой последовательности что произойдет, или запихать setThisSession в getCardThisSession?
+            // также не реализована перезагрузка колоды - вдруг смена колоды?              
+    //       }
+          
+    //     })
+    //     .catch(err => console.log('error', err))
+    //   }, 700000)
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [thisSessionCards.isLoaded, thisSession.last_version]) // thisSessionCards.isLoaded - грузится последним

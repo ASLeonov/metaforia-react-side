@@ -58,13 +58,10 @@ export const getPayCards = () => (dispatch, getState) => {
 export const getCardsThisSession = () => (dispatch, getState) => {
   const user_login = getState().user.login
   const session_id = getState().thisSession.session_id
-  setTimeout( () => {
-    dispatch({
-      type: 'GET_CARDS_THIS_SESSIONS__LOADING'
-    })
+  dispatch({
+    type: 'GET_CARDS_THIS_SESSIONS__LOADING'
   })
-  setTimeout( () => {
-    fetch(`${api_path}cards.php?name=${user_login}&type=getCardsThisSessions&session_id=${session_id}`)
+  fetch(`${api_path}cards.php?name=${user_login}&type=getCardsThisSessions&session_id=${session_id}`)
     .then(res => res.json())
     .then(res =>
       dispatch({
@@ -78,7 +75,6 @@ export const getCardsThisSession = () => (dispatch, getState) => {
         error,
       })
     })
-  })
 }
 
 export const clearAllCardsThisSession = () => {
@@ -106,29 +102,13 @@ export const saveCardThisSession = (card, position_left, position_top, scale, se
             scale
           }
         })
-        // console.log('Card', card.cards_id ,'added/updated successfull')
-        // задиспатчить экшн на получение данных от бэка когда надо
-        // dispatch({
-        //   type: '...'
-        // })
       } else {
-        console.log('php ->', data)
+      // Если данные на сервере обновятся некорректно, то фетчим их по новой для синхронизации
+        dispatch(getCardsThisSession())
       }
     })
     .catch(e => console.log('catch error =>', e))
 }
-
-// export const saveCardThisSessionLocal = (card, position_left, position_top, scale) => {
-//   return {
-//     type: 'SAVE_CARD_THIS_SESSION_LOCAL',
-//     payload: {
-//       card,
-//       position_left,
-//       position_top,
-//       scale
-//     }
-//   }
-// }
 
 // ---------- END OF CARDS THIS SESSION ---------- //
 
@@ -157,13 +137,11 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
 }
 
 export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {
-  setTimeout( () => {
-    dispatch({
-      type: 'ADD_SELECTED_CARD_ITEMS',
-      payload: {
-        cardsBox_id: cardsBox_id
-      }
-    })
+  dispatch({
+    type: 'ADD_SELECTED_CARD_ITEMS',
+    payload: {
+      cardsBox_id: cardsBox_id
+    }
   })
 }
 
