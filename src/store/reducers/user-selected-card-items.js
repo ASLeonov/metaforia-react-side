@@ -31,6 +31,7 @@ export const userSelectedCardReducer =
       case 'GET_SELECTED_CARD_ITEMS__SUCCESS': {
         console.log('GET_SELECTED_CARD_ITEMS__SUCCESS')
         const data_new = {...userSelectedCardItemsState.data}
+        delete data_new["ERROR"] // Если ранее была ошибка, нужно ее стереть
           action.response.forEach(element => {
             data_new[element.cards_id] = {
               cards_id: element.cards_id,
@@ -51,12 +52,14 @@ export const userSelectedCardReducer =
       }
       case 'GET_SELECTED_CARD_ITEMS__FAILED': {
         console.log('GET_SELECTED_CARD_ITEMS__FAILED')
+        // В случае ошибки загрузки карт колоды, обнуляем все предыдущие загрузки и настройки.
+        // Это надо для корректной работы <ConsultationCards /> при обратботке ошибки.
         return {
           isLoaded: true,
           isLoading: false,
           activeCardsBox: false,
-          cardBoxes: {...userSelectedCardItemsState.cardBoxes},
-          data: {"ERROR": action.error}     // Если одна колода загружена и вторая валится, то все валится?
+          cardBoxes: {},
+          data: {"ERROR": 'err'}
         }
       }
       case 'CLEAR_SELECTED_CARD_ITEMS': {

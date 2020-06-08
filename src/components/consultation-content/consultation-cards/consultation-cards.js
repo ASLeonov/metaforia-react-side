@@ -12,7 +12,7 @@ import Loader from '../../loader'
 import './consultation-cards.css'
 
 function ConsultationCards(props) {
-  const {thisSession, selectedCards, thisSessionCards, thisSessionCardsLocal, getCardsThisSession, clearCardThisSessionLocal, setThisSession} = props
+  const {thisSession, selectedCards, thisSessionCards, thisSessionCardsLocal, getCardsThisSession,  setThisSession} = props
   let fetched_selected, fetched_already_exist, local_already_exist, eventSource
 
   if (selectedCards.isLoading || thisSessionCards.isLoading) {
@@ -22,7 +22,7 @@ function ConsultationCards(props) {
   if (selectedCards.isLoaded && thisSessionCards.isLoaded) {
     if (!selectedCards.data["ERROR"] && !thisSessionCards.data["ERROR"]) {
       if (selectedCards.activeCardsBox !== props.activeCards_id) {
-        props.addSelectedCards(props.activeCards_id)
+        // props.addSelectedCards(props.activeCards_id)
       } else {
         fetched_already_exist = 
           <CardsThisSession
@@ -44,7 +44,7 @@ function ConsultationCards(props) {
           />
       }
     } else {
-      fetched_selected = <Messages caption="message_consultCardsError" />
+      fetched_selected = <Messages caption="message_consultCardsError" fullscreen={true} />
     }
   }
 
@@ -58,17 +58,17 @@ function ConsultationCards(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCards.isLoaded])
 
-  props.sse.onmessage = e => {
-    if (thisSession.last_version !== Number(e.data)) {
-      console.log("id local не равно id server", thisSession.last_version, Number(e.data))
-      getCardsThisSession()
-      setThisSession(thisSession.session_id, Number(e.data))
-    } else {
-      console.log("id local равно id server")
-    }
-  }
+  // props.sse.onmessage = e => {
+  //   if (thisSession.last_version !== Number(e.data)) {
+  //     console.log("id local не равно id server", thisSession.last_version, Number(e.data))
+  //     getCardsThisSession()
+  //     setThisSession(thisSession.session_id, Number(e.data))
+  //   } else {
+  //     console.log("id local равно id server")
+  //   }
+  // }
 
-  useEffect( () => () => props.sse.close(), [])
+  // useEffect( () => () => props.sse.close(), [])
 
   console.log('render Consultation cards')
  

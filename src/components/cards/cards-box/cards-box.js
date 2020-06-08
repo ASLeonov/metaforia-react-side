@@ -1,19 +1,22 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getSelectedCardItems} from '../../../store/action-creators/cards-actions'
+import {getSelectedCardItems, addSelectedCardItems} from '../../../store/action-creators/cards-actions'
 import './cards-box.css'
 
 function CardsBox(props) {
-  const {cards, mode, callback, getSelectedCardItems} = props
+  const {cards, mode, callback, selectCards, getSelectedCardItems, addSelectedCardItems} = props
 
   const selectCardsBox = () => {
     switch (mode) {
       case 'consult-mode-enter':
-        getSelectedCardItems(cards.cards_id)
+        // getSelectedCardItems(cards.cards_id)
         callback(cards.cards_id)
         break
       case 'consult-mode-play':
-        callback(cards.cards_id)
+        if (selectCards !== cards.cards_id) {
+          addSelectedCardItems(cards.cards_id)
+          callback(cards.cards_id)
+        }
         break
       case 'cards-page':
         callback()
@@ -44,7 +47,7 @@ function CardsBox(props) {
 export default connect(
   () => ({}),
   {
-    getSelectedCardItems,
+    getSelectedCardItems, addSelectedCardItems
   }
 )(CardsBox)
 
@@ -53,3 +56,7 @@ export default connect(
 // Второй - здесь при выборе колоды на этапе начальной загрузки сессии (mode:"consult-mode-enter"). Сейчас этот вариант работает по умолчанию. Лишних рендеров и фетчей не наблюдаю - все ok.
 // Какой вариант лучше? Не знаю. Есть везде свои за и против. Надо тестить в продакшн, если будет корректно работать, не рендерить лишний раз компоненты и не делать дублирующих фетчей, то оставляем так.
 // Отключить фетч здесь и переключиться на фетч через компонент consultation-cards - просто снести здесь getSelectedCardItems(cards.cards_id).
+// Подгрузка доп. колод во время сессии происходит в <ConsultationCards />
+
+
+// ОПИСАНИЕ НЕ АКТУАЛЬНО.

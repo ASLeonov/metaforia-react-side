@@ -20,16 +20,16 @@ function ConsultationContent(props) {
   let fetched
 
   const onSelectCardsClick = cardsBox_id => {
-    if (props.userSelectedCards.activeCardsBox !== cardsBox_id) {
+    // if (props.userSelectedCards.activeCardsBox !== cardsBox_id) {
       setShowChangeCards(false)   // скрытие вкладки выбора колоды - чтобы она не мигала при загрузке (при реальном фетче) новой колоды.
       setSelectCards(cardsBox_id)
-      if (!isSSE) {
-        let eventSource = new EventSource(`${api_path}sse.php?name=${props.user.login}&session_id=${props.session_id}`)
-        eventSource.onopen = e => console.log("Событие: open")
+      //if (!isSSE) {
+        //let eventSource = new EventSource(`${api_path}sse.php?name=${props.user.login}&session_id=${props.session_id}`)
+        //eventSource.onopen = e => console.log("Событие: open")
         // eventSource.onmessage = e => console.log("Событие: message", e.data)
-        setIsSSE(eventSource)
-      }
-    }      
+        //setIsSSE(eventSource)
+      // }
+    // }      
   }
 
   if (isLoading) {
@@ -49,15 +49,6 @@ function ConsultationContent(props) {
       setShowChangeCards(!showChangeCards)
     }
   }
-
-  // if (selectCards) {
-  //   if (!isSSE) {
-  //     eventSource  = new EventSource(`${api_path}sse.php?session_id=${thisSession.session_id}`)
-  //     eventSource.onopen = e => console.log("Событие: open")
-  //     eventSource.onmessage = e => console.log("Событие: message", e.data)
-  //     setIsSSE(true)
-  //   }
-  // }
 
   console.log('render Consultation content')
   // console.log(`render Consultation Content - ${!isLoaded && !isLoading ? 'Колоды не загружены' : ''}${!isLoaded && isLoading ? 'Колоды загружаются' : ''}${isLoaded && !isLoading ? 'Колоды загружены' : ''} Карты из колоды -> ${props.userSelectedCards.isLoaded} ${props.userSelectedCards.isLoading}`)
@@ -86,7 +77,7 @@ function ConsultationContent(props) {
           <div className="consultation-header-setCards-wrapper" onClick={setCards} style={showChangeCards ? {display:'block'} : {}}>
             <div className="consultation-header-setCards">
               {(showChangeCards && !isLoading && isLoaded) ? 
-                cardsJSX(data, 'consult-mode-play', 'freeCards', onSelectCardsClick) : ''}
+                cardsJSX(data, 'consult-mode-play', 'freeCards', onSelectCardsClick, selectCards) : ''}
             </div>
           </div>
         <span className="consultation-header-closeButton" title={windowFullScreen ? "Свернуть окно" : "В полноэкранный режим"} onClick={onChangeWindow}>

@@ -116,11 +116,10 @@ export const saveCardThisSession = (card, position_left, position_top, scale, se
 // ---------- SELECTED CARD ITEMS Карты из выбранной для работы колоды ---------- //
 
 export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
-  // Тут походу на беке захардкоден user --- беда.
     dispatch({
       type: 'GET_SELECTED_CARD_ITEMS__LOADING'
     })
-    fetch(`${api_path}cards.php?name=user&type=userSelectedCards&payload=${cards_id}`)
+    fetch(`${api_path}cards.php?name=nobody&type=userSelectedCards&payload=${cards_id}`)  // name - любое
     .then(res => res.json())
     .then(res =>
       dispatch({
@@ -137,12 +136,20 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
 }
 
 export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {
-  dispatch({
-    type: 'ADD_SELECTED_CARD_ITEMS',
-    payload: {
-      cardsBox_id: cardsBox_id
-    }
-  })
+  // setTimeout( () => {
+// Фикс бага Warning: Cannot update a component (`ConnectFunction`) while rendering a different component (`ConsultationCards`) ... ...
+// Здесь, видимо, речь о том, что при рендере компонента, мы меяем стор и этот же компонент рендереится в тот же момент, т.е. два рендера одного компонента одновременно. Но я не уверен, что именно в этом казус.
+// ТаймАут без задержки вроде как должен дать закончиться предыдующему коду, прежде чем задиспатчить этот экшн, что кажись помогает.
+
+// Убрал ТаймАут пока, т.к. закомментил проблемную строку.
+    dispatch({
+      type: 'ADD_SELECTED_CARD_ITEMS',
+      payload: {
+        cardsBox_id: cardsBox_id
+      }
+    })
+  // })
+
 }
 
 export const clearSelectedCardItems = () => {
