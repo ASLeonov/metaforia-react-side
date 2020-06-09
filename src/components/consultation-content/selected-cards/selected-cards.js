@@ -1,10 +1,9 @@
 import React, {useState} from 'react'
 import ConsultationCard from '../consultation-card'
 
-function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, thisSessionCardsLocal}) {
+function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, thisSessionCardsLocal, mixCards}) {
   const [xPosition, setXPosition] = useState(0)
-
-  // console.log('render selected cards')
+  const data_length = Object.keys(data).length
 
   const rightScrollClick = () => {
     const wrapper_element = document.querySelector('.consultation-cards-center-wrapper')
@@ -16,8 +15,14 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
   }
 
   const dataJSX = []
+  const count = (arr, result = 0) => {
+    for (let index = 0; index < arr.length; index++) {
+      if (arr[index] !== undefined) result++      
+    }
+    return result  
+  }
 
-  if (Object.keys(data).length > 0) {
+  if (data_length > 0) {
     let i = 0
       for (const key in data) {
         if (data.hasOwnProperty(key)) {
@@ -25,14 +30,27 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
             if (element.cards_box === activeCardsBox && !thisSessionCards[key] && !thisSessionCardsLocal[key]) {
               i++
               const style_1 = (i <= xPosition) ? {width:'0', margin:'0'} : {}
-                dataJSX.push(
-                  <ConsultationCard
-                    key={element.cards_id}
-                    style_1={style_1}
-                    card={element}
-                    session_id={session_id}
-                  />
-                )
+
+                while (count(dataJSX) < i) {
+                  const randomNumber = Math.floor(Math.random() * (data_length + 1))
+                    if (dataJSX[randomNumber] === undefined) {
+                      dataJSX[randomNumber] =
+                        <ConsultationCard
+                          key={element.cards_id}
+                          style_1={style_1}
+                          card={element}
+                          session_id={session_id}
+                        />
+                    }
+                }
+                // dataJSX.push(
+                //   <ConsultationCard
+                //     key={element.cards_id}
+                //     style_1={style_1}
+                //     card={element}
+                //     session_id={session_id}
+                //   />
+                // )
             }
         }
       }
@@ -41,6 +59,8 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
   // useEffect ( () => {
   //   (xPosition !== 0) && setXPosition(0)
   // }, [activeCardsBox])
+
+  // console.log('render selected cards' , dataJSX, count(dataJSX))
 
   return(
     <>
@@ -60,3 +80,5 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
 }
 
 export default SelectedCards
+
+// Всегда рандом ???

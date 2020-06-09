@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
@@ -6,12 +6,12 @@ import {getSelectedCardItems, addSelectedCardItems, getCardsThisSession} from '.
 import {setThisSession} from '../../../store/action-creators/sessions-actions'
 import SelectedCards from '../selected-cards'
 import CardsThisSession from '../cards-this-session'
-import CardsThisSessionLocal from '../cards-this-session-local'
 import Messages from '../../messages'
 import Loader from '../../loader'
 import './consultation-cards.css'
 
 function ConsultationCards(props) {
+  const [mixCards, setMixCards] = useState(0)
   const {thisSession, selectedCards, thisSessionCards, thisSessionCardsLocal, getCardsThisSession,  setThisSession} = props
   let fetched_selected, fetched_already_exist, local_already_exist, eventSource
 
@@ -30,7 +30,7 @@ function ConsultationCards(props) {
             thisSessionCards={thisSessionCards.data}
           />
         local_already_exist = 
-          <CardsThisSessionLocal
+          <CardsThisSession
             session_id={thisSession.session_id}
             thisSessionCardsLocal={thisSessionCardsLocal}
           />
@@ -41,6 +41,7 @@ function ConsultationCards(props) {
             data={selectedCards.data}
             thisSessionCards={thisSessionCards.data}
             thisSessionCardsLocal={thisSessionCardsLocal}
+            mixCards={mixCards}
           />
       }
     } else {
@@ -48,27 +49,31 @@ function ConsultationCards(props) {
     }
   }
 
+  const mixCardsClick = () => {
+    setMixCards(mixCards + 1)
+  }
+
   useEffect( () => {
     if (!selectedCards.isLoaded && !selectedCards.isLoading) {
+      // Срабатывает при загрузке новой колоды в процессе консультации
       props.getSelectedCards(props.activeCards_id)
     }
-    if (!thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
-      props.getCardsThisSession()
-    }
+    // if (!thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
+    //   Это загрузка существующих карт сессии - сейчас не актуальна, т.к. она происходит из <CardsBox />
+    //   props.getCardsThisSession()
+    // }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCards.isLoaded])
 
-  // props.sse.onmessage = e => {
-  //   if (thisSession.last_version !== Number(e.data)) {
-  //     console.log("id local не равно id server", thisSession.last_version, Number(e.data))
-  //     getCardsThisSession()
-  //     setThisSession(thisSession.session_id, Number(e.data))
-  //   } else {
-  //     console.log("id local равно id server")
-  //   }
-  // }
+  props.sse.onmessage = e => {
+    if (thisSession.last_version !== Number(e.data)) {
+      //console.log("id local не равно id server", thisSession.last_version, Number(e.data))
+      setThisSession(thisSession.session_id, Number(e.data))
+      getCardsThisSession()
+    }
+  }
 
-  // useEffect( () => () => props.sse.close(), [])
+  useEffect( () => () => props.sse.close(), [])
 
   console.log('render Consultation cards')
  
@@ -76,7 +81,7 @@ function ConsultationCards(props) {
     <div className="consultation-cards">
       <div className="consultation-cards-tools">
         <div className="consultation-cards-tools-item">
-          <span>Перемешать карты</span>
+          <span onClick={mixCardsClick}>Перемешать карты</span>
         </div>
         <div className="consultation-cards-tools-item consultation-cards-tools-divider">
           <span>Случайная карта</span>
@@ -104,11 +109,13 @@ export default connect(
   }
 )(ConsultationCards)
 
-// ...
 
 // Корректная работа.
-// После первого рендера срабатывает useEffect - при необходимости стартуем фетч карт из выбранной колоды (getSelectedCards, сейчас не должен срабатывать никогда, т.к. этот фетч запускается раньше при выборе колоды из компонента <CardsBox />, эта проверка оставлена на всякий случай и для показа возможностей функционирования), а также фетч ранее сохраненных в БД карт из текущей сессии (getCardsThisSession) - но нему ok, этот fetch на сервер один. На этом этапе кол-во рендеров соответствует изменениям в store, все ok.
-// 
+// После первого рендера срабатывает useEffect - при необходимости стартуем фетч карт из выбранной колоды (getSelectedCards сейчас должен срабатывать только при выборе другой колоды из режима консультации, т.к. при первичном выборе колоды он запускается из <CardsBox />), а также фетч ранее сохраненных в БД карт из текущей сессии (getCardsThisSession - вообще закомментил, т.к. запускаю также из <CardBox />).
+// Лишних рендеров и фетчей не наблюдаю, все ok.
 
 
-// SSE всякое ... 
+// SSE
+// Здесь происходит вся работа с SSE кроме инициализации (она уровнем выше).
+// При получении ответа от бэка сравнивается локальная версися косультации и серверная, если нет разницы - не делаем ничего, если есть - то приводим данные по консультации к актуальным(серверным) и фетчим последние данные по сессии.
+// При unMount компонента, рушим SSE.

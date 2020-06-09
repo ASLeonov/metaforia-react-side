@@ -20,9 +20,7 @@
   flex-grow: 1;
   border-top: 1px solid rgb(196, 196, 196);
   border-bottom: 1px solid rgb(196, 196, 196);
-
-                      animation: cards-fadeIn 1.2s;
-
+  animation: cards-fadeIn 1s;
 }
 
 @keyframes cards-fadeIn {
@@ -116,4 +114,8 @@
 
 .consultation-cards-leftBtn span:hover, .consultation-cards-rightBtn span:hover {
   opacity: 1;
+}
+
+.consultation-cards-exists {
+  animation: cards-fadeIn 1s;
 }

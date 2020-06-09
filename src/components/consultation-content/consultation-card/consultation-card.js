@@ -85,7 +85,6 @@ function ConsultationCard(props) {
       position: 'fixed',
       left: position[1],
       top: position[2],
-      animation: 'cards-fadeIn  1.2s',
       // margin: '50px',
       ...img_style,
       ...props.style_1

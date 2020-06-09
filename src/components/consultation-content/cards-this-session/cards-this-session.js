@@ -1,16 +1,22 @@
 import React from 'react'
 import ConsultationCard from '../consultation-card'
 
-function CardsThisSession({session_id, thisSessionCards}) {
+function CardsThisSession({session_id, thisSessionCards, thisSessionCardsLocal}) {
+  let cards = {}
+  let dataJSX = []
+  
+  if (thisSessionCards !== undefined) {
+    cards = {...thisSessionCards}
+  } else if (thisSessionCardsLocal !== undefined) {
+    cards = {...thisSessionCardsLocal}
+  }
 
   // console.log('render this cards fetched')
 
-  const dataJSX = []
-
-  for (const key in thisSessionCards) {
-    if (thisSessionCards.hasOwnProperty(key)) {
-      const element = thisSessionCards[key]
-      dataJSX.push(
+  for (const key in cards) {
+    if (cards.hasOwnProperty(key)) {
+      const element = cards[key]
+        dataJSX.push(
           <ConsultationCard
             key={`exist-card-${key}`}
             style_1={{}}
@@ -26,7 +32,9 @@ function CardsThisSession({session_id, thisSessionCards}) {
   }
 
   return (
-    <>{dataJSX}</>
+    <div className="consultation-cards-exists">
+      {dataJSX}
+    </div>
   )
 }
 

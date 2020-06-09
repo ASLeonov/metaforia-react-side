@@ -20,16 +20,13 @@ function ConsultationContent(props) {
   let fetched
 
   const onSelectCardsClick = cardsBox_id => {
-    // if (props.userSelectedCards.activeCardsBox !== cardsBox_id) {
       setShowChangeCards(false)   // скрытие вкладки выбора колоды - чтобы она не мигала при загрузке (при реальном фетче) новой колоды.
       setSelectCards(cardsBox_id)
-      //if (!isSSE) {
-        //let eventSource = new EventSource(`${api_path}sse.php?name=${props.user.login}&session_id=${props.session_id}`)
-        //eventSource.onopen = e => console.log("Событие: open")
-        // eventSource.onmessage = e => console.log("Событие: message", e.data)
-        //setIsSSE(eventSource)
-      // }
-    // }      
+      if (!isSSE) {
+        let eventSource = new EventSource(`${api_path}sse.php?name=${props.user.login}&session_id=${props.session_id}`)
+        // eventSource.onopen = e => console.log("Событие: open")
+        setIsSSE(eventSource)
+      }
   }
 
   if (isLoading) {
@@ -51,7 +48,6 @@ function ConsultationContent(props) {
   }
 
   console.log('render Consultation content')
-  // console.log(`render Consultation Content - ${!isLoaded && !isLoading ? 'Колоды не загружены' : ''}${!isLoaded && isLoading ? 'Колоды загружаются' : ''}${isLoaded && !isLoading ? 'Колоды загружены' : ''} Карты из колоды -> ${props.userSelectedCards.isLoaded} ${props.userSelectedCards.isLoading}`)
 
   useEffect( () => {
     if (!isLoaded && !isLoading) {
@@ -115,6 +111,6 @@ export default connect(
 // ПРОВЕРЕНО ЛОКАЛЬНО
 
 // Корректная работа.
-// После монтирования срабатывает useEffect - при необходимости фетчим доступные для работы колоды (getUserCards) и отображаем их на экране с флагом 'consult-mode-enter', который говорит о том, что при клике на колоду, надо запустить ее фетч и сделать сетстейт компонента. На этом этапе лишних рендеров нет, фетч один - все ok.
-// При выборе рабочей колоды запускается ее фетч (из компонента <CardsBox />) и происходит сетстейт компонента (selectCards равно id колоды) и, так как, теперь есть selectCards, то будет рендер компонента <ConsultationCards />.
+// После монтирования срабатывает useEffect - при необходимости фетчим доступные для работы колоды (getUserCards) и отображаем их на экране с флагом 'consult-mode-enter', который говорит о том, что при клике на колоду, надо запустить фетч этой колоды и существующих карта сессии и сделать сетстейт компонента. На этом этапе лишних рендеров нет, фетч один - все ok.
+// При выборе рабочей колоды запускаются фетчи (из компонента <CardsBox />) и происходит сетстейт компонента (selectCards равно id колоды) и, так как, теперь есть selectCards, то будет рендер компонента <ConsultationCards />.
 // При изменении стейта showChangeCards (true - показ выбора колод в игровом режиме или false - в противном случае) перерендеривания <ConsultationCards /> не происходит - это хорошо. Перерендеривает <ConsultationCards /> только при реальном изменении колоды.
