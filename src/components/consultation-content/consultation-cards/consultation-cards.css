@@ -73,6 +73,7 @@
 .consultation-cards-tools-item span{
   text-align: center;
   cursor: pointer;
+  user-select: none;
 }
 
 .consultation-cards-tools-divider {

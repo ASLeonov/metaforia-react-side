@@ -5,6 +5,7 @@ import {store} from '../../store'
 import Header from '../header'
 import Middle from '../middle'
 import Footer from '../footer'
+import Login from '../login'
 import './app.css'
 
 function App() {
@@ -16,6 +17,9 @@ function App() {
         <div className="app">
           <Header />
             <Switch>
+              <Route path="/login">
+                <Login />
+              </Route>
               <Route path="/consultation">
                 <Middle activePage="consultation" />
               </Route>

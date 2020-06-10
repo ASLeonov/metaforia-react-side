@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
@@ -11,9 +11,8 @@ import Loader from '../../loader'
 import './consultation-cards.css'
 
 function ConsultationCards(props) {
-  const [mixCards, setMixCards] = useState(0)
   const {thisSession, selectedCards, thisSessionCards, thisSessionCardsLocal, getCardsThisSession,  setThisSession} = props
-  let fetched_selected, fetched_already_exist, local_already_exist, eventSource
+  let fetched_selected, fetched_already_exist, local_already_exist
 
   if (selectedCards.isLoading || thisSessionCards.isLoading) {
     fetched_selected = <Loader fullscreen={true} />
@@ -41,16 +40,11 @@ function ConsultationCards(props) {
             data={selectedCards.data}
             thisSessionCards={thisSessionCards.data}
             thisSessionCardsLocal={thisSessionCardsLocal}
-            mixCards={mixCards}
           />
       }
     } else {
       fetched_selected = <Messages caption="message_consultCardsError" fullscreen={true} />
     }
-  }
-
-  const mixCardsClick = () => {
-    setMixCards(mixCards + 1)
   }
 
   useEffect( () => {
@@ -73,20 +67,15 @@ function ConsultationCards(props) {
     }
   }
 
-  useEffect( () => () => props.sse.close(), [])
+  useEffect( () => () => {
+    props.sse.close()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   console.log('render Consultation cards')
  
   return (
     <div className="consultation-cards">
-      <div className="consultation-cards-tools">
-        <div className="consultation-cards-tools-item">
-          <span onClick={mixCardsClick}>Перемешать карты</span>
-        </div>
-        <div className="consultation-cards-tools-item consultation-cards-tools-divider">
-          <span>Случайная карта</span>
-        </div>
-      </div>
       {local_already_exist}
       {fetched_already_exist}
       {fetched_selected}
