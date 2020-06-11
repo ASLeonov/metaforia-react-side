@@ -24,6 +24,13 @@ export const currentSessionsReducer = (sessionsState = {isLoaded: false, isLoadi
         data: ["ERROR"]
       }
     }
+    case 'CLEAR_SESSIONS_CURRENT': {
+      return {
+        isLoaded: false,
+        isLoading: false,
+        data: []
+      }
+    }
     default: {
       return {
         ...sessionsState

@@ -24,6 +24,13 @@ export const payCardsReducer = (cardsState = {isLoaded: false, isLoading: false,
         data: ["ERROR"]
       }
     }
+    case 'CLEAR_CARDS_PAY': {
+      return {
+        isLoaded: false,
+        isLoading: false,
+        data: []
+      }
+    }
     default: {
       return {
         ...cardsState

@@ -1,15 +1,24 @@
 import React from 'react'
-// import './header.css'
+import {connect} from 'react-redux'
+import {logout} from '../../../store/action-creators/user'
+import './exit.css'
 
-function Exit() {
+function Exit({logout}) {
+
+  const logoutClick = () => logout()
 
   return (
     <div className="header-exit">
-      <div>
+      <p className="header-exit-btn" onClick={logoutClick}>
         Выход
-      </div>
+      </p>
     </div>
   )
 }
 
-export default Exit
+export default connect(
+  null,
+  {
+    logout
+  }
+)(Exit)

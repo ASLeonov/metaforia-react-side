@@ -24,6 +24,13 @@ export const userCardsReducer = (userCardsState = {isLoaded: false, isLoading: f
         data: ["ERROR"]
       }
     }
+    case 'CLEAR_USER_CARDS': {
+      return {
+        isLoaded: false,
+        isLoading: false,
+        data: []
+      }
+    }
     default: {
       return {
         ...userCardsState

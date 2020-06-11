@@ -62,7 +62,7 @@ export const thisSessionReducer = (
           }
         }
         case 'CLEAR_THIS_SESSION': {
-          console.log('CLEAR_THIS_SESSION')
+          // console.log('CLEAR_THIS_SESSION')
           return {
             session_id: null,
             last_version: null,

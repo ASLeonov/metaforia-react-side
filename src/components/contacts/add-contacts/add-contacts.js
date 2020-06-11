@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {selectUser} from '../../../store/selectors'
+import {selectUser} from '../../../store/selectors/user'
 import {getContacts} from '../../../store/action-creators'
 import ContactItem from '../contact-item'
 import './add-contacts.css'

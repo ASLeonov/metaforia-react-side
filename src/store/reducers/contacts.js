@@ -23,6 +23,13 @@ export const contactsReducer = (contactsState = {isLoaded: false, isLoading: fal
         data: ["ERROR", action.error]
       }
     }
+    case 'CLEAR_CONTACTS': {
+      return {
+        isLoaded: false,
+        isLoading: false,
+        data: []
+      }
+    }
     default: {
       return {
         ...contactsState

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
-import {selectUser} from '../../store/selectors'
+import {selectUser} from '../../store/selectors/user'
 import {selectUserCards, selectUserSelectedCards} from '../../store/selectors/cards'
 import {getUserCards} from '../../store/action-creators/cards-actions'
 import {cardsJSX} from '../../functions/cards-box-jsx'

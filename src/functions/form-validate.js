@@ -5,7 +5,7 @@ export const validateField = (props) => {
 
   if (isRequired) {
     
-    if (name === 'email' && (!value.includes('@') || !value.includes('.'))) {
+    if ( (name === 'email' || name === 'login') && (!value.includes('@') || !value.includes('.')) ) {
       return false
     } else if ( (value_with_tags && value_with_tags.length > 0) || value.replace(/ /gi,'').length === 0 ) {
       return false

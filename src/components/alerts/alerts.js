@@ -11,7 +11,7 @@ function Alerts(props) {
   const confirmBtnsCN = direction === 'column' ? "confirm_buttons confirm_buttons_column" : "confirm_buttons"
   const confirmBtnCN  = direction === 'column' ? "confirm_button confirm_button_column"   : "confirm_button"
 
-  console.log('render alert')
+  // console.log('render alert')
 
   return (
     <div className={comfirmCN}>

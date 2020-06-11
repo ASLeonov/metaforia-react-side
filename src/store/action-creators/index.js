@@ -1,11 +1,5 @@
 import {api_path} from '../common'
 
-export const getUser = () => {
-  return {
-      type: 'GET_USER',
-  }
-}
-
 export const getContacts = () => (dispatch, getState) => {
   const user_login = getState().user.login
   dispatch({

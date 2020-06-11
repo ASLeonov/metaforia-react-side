@@ -1,21 +1,21 @@
-export const userSelectedCardReducer = 
+export const userSelectedCardsReducer = 
   (
-    userSelectedCardItemsState = { isLoaded: false, isLoading: false, activeCardsBox: false, cardBoxes: {}, data: {} },
+    userSelectedCardsState = { isLoaded: false, isLoading: false, activeCardsBox: false, cardBoxes: {}, data: {} },
     action
   ) => {
 // ---------------------------- А не замутить ли иммутабле ??? Типа объект в объекте и все такое...
     switch (action.type) {
       case 'ADD_SELECTED_CARD_ITEMS': {
         console.log('ADD_SELECTED_CARD_ITEMS')
-        const new_cardBoxes = userSelectedCardItemsState.cardBoxes[action.payload.cardsBox_id]
+        const new_cardBoxes = userSelectedCardsState.cardBoxes[action.payload.cardsBox_id]
         const isLoaded_new = new_cardBoxes === undefined ? false : true
-        const activeCardsBox_new = isLoaded_new ===  true ? action.payload.cardsBox_id : userSelectedCardItemsState.activeCardsBox
+        const activeCardsBox_new = isLoaded_new ===  true ? action.payload.cardsBox_id : userSelectedCardsState.activeCardsBox
         return {
           isLoaded: isLoaded_new,
           isLoading: false,
           activeCardsBox: activeCardsBox_new,
-          cardBoxes: {...userSelectedCardItemsState.cardBoxes},
-          data: {...userSelectedCardItemsState.data}
+          cardBoxes: {...userSelectedCardsState.cardBoxes},
+          data: {...userSelectedCardsState.data}
         }
       }
       case 'GET_SELECTED_CARD_ITEMS__LOADING': {
@@ -24,13 +24,13 @@ export const userSelectedCardReducer =
           isLoaded: false,
           isLoading: true,
           activeCardsBox: false,
-          cardBoxes: {...userSelectedCardItemsState.cardBoxes},
-          data: {...userSelectedCardItemsState.data}
+          cardBoxes: {...userSelectedCardsState.cardBoxes},
+          data: {...userSelectedCardsState.data}
         }
       }
       case 'GET_SELECTED_CARD_ITEMS__SUCCESS': {
         console.log('GET_SELECTED_CARD_ITEMS__SUCCESS')
-        const data_new = {...userSelectedCardItemsState.data}
+        const data_new = {...userSelectedCardsState.data}
         delete data_new["ERROR"] // Если ранее была ошибка, нужно ее стереть
           action.response.forEach(element => {
             data_new[element.cards_id] = {
@@ -40,7 +40,7 @@ export const userSelectedCardReducer =
               cards_img: element.cards_img,
             }
           })
-        const cardBoxes_new = {...userSelectedCardItemsState.cardBoxes}
+        const cardBoxes_new = {...userSelectedCardsState.cardBoxes}
           cardBoxes_new[action.response[0].cards_box] = ""
         return {
           isLoaded: true,
@@ -73,7 +73,7 @@ export const userSelectedCardReducer =
       }
       default: {
         return {
-          ...userSelectedCardItemsState
+          ...userSelectedCardsState
         }
       }
     }
