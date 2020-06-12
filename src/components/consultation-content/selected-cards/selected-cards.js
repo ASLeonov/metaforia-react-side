@@ -35,6 +35,7 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
     Object.keys(dataKeys).length > 0 && setDataKeys({})
     xPosition !==0 && setXPosition(0)
     setMixCards([0])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeCardsBox])
 
   useEffect( () => {

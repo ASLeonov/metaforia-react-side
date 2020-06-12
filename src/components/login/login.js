@@ -62,7 +62,7 @@ function Login({user, login}) {
     e.preventDefault()
     if (loginType === 'enter') {
       if (Object.keys(badValuesEnter).length === 0) {
-        login(formData.login)
+        login(formData.login, formData.password)
       } else {
         // сообщение ?
       }
@@ -87,7 +87,7 @@ function Login({user, login}) {
     }
   }, [user])
 
-  console.log('render Login', formData)
+  console.log('render Login', badValuesReg)
 
   return(
     <div className="login">
@@ -101,7 +101,12 @@ function Login({user, login}) {
           method="post"
           style={loginType === 'enter' ? {borderTopRightRadius:'8px'} : {borderTopLeftRadius:'8px'}}
         >
-          {loginType !== 'enter' ? formItem('Ваше имя', 'name') : ''}
+          {loginType !== 'enter' ? 
+            <>
+              {formItem('Ваше имя', 'name')}
+              <span className="login-form-verification" style={badValuesReg['name'] ? {color:'red'} : {color:'green'}}>{badValuesReg["name"] ? '❗' : '✔'}</span>
+            </> : ''
+          }
           {formItem('E-mail (логин)', 'login')}
           {loginType === 'enter' ? formItem('Пароль', 'password') : <p>Инфа будет выслана на почту</p>}
             <input type='submit' value={loginType === 'enter' ? 'Войти' : 'Зарегистрироваться'} />
