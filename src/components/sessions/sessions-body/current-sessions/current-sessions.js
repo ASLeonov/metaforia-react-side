@@ -10,6 +10,8 @@ import Messages from '../../../messages'
 import Loader from '../../../loader'
 import './current-sessions.css'
 
+// const WebSocket = require('isomorphic-ws')
+
 function CurrentSessions(props) {
   const {user, sessions_data, getCurrentSessions, getLastSessions, setThisSession} = props
 
@@ -47,6 +49,11 @@ function CurrentSessions(props) {
     if (!sessions_data.isLoading && !sessions_data.isLoaded) {
       getCurrentSessions()
     }
+              // const ws = new WebSocket('ws://localhost:8080')
+              //   ws.onopen = function open() {
+              //   ws.send('msg from client')
+              // }
+              
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

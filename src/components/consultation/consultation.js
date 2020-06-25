@@ -7,26 +7,18 @@ import {clearThisSession} from '../../store/action-creators/sessions-actions'
 import {clearSelectedCardItems} from '../../store/action-creators/cards-actions'
 import './consultation.css'
 
-// import useWebSocket from 'react-use-websocket'
-
 function Consultation(props) {
   const {clearThisSession, clearSelectedCardItems} = props
-
-  // const {sendMessage, sendJsonMessage, lastMessage, lastJsonMessage, readyState, getWebSocket} = 
-  //   useWebSocket('ws://localhost/ll/socket.php', {                                // wss://echo.websocket.org
-  //     onOpen: () => console.log('opened'),
-  //     shouldReconnect: (closeEvent) => false,
-  //   })
 
   const data = props.thisSession.session_id ? 
     <ConsultationContent session_id={props.thisSession.session_id} /> : 
       <Messages caption="message_currentSessionError" />
 
   useEffect ( () => () => {
-    const maxId = setInterval( () => {} )
-    for (let i=0; i < maxId; i+=1) { 
-      clearInterval(i)
-    }
+    // const maxId = setInterval( () => {} )
+    // for (let i=0; i < maxId; i+=1) { 
+    //   clearInterval(i)
+    // }
     clearThisSession()
     clearSelectedCardItems()
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -36,8 +28,8 @@ function Consultation(props) {
 
   return (
     <>
-    {/* <button onClick={() => sendMessage('msg')}>MSG</button> */}
-    {data}</>
+      {data}
+    </>
   )
 }
 

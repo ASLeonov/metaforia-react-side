@@ -8,25 +8,35 @@ import ConsultationCards from './consultation-cards'
 import Loader from '../loader'
 import './consultation-content.css'
 
-import {api_path} from '../../store/common'
+// import useWebSocket from 'react-use-websocket'
+
+// import {api_path} from '../../store/common'
 
 function ConsultationContent(props) {
   const [windowFullScreen, setWindowFullScreen] = useState(false)
   const [showChangeCards, setShowChangeCards] = useState(false)
   const [selectCards, setSelectCards] = useState(null)
-  const [isSSE, setIsSSE] = useState(false)
+  // const [isSocket, setIsSocket] = useState(false)
   const {isLoaded, isLoading, data} = props.userCards
 
   let fetched
 
+      // if (!isSocket) {
+        // const {sendMessage, sendJsonMessage, lastMessage, lastJsonMessage, readyState, getWebSocket} = 
+        //   useWebSocket('ws://localhost:8080', {                                // wss://echo.websocket.org
+        //     onOpen: () => sendMessage('init - client'),
+        //     shouldReconnect: (closeEvent) => true,
+        //   })
+        // setIsSocket(sendMessage, sendJsonMessage, lastMessage, lastJsonMessage, readyState, getWebSocket)
+      // }
+
   const onSelectCardsClick = cardsBox_id => {
       setShowChangeCards(false)   // скрытие вкладки выбора колоды - чтобы она не мигала при загрузке (при реальном фетче) новой колоды.
       setSelectCards(cardsBox_id)
-      if (!isSSE) {
-        let eventSource = new EventSource(`${api_path}sse.php?name=${props.user.login}&session_id=${props.session_id}`)
-        // eventSource.onopen = e => console.log("Событие: open")
-        setIsSSE(eventSource)
-      }
+      // if (!isSSE) {
+      //   let eventSource = new EventSource(`${api_path}sse.php?name=${props.user.login}&session_id=${props.session_id}`)
+      //   setIsSSE(eventSource)
+      // }
   }
 
   if (isLoading) {
@@ -92,7 +102,7 @@ function ConsultationContent(props) {
           </h4> : ''
         }
       </div>
-        {selectCards ? <ConsultationCards activeCards_id={selectCards} sse={isSSE} /> : ''}
+        {selectCards ? <ConsultationCards activeCards_id={selectCards} user={props.user} /> : ''}
     </div>
   )
 }

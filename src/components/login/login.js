@@ -24,6 +24,10 @@ function Login({user, login}) {
           onChange={onFormDataChange}
           type={data === 'password' ? 'password' : ''}
         />
+        {loginType === 'enter' ? 
+          <span className="login-form-verification" style={badValuesEnter[data] ? {color:'red'} : {color:'green'}}>{badValuesEnter[data] ? '❗' : '✔'}</span> :
+          <span className="login-form-verification" style={badValuesReg[data]   ? {color:'red'} : {color:'green'}}>{badValuesReg[data]   ? '❗' : '✔'}</span>
+        }
     </>
   )
 
@@ -64,13 +68,23 @@ function Login({user, login}) {
       if (Object.keys(badValuesEnter).length === 0) {
         login(formData.login, formData.password)
       } else {
-        // сообщение ?
+        setShowAlert([
+          'notification',
+          'column',
+          'alert_loginBadValueEnter',
+          () => setShowAlert([]),
+        ])
       }
     } else {
       if (Object.keys(badValuesReg).length === 0) {
         // регистрационные действия
       } else {
-        // сообщение ?
+        setShowAlert([
+          'notification',
+          'column',
+          'alert_loginBadValueReg',
+          () => setShowAlert([]),
+        ])
       }
     }
     
@@ -101,14 +115,17 @@ function Login({user, login}) {
           method="post"
           style={loginType === 'enter' ? {borderTopRightRadius:'8px'} : {borderTopLeftRadius:'8px'}}
         >
-          {loginType !== 'enter' ? 
+          {loginType === 'enter' ? 
             <>
+              {formItem('E-mail (логин)', 'login')}
+              {formItem('Пароль', 'password')}
+            </> : 
+            <>
+              {formItem('E-mail (логин)', 'login')}
               {formItem('Ваше имя', 'name')}
-              <span className="login-form-verification" style={badValuesReg['name'] ? {color:'red'} : {color:'green'}}>{badValuesReg["name"] ? '❗' : '✔'}</span>
-            </> : ''
+              <p>Инфа будет выслана на почту</p>
+            </>
           }
-          {formItem('E-mail (логин)', 'login')}
-          {loginType === 'enter' ? formItem('Пароль', 'password') : <p>Инфа будет выслана на почту</p>}
             <input type='submit' value={loginType === 'enter' ? 'Войти' : 'Зарегистрироваться'} />
               <span className="login-form-support">
                 Служба поддержки
