@@ -2,7 +2,7 @@ const express = require('express')
 // const bodyParser = require('body-parser')
 // const path = require("path")
 const mysql = require('mysql2')
-const api = require('./api')
+// const api = require('./api')
 
 const app = express()
 const port = 3001
@@ -13,7 +13,7 @@ const WebSocket = require('ws')
 //   next()
 // })
 // app.use(bodyParser.json())
-app.use('/api', api)
+// app.use('/api', api)
 
  
 const wss = new WebSocket.Server({ port: 8080 });
