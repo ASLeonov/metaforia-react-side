@@ -1,6 +1,7 @@
 export const contactsReducer = (contactsState = {isLoaded: false, isLoading: false, data: []}, action) => {
   switch (action.type) {
     case 'GET_CONTACTS__LOADING': {
+      console.log('GET_CONTACTS__LOADING')
       return {
         isLoaded: false,
         isLoading: true,
@@ -8,6 +9,7 @@ export const contactsReducer = (contactsState = {isLoaded: false, isLoading: fal
       }
     }
     case 'GET_CONTACTS__SUCCESS': {
+      console.log('GET_CONTACTS__SUCCESS')
       return {
         isLoaded: true,
         isLoading: false,
@@ -19,6 +21,13 @@ export const contactsReducer = (contactsState = {isLoaded: false, isLoading: fal
         isLoaded: true,
         isLoading: false,
         data: ["ERROR", action.error]
+      }
+    }
+    case 'CLEAR_CONTACTS': {
+      return {
+        isLoaded: false,
+        isLoading: false,
+        data: []
       }
     }
     default: {

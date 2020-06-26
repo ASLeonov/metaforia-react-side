@@ -1,3 +1,16 @@
+.messages_fullscreen {
+  position: absolute;
+  top: 50px;      /* высота header */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 0 50px;
+  background-color: lemonchiffon;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .messages {
   display: flex;
   flex-direction: column;

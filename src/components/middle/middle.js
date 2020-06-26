@@ -5,8 +5,6 @@ import './middle.css'
 
 function Middle(props) {
 
-  // console.log('render Middle', props.activePage)
-
   return (
     <div className="middle">
       <Sidebar activePage={props.activePage} />

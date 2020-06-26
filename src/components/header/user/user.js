@@ -1,14 +1,9 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getUser} from '../../../store/action-creators/index'
-import {selectUser} from '../../../store/selectors'
+import {selectUser} from '../../../store/selectors/user'
 import './user.css'
 
-function User({user, getUser}) {
-
-  if (user.login === "") {
-    getUser()
-  }
+function User({user}) {
 
   // console.log('render User', user)
 
@@ -16,21 +11,14 @@ function User({user, getUser}) {
     <div className="header-user">
       <div className="header-user-avatar"></div>
       <div>
-        {user.name.length > 0 ? user.name : 'Текущий пользователь'}
+        {user.fullname ? user.fullname : 'Авторизация не произведена'}
       </div>
     </div>
   )
 }
 
-const mapStateToProps = state => ({
-  user: selectUser(state)
-})
-
-const mapDispatchToProps = {
-  getUser: getUser
-}
-
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+  state => ({
+    user: selectUser(state)
+  })
 )(User)

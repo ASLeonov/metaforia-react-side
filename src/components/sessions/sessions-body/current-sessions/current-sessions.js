@@ -1,34 +1,23 @@
 import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
-import {getCurrentSessions, clearCurrentSessions, clearLastSessions} from '../../../../store/action-creators'
-import {setThisSession, clearThisSession} from '../../../../store/action-creators/sessions-actions'
-import {clearSelectedCardItems, clearCardsThisSession, clearCardThisSessionLocal} from '../../../../store/action-creators/cards-actions'
+import {Link} from 'react-router-dom'
+import {getCurrentSessions, getLastSessions} from '../../../../store/action-creators/sessions-actions'
+import {setThisSession} from '../../../../store/action-creators/sessions-actions'
 import {selectCurrentSessions} from '../../../../store/selectors/sessions'
-import {selectUser} from '../../../../store/selectors'
-import SingleCurrentSession from '../single-current-session'
+import {selectUser} from '../../../../store/selectors/user'
+import SingleSession from '../single-session'
 import Messages from '../../../messages'
 import Loader from '../../../loader'
 import './current-sessions.css'
 
+// const WebSocket = require('isomorphic-ws')
+
 function CurrentSessions(props) {
-  const {
-    user,
-    sessions_data,
-    getCurrentSessions,
-    clearCurrentSessions,
-    clearLastSessions,
-    setThisSession,
-    clearThisSession,
-    clearCardsThisSession,
-    clearSelectedCardItems,
-    clearCardThisSessionLocal
-  } = props
+  const {user, sessions_data, getCurrentSessions, getLastSessions, setThisSession} = props
 
-  let fetched
+  console.log('Render Current sessions')
 
-  if (!sessions_data.isLoading && !sessions_data.isLoaded) {
-    getCurrentSessions()
-  }
+  let fetched = []
 
   if (sessions_data.isLoading) {
     fetched = <Loader />
@@ -37,13 +26,14 @@ function CurrentSessions(props) {
   if (sessions_data.isLoaded) {
     if (sessions_data.data[0] !== "ERROR") {
       if (sessions_data.data.length > 0) {
-        fetched = sessions_data.data.map( element => (
-          <SingleCurrentSession
+        fetched = sessions_data.data.map(element => (
+          <SingleSession
             key={element.session_id}
+            type={'current_session'}
             session={element}
             user={user}
-            clearCurrentSessions={clearCurrentSessions} 
-            clearLastSessions={clearLastSessions}
+            getCurrentSessions={getCurrentSessions}
+            getLastSessions={getLastSessions}
             setThisSession={setThisSession}
           />
         ))
@@ -55,42 +45,43 @@ function CurrentSessions(props) {
     }
   }
 
-  // const reload = () => clearCurrentSessions()
-
   useEffect( () => {
-    clearThisSession()
-    clearCardsThisSession()
-    clearSelectedCardItems()
-    clearCardThisSessionLocal()
+    if (!sessions_data.isLoading && !sessions_data.isLoaded) {
+      getCurrentSessions()
+    }
+              // const ws = new WebSocket('ws://localhost:8080')
+              //   ws.onopen = function open() {
+              //   ws.send('msg from client')
+              // }
+              
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <div className="sessions-list">
       {fetched}
-      {/* <button onClick={reload}>Обновить список сессий</button> */}
+      {fetched.length > 0 ? 
+        <Link to='/contacts'><button className="sessions-standart-button">Выбрать клиента и создать сессию</button></Link> : ''}
     </div>
   )
 }
 
-const mapStateToProps = state => {
-  return {
+export default connect(
+  state => ({
     sessions_data: selectCurrentSessions(state),
     user: selectUser(state)
+  }),
+  {
+    getCurrentSessions,
+    getLastSessions,
+    setThisSession
   }
-}
-
-const mapDispatchToProps = {
-  getCurrentSessions,
-  clearCurrentSessions,
-  clearLastSessions,
-  setThisSession,
-  clearThisSession,
-  clearCardsThisSession,
-  clearCardThisSessionLocal,
-  clearSelectedCardItems
-}
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
 )(CurrentSessions)
+
+// ПРОВЕРЕНО ЛОКАЛЬНО
+
+// Корректная работа:
+// После первого рендера, один раз вызываем useEffect - при необходимости диспатчим экшн загрузки данных.
+// Лишних рендеров нет как при первой загрузке, так и при переходе по ссылкам.
+// Fetch на сервер один, проблем нет.
+// Рендер каждого компонента-консультации (SingleSession) тоже один. Проблем нет.

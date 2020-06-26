@@ -11,12 +11,13 @@ function Messages(props) {
       messages[props.caption][1]
 
   return (
-    <p className="messages">
-      <span>{text_line_1}</span>
-      <span>{text_line_2}</span>
-    </p>
+    <div className={props.fullscreen ? 'messages_fullscreen' : ''}>
+      <p className="messages">
+        <span>{text_line_1}</span>
+        <span>{text_line_2}</span>
+      </p>
+    </div>
   )
-  
 }
 
 export default Messages

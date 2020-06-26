@@ -1,10 +1,34 @@
-export const userReducer = (userState = {login: "", name: ""}, action) => {
-  // console.log('userReducer')
+export const userReducer = 
+(
+  userState = {login: "", name: "", fullname: "", surname: "", spec: false},
+  action
+) => {
   switch (action.type) {
-    case 'GET_USER': {
+    case 'LOGIN_OK': {
       return {
-        login: "tanyaleo81@yandex.ru",
-        name: "Татьяна Леонова"
+        login: action.response.user_login,
+        name: action.response.user_name,
+        surname: action.response.user_surname,
+        fullname: `${action.response.user_name} ${action.response.user_surname}`,
+        spec: action.response.user_spec === '1' ? true : false
+      }
+    }
+    case 'LOGIN_ERROR': {
+      return {
+        login: 'BAD_LOGIN',
+        name: '',
+        surname: '',
+        fullname: '',
+        spec: false
+      }
+    }
+    case 'LOGOUT': {
+      return {
+        login: '',
+        name: '',
+        surname: '',
+        fullname: '',
+        spec: false
       }
     }
     default: {

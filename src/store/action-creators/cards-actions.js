@@ -1,17 +1,67 @@
 import {api_path} from '../common'
 
-// ----------
+
+// ---------- GET USER CARDS Все колоды карт (бесплатные и оплаченные) пользователя ---------- //
+
+export const getUserCards = () => (dispatch, getState) => {
+  const user_login = getState().user.login
+    dispatch({
+      type: 'GET_USER_CARDS__LOADING'
+    })
+    fetch(`${api_path}cards.php?name=${user_login}&type=userPayCards`)
+    .then(res => res.json())
+    .then(res =>
+      dispatch({
+        type: 'GET_USER_CARDS__SUCCESS',
+        response: res,
+      })
+    )
+    .catch(error => {
+      dispatch({
+        type: 'GET_USER_CARDS__FAILED',
+        error,
+      })
+    })
+}
+
+// ---------- END OF GET USER CARDS ---------- //
+
+
+// ---------- GET PAY CARDS Все платные, но не оплаченные пользователем колоды карт ---------- //
+
+export const getPayCards = () => (dispatch, getState) => {
+  const user_login = getState().user.login
+  dispatch({
+    type: 'GET_CARDS_PAY__LOADING'
+  })
+  fetch(`${api_path}cards.php?name=${user_login}&type=payCards`)
+    .then(res => res.json())
+    .then(res =>
+      dispatch({
+        type: 'GET_CARDS_PAY__SUCCESS',
+        response: res,
+      })
+    )
+    .catch(error => {
+      dispatch({
+        type: 'GET_CARDS_PAY__FAILED',
+        error,
+      })
+    })
+}
+
+// ---------- END OF GET PAY CARDS ---------- //
+
+
+// ---------- CARDS THIS SESSION Вся логика по работе с картами сессии, записанными в БД ---------- //
 
 export const getCardsThisSession = () => (dispatch, getState) => {
   const user_login = getState().user.login
   const session_id = getState().thisSession.session_id
-  setTimeout( () => {
-    dispatch({
-      type: 'GET_CARDS_THIS_SESSIONS__LOADING'
-    })
+  dispatch({
+    type: 'GET_CARDS_THIS_SESSIONS__LOADING'
   })
-  setTimeout( () => {
-    fetch(`${api_path}cards.php?name=${user_login}&type=getCardsThisSessions&session_id=${session_id}`)
+  fetch(`${api_path}cards.php?name=${user_login}&type=getCardsThisSessions&session_id=${session_id}`)
     .then(res => res.json())
     .then(res =>
       dispatch({
@@ -25,17 +75,13 @@ export const getCardsThisSession = () => (dispatch, getState) => {
         error,
       })
     })
-  })
 }
 
-export const clearCardsThisSession = () => {
+export const clearAllCardsThisSession = () => {
   return {
-    type: 'CLEAR_CARDS_THIS_SESSION'
+    type: 'CLEAR_ALL_CARDS_THIS_SESSION'  // И существующие и локал кардс
   }
 }
-
-
-// ----------
 
 export const saveCardThisSession = (card, position_left, position_top, scale, session_id) => (dispatch, getState) => {
   const user_login = getState().user.login
@@ -48,50 +94,32 @@ export const saveCardThisSession = (card, position_left, position_top, scale, se
     .then(data => {
       if (data === 'INSERT_CARD_THIS_SESSION') {
         dispatch({
-          type: 'INCREASE_THIS_SESSION'
+          type: 'INCREASE_THIS_SESSION',
+          payload: {
+            card,
+            position_left,
+            position_top,
+            scale
+          }
         })
-        // console.log('Card', card.cards_id ,'added/updated successfull')
-        // задиспатчить экшн на получение данных от бэка когда надо
-        // dispatch({
-        //   type: '...'
-        // })
       } else {
-        console.log('php ->', data)
+      // Если данные на сервере обновятся некорректно, то фетчим их по новой для синхронизации
+        dispatch(getCardsThisSession())
       }
     })
     .catch(e => console.log('catch error =>', e))
 }
 
-export const saveCardThisSessionLocal = (card, position_left, position_top, scale) => {
-  return {
-    type: 'SAVE_CARD_THIS_SESSION_LOCAL',
-    payload: {
-      card,
-      position_left,
-      position_top,
-      scale
-    }
-  }
-}
-
-export const clearCardThisSessionLocal = (card, position_left, position_top, scale) => {
-  return {
-    type: 'CLEAR_CARD_THIS_SESSION_LOCAL'
-  }
-}
+// ---------- END OF CARDS THIS SESSION ---------- //
 
 
 // ---------- SELECTED CARD ITEMS Карты из выбранной для работы колоды ---------- //
 
 export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
-  // Тут походу на беке захардкоден user --- беда.
-  setTimeout( () => {
     dispatch({
       type: 'GET_SELECTED_CARD_ITEMS__LOADING'
     })
-  })
-  setTimeout( () => {
-    fetch(`${api_path}cards.php?name=user&type=userSelectedCards&payload=${cards_id}`)
+    fetch(`${api_path}cards.php?name=nobody&type=userSelectedCards&payload=${cards_id}`)  // name - любое
     .then(res => res.json())
     .then(res =>
       dispatch({
@@ -105,18 +133,23 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
         error,
       })
     })
-  })
 }
 
 export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {
-  setTimeout( () => {
+  // setTimeout( () => {
+// Фикс бага Warning: Cannot update a component (`ConnectFunction`) while rendering a different component (`ConsultationCards`) ... ...
+// Здесь, видимо, речь о том, что при рендере компонента, мы меяем стор и этот же компонент рендереится в тот же момент, т.е. два рендера одного компонента одновременно. Но я не уверен, что именно в этом казус.
+// ТаймАут без задержки вроде как должен дать закончиться предыдующему коду, прежде чем задиспатчить этот экшн, что кажись помогает.
+
+// Убрал ТаймАут пока, т.к. закомментил проблемную строку.
     dispatch({
       type: 'ADD_SELECTED_CARD_ITEMS',
       payload: {
         cardsBox_id: cardsBox_id
       }
     })
-  })
+  // })
+
 }
 
 export const clearSelectedCardItems = () => {

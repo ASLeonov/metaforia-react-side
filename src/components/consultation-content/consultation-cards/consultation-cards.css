@@ -20,6 +20,13 @@
   flex-grow: 1;
   border-top: 1px solid rgb(196, 196, 196);
   border-bottom: 1px solid rgb(196, 196, 196);
+  animation: cards-fadeIn 1s;
+}
+
+@keyframes cards-fadeIn {
+  0% {opacity: 0;}
+  40% {opacity: 0;}
+  100% {opacity: 1;}
 }
 
 .consultation-cards-center-wrapper {
@@ -66,6 +73,7 @@
 .consultation-cards-tools-item span{
   text-align: center;
   cursor: pointer;
+  user-select: none;
 }
 
 .consultation-cards-tools-divider {
@@ -82,6 +90,9 @@
   cursor: pointer;
   user-select: none;
   border: 1px solid rgb(196, 196, 196);
+
+        animation: cards-fadeIn 1.2s;
+
 }
 
 .consultation-cards-leftBtn {
@@ -104,4 +115,8 @@
 
 .consultation-cards-leftBtn span:hover, .consultation-cards-rightBtn span:hover {
   opacity: 1;
+}
+
+.consultation-cards-exists {
+  animation: cards-fadeIn 1s;
 }

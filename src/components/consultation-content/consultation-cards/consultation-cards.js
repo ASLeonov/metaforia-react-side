@@ -1,222 +1,103 @@
-import React, {useState, useEffect} from 'react'
+import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
 import {getSelectedCardItems, addSelectedCardItems, getCardsThisSession} from '../../../store/action-creators/cards-actions'
 import {setThisSession} from '../../../store/action-creators/sessions-actions'
-import ConsultationCard from '../consultation-card'
+import SelectedCards from '../selected-cards'
+import CardsThisSession from '../cards-this-session'
+import Messages from '../../messages'
 import Loader from '../../loader'
-import {api_path} from '../../../store/common'
 import './consultation-cards.css'
 
+import SocketController from '../socket-controller'
+
 function ConsultationCards(props) {
-  const [xPosition, setXPosition] = useState(0)
-  const {isLoaded, isLoading, activeCardsBox, data} = props.userSelectedCards
-  const thisSessionCards = props.thisSessionCards
-  const thisSessionCardsLocal = props.thisSessionCardsLocal
-  let fetched, fetched_already_exist, local_already_exist
+  const {thisSession, selectedCards, thisSessionCards, thisSessionCardsLocal, getCardsThisSession,  setThisSession} = props
+  let fetched_selected, fetched_already_exist, local_already_exist, socket
 
-  const rightScrollClick = () => {
-    const wrapper_element = document.querySelector('.consultation-cards-center-wrapper')
-    if (wrapper_element.scrollWidth > wrapper_element.clientWidth) {
-      setXPosition(xPosition + 1)
-    }
+  if (selectedCards.isLoading || thisSessionCards.isLoading) {
+    fetched_selected = <Loader fullscreen={true} />
   }
-
-  const leftScrollClick = () => {
-    (xPosition > 0) && setXPosition(xPosition - 1)
-  }
-
-  const userSelectedCardsJSX = () => {
-    fetched = []
-      if (Object.keys(data).length > 0) {
-        let i = 0
-          for (const key in data) {
-            if (data.hasOwnProperty(key)) {
-              const element = data[key]
-                if (element.cards_box === activeCardsBox && !thisSessionCards.data[key] && !thisSessionCardsLocal[key]) {     // !element.cardInUse
-                  i++
-                  const style_1 = (i <= xPosition) ? {width:'0', margin:'0'} : {}
-                  fetched.push(
-                    <ConsultationCard
-                      key={element.cards_id}
-                      style_1={style_1}
-                      card={element}
-                      session_id={props.thisSession.session_id}
-                    />
-                  )
-                }
-            }
-          }
+ 
+  if (selectedCards.isLoaded && thisSessionCards.isLoaded) {
+    if (!selectedCards.data["ERROR"] && !thisSessionCards.data["ERROR"]) {
+      if (selectedCards.activeCardsBox !== props.activeCards_id) {
+        // props.addSelectedCards(props.activeCards_id)
+      } else {
+        fetched_already_exist = 
+          <CardsThisSession
+            session_id={thisSession.session_id}
+            thisSessionCards={thisSessionCards.data}
+          />
+        local_already_exist = 
+          <CardsThisSession
+            session_id={thisSession.session_id}
+            thisSessionCardsLocal={thisSessionCardsLocal}
+          />
+        fetched_selected = 
+          <SelectedCards
+            session_id={thisSession.session_id}
+            activeCardsBox={selectedCards.activeCardsBox}
+            data={selectedCards.data}
+            thisSessionCards={thisSessionCards.data}
+            thisSessionCardsLocal={thisSessionCardsLocal}
+          />
+        socket = <SocketController user_login={props.user.login} session_id={thisSession.session_id} version={thisSession.last_version} />
       }
-  }
-
-  const thisSessionCardsJSX = () => {
-    fetched_already_exist = []
-      for (const key in thisSessionCards.data) {
-        if (thisSessionCards.data.hasOwnProperty(key)) {
-          const element = thisSessionCards.data[key]
-            fetched_already_exist.push(
-              <ConsultationCard
-                key={`exist-card-${key}`}
-                style_1={{}}
-                card={element.card}
-                position_left={element.position_left}
-                position_top={element.position_top}
-                scale={element.scale}
-                exist_card={true}
-                session_id={props.thisSession.session_id}
-              />
-            )
-        }
-      }
-  }
-
-  const thisSessionCardsLocalJSX = () => {
-    local_already_exist = []
-        for (const key in thisSessionCardsLocal) {
-          if (thisSessionCardsLocal.hasOwnProperty(key)) {
-            const element = thisSessionCardsLocal[key]
-              local_already_exist.push(
-                <ConsultationCard
-                  key={`exist-card-local-${key}`}
-                  style_1={{}}
-                  card={element.card}
-                  position_left={element.position_left}
-                  position_top={element.position_top}
-                  scale={element.scale}
-                  exist_card_local={true}
-                  session_id={props.thisSession.session_id}
-                />
-              )
-          }
-        }
-  }
-
-  if (!isLoaded && !isLoading) {
-    fetched = <Loader fullscreen={true} />
-  }
-
-  if (isLoaded) {
-    if (!data["ERROR"]) {
-      // userSelectedCardsJSX()     убрал, тестим скачки карт для выбора
-    } else {}   // прописать errors...
-  }
-
-  if (!thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
-    props.getCardsThisSession()
-  }
-
-  if (thisSessionCards.isLoaded) {
-    if ( (!isLoaded && !isLoading) ) { 
-      props.getSelectedCards(props.activeCards_id)
-    } else if (isLoading) {
-      fetched = <Loader fullscreen={true} />
-    } else if (isLoaded) {
-
-        if (activeCardsBox !== props.activeCards_id) {
-          props.addSelectedCards(props.activeCards_id)
-        } else {
-          if (!thisSessionCards.data["ERROR"]) {
-            thisSessionCardsJSX()
-            thisSessionCardsLocalJSX()
-            userSelectedCardsJSX()
-          } else {}   // прописать errors...  
-        }
+    } else {
+      fetched_selected = <Messages caption="message_consultCardsError" fullscreen={true} />
     }
   }
 
   useEffect( () => {
-
-    // console.log('useEffect ->', isLoaded, thisSessionCards.isLoaded)
-
-    if (isLoaded && thisSessionCards.isLoaded && !isLoading && !thisSessionCards.isLoading) {
-
-      const maxId = setInterval( () => {} )
-        for (let i=0; i < maxId; i+=1) { 
-          clearInterval(i)
-        }
-
-// Возможно здесь лучше рекурсивный setTimeOut? Что если сервер будет отвечать долго?
-// Посыпятся потом ответы? Или что вообще будет?
-        let timerId = setInterval( () => {    
-
-          fetch(`${api_path}cards.php?name=tanyaleo81@yandex.ru&type=synchro&session_id=${props.thisSession.session_id}&changeValue=${props.thisSession.last_version}`)
-          .then(response => response.text())
-          .then(data => {
-
-            if (data === 'UPDATE_IS_NO_NEEDED') {
-
-              console.log(timerId, '-> UPDATE_IS_NO_NEEDED')     // timerId = setTimeout(tick, 7000); // рекурсивный вызов, если обновление не нужно
-                
-            } else if (data.includes('UPDATE_IS_NEEDED_')) {
-
-              const str = 'UPDATE_IS_NEEDED_'
-
-              console.log(data.slice(str.length))
-
-              console.log(timerId, '-> UPDATE_IS_NEEDED')
-              props.clearCardThisSessionLocal()
-              props.getCardsThisSession()
-              setTimeout( () => {
-                props.setThisSession(props.thisSession.session_id, data.slice(str.length))
-              }, 1100)
-              // подумать про промис тут, а то мало ли в какой последовательности что произойдет, или запихать setThisSession в getCardThisSession?
-              // также не реализована перезагрузка колоды - вдруг смена колоды?              
-            }
-            
-          })
-
-          .catch(err => console.log('error', err))
-          
-        }, 7000)
-
+    if (!selectedCards.isLoaded && !selectedCards.isLoading) {
+      // Срабатывает при загрузке новой колоды в процессе консультации
+      props.getSelectedCards(props.activeCards_id)
     }
-  }, [isLoaded, props.thisSession.last_version]) // isLoaded - грузится последним
+    // if (!thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
+    //   Это загрузка существующих карт сессии - сейчас не актуальна, т.к. она происходит из <CardsBox />
+    //   props.getCardsThisSession()
+    // }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCards.isLoaded])
 
-  useEffect ( () => {
-    if (xPosition !== 0) {
-      // console.log('activeCardsBox -> setXPosition(0)')
-      setXPosition(0)
-    }
-  }, [activeCardsBox])
-  
+  // useEffect( () => {
+    // console.log(props.socketGet.data)
+  // }, [props.socketGet])
+
+  // props.sse.onmessage = e => {
+    // if (thisSession.last_version !== Number(e.data)) {
+      //console.log("id local не равно id server", thisSession.last_version, Number(e.data))
+      // setThisSession(thisSession.session_id, Number(e.data))
+      // getCardsThisSession()
+    // }
+  // }
+
+  // useEffect( () => () => {
+    // props.sse.close()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
+
+  console.log('render Consultation cards')
+ 
   return (
     <div className="consultation-cards">
-      <div className="consultation-cards-tools">
-        <div className="consultation-cards-tools-item">
-          <span>Перемешать карты</span>
-        </div>
-        <div className="consultation-cards-tools-item consultation-cards-tools-divider">
-          <span>Случайная карта</span>
-        </div>
-      </div>
-      <div className="consultation-cards-leftBtn" onClick={leftScrollClick}>
-        <span>❮</span>
-      </div>
-      <div className="consultation-cards-center">
-        <div className={"consultation-cards-center-wrapper"}>
-          {local_already_exist}
-          {fetched_already_exist}
-          {fetched}
-        </div>
-      </div>
-      <div className="consultation-cards-rightBtn" onClick={rightScrollClick}>
-        <span>❯</span>
-      </div>
+      {local_already_exist}
+      {fetched_already_exist}
+      {fetched_selected}
+      {socket}
     </div>
   )
 }
 
 export default connect(
-  state => {
-    return {
-      userSelectedCards: selectUserSelectedCards(state),
-      thisSessionCards: selectThisSessionCards(state), 
-      thisSessionCardsLocal: selectThisSessionCardsLocal(state),
-      thisSession: selectThisSession(state)
-    }
-  },
+  state => ({
+    selectedCards: selectUserSelectedCards(state),
+    thisSessionCards: selectThisSessionCards(state), 
+    thisSessionCardsLocal: selectThisSessionCardsLocal(state),
+    thisSession: selectThisSession(state)
+  }),
   {
     getSelectedCards: getSelectedCardItems,
     addSelectedCards: addSelectedCardItems,
@@ -224,3 +105,14 @@ export default connect(
     setThisSession,
   }
 )(ConsultationCards)
+
+
+// Корректная работа.
+// После первого рендера срабатывает useEffect - при необходимости стартуем фетч карт из выбранной колоды (getSelectedCards сейчас должен срабатывать только при выборе другой колоды из режима консультации, т.к. при первичном выборе колоды он запускается из <CardsBox />), а также фетч ранее сохраненных в БД карт из текущей сессии (getCardsThisSession - вообще закомментил, т.к. запускаю также из <CardBox />).
+// Лишних рендеров и фетчей не наблюдаю, все ok.
+
+
+// SSE
+// Здесь происходит вся работа с SSE кроме инициализации (она уровнем выше).
+// При получении ответа от бэка сравнивается локальная версися косультации и серверная, если нет разницы - не делаем ничего, если есть - то приводим данные по консультации к актуальным(серверным) и фетчим последние данные по сессии.
+// При unMount компонента, рушим SSE.

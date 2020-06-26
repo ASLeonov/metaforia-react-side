@@ -6,7 +6,10 @@
 }
 
 .sessions-item-left {
-  width: 60%;
+  box-sizing: border-box;
+  width: 40%;
+  padding-right: 15px;
+  text-align: left;
 }
 
 .sessions-item-caption {
@@ -14,6 +17,7 @@
 }
 
 .sessions-item-caption__1stelement {
+  display: inline-block;
   margin-right: 25px;
 }
 
@@ -23,7 +27,11 @@
 
 .sessions-item-right {
   display: flex;
+  position: relative;
+  justify-content: flex-end;
   align-items: center;
+  overflow: hidden;
+  width: 60%;
 }
 
 .sessions-item-button {
@@ -31,7 +39,6 @@
   width: 95px;
   margin-right: 25px;
   padding: 10px;
-  background-color: rgb(180, 180, 180);;
   border-radius: 5px;
   cursor: pointer;
   opacity: 0.5;

@@ -1,60 +1,48 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
-import {selectUserCards} from '../../store/selectors/cards'
-import {getUserCards} from '../../store/action-creators'
-import CardsBox from '../cards/cards-box'
+import {selectUser} from '../../store/selectors/user'
+import {selectUserCards, selectUserSelectedCards} from '../../store/selectors/cards'
+import {getUserCards} from '../../store/action-creators/cards-actions'
+import {cardsJSX} from '../../functions/cards-box-jsx'
 import ConsultationCards from './consultation-cards'
-import Messages from '../messages'
 import Loader from '../loader'
 import './consultation-content.css'
+
+// import useWebSocket from 'react-use-websocket'
+
+// import {api_path} from '../../store/common'
 
 function ConsultationContent(props) {
   const [windowFullScreen, setWindowFullScreen] = useState(false)
   const [showChangeCards, setShowChangeCards] = useState(false)
   const [selectCards, setSelectCards] = useState(null)
+  // const [isSocket, setIsSocket] = useState(false)
   const {isLoaded, isLoading, data} = props.userCards
 
   let fetched
 
+      // if (!isSocket) {
+        // const {sendMessage, sendJsonMessage, lastMessage, lastJsonMessage, readyState, getWebSocket} = 
+        //   useWebSocket('ws://localhost:8080', {                                // wss://echo.websocket.org
+        //     onOpen: () => sendMessage('init - client'),
+        //     shouldReconnect: (closeEvent) => true,
+        //   })
+        // setIsSocket(sendMessage, sendJsonMessage, lastMessage, lastJsonMessage, readyState, getWebSocket)
+      // }
+
   const onSelectCardsClick = cardsBox_id => {
-    setSelectCards(cardsBox_id)
-  }
-
-  const userCardsJSX = (data, mode, result) => {
-    if (data.length > 0) {
-      result = data.map(
-        element => (
-          <CardsBox
-            key={element.cards_id}
-            cards={element}
-            mode={mode}
-            callback={onSelectCardsClick}
-            // hideMenu={() => setShowChangeCards(false)}
-          />
-        )
-      )
-    } else {
-      result = <Messages caption="message_freeCardsNone" />
-    }
-    return result
-  }
-
-  if (!isLoaded && !isLoading) {
-    props.getUserCards()
+      setShowChangeCards(false)   // скрытие вкладки выбора колоды - чтобы она не мигала при загрузке (при реальном фетче) новой колоды.
+      setSelectCards(cardsBox_id)
+      // if (!isSSE) {
+      //   let eventSource = new EventSource(`${api_path}sse.php?name=${props.user.login}&session_id=${props.session_id}`)
+      //   setIsSSE(eventSource)
+      // }
   }
 
   if (isLoading) {
     fetched = <Loader />
-  } else if (isLoaded) {
-    if (data[0] !== "ERROR") {
-      if (data.length > 0) {
-        fetched = userCardsJSX(data, "consult-mode-enter")
-      } else {
-        fetched = <Messages caption="message_freeCardsNone" />
-      }
-    } else {
-      fetched = <Messages caption="message_freeCardsError" />
-    }
+  } else if (isLoaded && !props.userSelectedCards.isLoaded && !props.userSelectedCards.isLoading && !selectCards) {
+    fetched = cardsJSX(data, 'consult-mode-enter', 'freeCards', onSelectCardsClick)
   }
 
   const onChangeWindow = () => {
@@ -63,9 +51,20 @@ function ConsultationContent(props) {
   }
   const window_CN = windowFullScreen ? "consultation_large" : "consultation_low"
 
-  const setCards = () => {
-    setShowChangeCards(!showChangeCards)
+  const setCards = (event) => {
+    if (event.target === event.currentTarget) {
+      setShowChangeCards(!showChangeCards)
+    }
   }
+
+  console.log('render Consultation content')
+
+  useEffect( () => {
+    if (!isLoaded && !isLoading) {
+      props.getUserCards()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <div className={window_CN}>
@@ -81,10 +80,10 @@ function ConsultationContent(props) {
             Закрыть сессию
           </span>
         </div>
-          <div className="consultation-header-setCards-wrapper" style={showChangeCards ? {display:'block'} : {}}>
+          <div className="consultation-header-setCards-wrapper" onClick={setCards} style={showChangeCards ? {display:'block'} : {}}>
             <div className="consultation-header-setCards">
-              {(!isLoading && isLoaded && data[0] !== "ERROR") ? userCardsJSX(data, "consult-mode-play") : ''}     {/* // провреить условия */}
-              {/* Еще варианты сюда */}
+              {(showChangeCards && !isLoading && isLoaded) ? 
+                cardsJSX(data, 'consult-mode-play', 'freeCards', onSelectCardsClick, selectCards) : ''}
             </div>
           </div>
         <span className="consultation-header-closeButton" title={windowFullScreen ? "Свернуть окно" : "В полноэкранный режим"} onClick={onChangeWindow}>
@@ -103,18 +102,25 @@ function ConsultationContent(props) {
           </h4> : ''
         }
       </div>
-        {selectCards ? <ConsultationCards activeCards_id={selectCards}/> : ''}
+        {selectCards ? <ConsultationCards activeCards_id={selectCards} user={props.user} /> : ''}
     </div>
   )
 }
 
 export default connect(
-  state => {
-    return {
+  state => ({
+      user: selectUser(state),
       userCards: selectUserCards(state),
-    }
-  },
+      userSelectedCards: selectUserSelectedCards(state)
+  }),
   {
     getUserCards
   }
 )(ConsultationContent)
+
+// ПРОВЕРЕНО ЛОКАЛЬНО
+
+// Корректная работа.
+// После монтирования срабатывает useEffect - при необходимости фетчим доступные для работы колоды (getUserCards) и отображаем их на экране с флагом 'consult-mode-enter', который говорит о том, что при клике на колоду, надо запустить фетч этой колоды и существующих карта сессии и сделать сетстейт компонента. На этом этапе лишних рендеров нет, фетч один - все ok.
+// При выборе рабочей колоды запускаются фетчи (из компонента <CardsBox />) и происходит сетстейт компонента (selectCards равно id колоды) и, так как, теперь есть selectCards, то будет рендер компонента <ConsultationCards />.
+// При изменении стейта showChangeCards (true - показ выбора колод в игровом режиме или false - в противном случае) перерендеривания <ConsultationCards /> не происходит - это хорошо. Перерендеривает <ConsultationCards /> только при реальном изменении колоды.

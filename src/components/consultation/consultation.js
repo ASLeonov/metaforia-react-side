@@ -4,37 +4,50 @@ import Messages from '../messages'
 import {connect} from 'react-redux'
 import {selectThisSession} from '../../store/selectors/sessions'
 import {clearThisSession} from '../../store/action-creators/sessions-actions'
-import {clearSelectedCardItems, clearCardsThisSession, clearCardThisSessionLocal} from '../../store/action-creators/cards-actions'
+import {clearSelectedCardItems} from '../../store/action-creators/cards-actions'
 import './consultation.css'
 
 function Consultation(props) {
+  const {clearThisSession, clearSelectedCardItems} = props
+
   const data = props.thisSession.session_id ? 
-    <ConsultationContent /> : 
+    <ConsultationContent session_id={props.thisSession.session_id} /> : 
       <Messages caption="message_currentSessionError" />
 
-  useEffect ( () => () => {   // Такая форма записи useEffect => сработает только при unMount
-    const maxId = setInterval( () => {} )
-    for (let i=0; i < maxId; i+=1) { 
-      clearInterval(i)
-    }
-    props.clearThisSession()
-    props.clearCardsThisSession()
-    props.clearSelectedCardItems()
-    props.clearCardThisSessionLocal()
+  useEffect ( () => () => {
+    // const maxId = setInterval( () => {} )
+    // for (let i=0; i < maxId; i+=1) { 
+    //   clearInterval(i)
+    // }
+    clearThisSession()
+    clearSelectedCardItems()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  console.log('render Consultation')
+
   return (
-    <>{data}</>
+    <>
+      {data}
+    </>
   )
 }
 
 export default connect(
-  state => {
-    return {
-      thisSession: selectThisSession(state)
-    }
-  },
+  state => ({
+    thisSession: selectThisSession(state)
+  }),
   {
-    clearThisSession, clearSelectedCardItems, clearCardsThisSession, clearCardThisSessionLocal
+    clearThisSession, clearSelectedCardItems
   }
 )(Consultation)
+
+// ПРОВЕРЕНО ЛОКАЛЬНО.
+
+// Корректная работа.
+// Это верхний компонент консультаций. В нем  проверяем, есть ли выбранная текущая сессия для работы. Если есть - грузим дальше, если нет - message.
+// Также при unMount сессии чистим store у текущей сессии (clearThisSession) и карты выбранных колод (clearSelectedCardItems) и установленные в <ConsultationCards /> таймеры.
+// Лишних рендеров нет, фетчей совсем нет.
+
+
+// Добавляю сюда стейт с сокетом cокет - после этого ничего не проверял !!!!!!!!!!

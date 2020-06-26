@@ -1,3 +1,10 @@
 .content-contacts-body-addContacts{
+  width: 55%;
+  padding: 0 45px 15px 50px;
+  border-left: 1px solid rgb(211, 206, 206);
+  border-right: 1px solid rgb(211, 206, 206);
+  border-bottom: 1px solid rgb(211, 206, 206);
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
   animation: contacts_fadeIn 600ms;   /*  keyframes in contacts-body.css  */
 }

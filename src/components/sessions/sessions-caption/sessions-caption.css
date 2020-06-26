@@ -9,6 +9,7 @@
   font-weight: bold;
   cursor: pointer;
   opacity: 0.6;
+  user-select: none;
 }
 
 .content-sessions-caption__title:hover {
