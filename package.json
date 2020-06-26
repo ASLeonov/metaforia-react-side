@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
+    "cross-env": "^7.0.2",
     "express": "^4.17.1",
     "isomorphic-ws": "^4.0.1",
     "mysql2": "^2.1.0",
@@ -26,8 +27,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "server": "nodemon server/server.js",
-    "dev": "run-p server start"
+    "ws_dev": "nodemon server/websocket.js",
+    "ws":     "node server/websocket.js",
+    "dev":    "cross-env NODE_ENV=development concurrently \"npm run ws_dev\" \"npm run start\"",
+    "prod":   "cross-env NODE_ENV=production  concurrently \"npm run ws\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,7 +48,6 @@
     ]
   },
   "devDependencies": {
-    "npm-run-all": "^4.1.5",
     "redux-devtools-extension": "^2.13.8"
   }
 }
