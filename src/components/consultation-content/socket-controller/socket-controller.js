@@ -1,9 +1,10 @@
 import useWebSocket from 'react-use-websocket'
+import {websocket_path} from '../../../store/common'
 
 function SocketController(props) {
 
   const {sendJsonMessage} = 
-    useWebSocket('ws://localhost:8080', {
+    useWebSocket(websocket_path, {
       onOpen: () => sendJsonMessage({user: props.user_login, session: props.session_id}),
       onMessage: e => {
         if (String(props.version) === String(e.data)) {
