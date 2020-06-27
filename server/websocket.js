@@ -10,6 +10,7 @@ const dbConfig = config.get('dbConfig')
 
 console.log('work type =', process.env.NODE_ENV)
 console.log('dbConfig =', dbConfig)
+console.log('port ws =', port)
  
 wss.on('connection', function connection(ws) {
 
