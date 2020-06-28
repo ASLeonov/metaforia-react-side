@@ -1,6 +1,9 @@
+// const express = require('express')
 const mysql = require('mysql2')
 const WebSocket = require('ws')
 const config = require('config')
+
+// const app = express()
 
 const port = process.env.PORT || 8080
 const wss = new WebSocket.Server({ port: port })
@@ -19,7 +22,7 @@ wss.on('connection', function connection(ws) {
     let timerId = setTimeout(function tick() {
       const query = `
         SELECT \`last_version\` 
-        FROM \`${client_data.user}__sessions\` 
+        FROM \`${client_data.user}__sessions\`
         WHERE \`session_id\` = ${client_data.session}`
       connection.query(
         query,
@@ -32,3 +35,7 @@ wss.on('connection', function connection(ws) {
     }, 7000)
   })
 })
+
+// app.listen(8081, () => console.log(`Server listening on port 8081`))
+
+// pm2 start npm -- run ws

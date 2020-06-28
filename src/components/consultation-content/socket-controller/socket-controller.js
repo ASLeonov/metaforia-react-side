@@ -8,15 +8,15 @@ function SocketController(props) {
       onOpen: () => sendJsonMessage({user: props.user_login, session: props.session_id}),
       onMessage: e => {
         if (String(props.version) === String(e.data)) {
-          console.log('current version -> ok')
+          console.log('current version -> ok ->',  String(props.version), '===', String(e.data))
         } else {
-          console.log('current version -> bad')
+          console.log('current version -> bad ->', String(props.version), '!==', String(e.data))
         }
       },
       shouldReconnect: (closeEvent) => true,
     })
 
-  console.log('render SocketController')
+  // console.log('render SocketController')
 
   return null
 }
