@@ -1,6 +1,7 @@
 {
   "dbConfig": {
     "host":     "xxx",
+    "port":     "3306",
     "user":     "xxx",
     "database": "xxx",
     "password": "xxx"
