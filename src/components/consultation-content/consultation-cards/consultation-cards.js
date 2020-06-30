@@ -2,19 +2,16 @@ import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
-import {getSelectedCardItems, addSelectedCardItems, getCardsThisSession} from '../../../store/action-creators/cards-actions'
-import {setThisSession} from '../../../store/action-creators/sessions-actions'
+import {getSelectedCardItems, addSelectedCardItems} from '../../../store/action-creators/cards-actions'
 import SelectedCards from '../selected-cards'
 import CardsThisSession from '../cards-this-session'
 import Messages from '../../messages'
 import Loader from '../../loader'
 import './consultation-cards.css'
 
-import SocketController from '../socket-controller'
-
 function ConsultationCards(props) {
-  const {thisSession, selectedCards, thisSessionCards, thisSessionCardsLocal, getCardsThisSession,  setThisSession} = props
-  let fetched_selected, fetched_already_exist, local_already_exist, socket
+  const {thisSession, selectedCards, thisSessionCards, thisSessionCardsLocal} = props
+  let fetched_selected, fetched_already_exist, local_already_exist
 
   if (selectedCards.isLoading || thisSessionCards.isLoading) {
     fetched_selected = <Loader fullscreen={true} />
@@ -43,7 +40,6 @@ function ConsultationCards(props) {
             thisSessionCards={thisSessionCards.data}
             thisSessionCardsLocal={thisSessionCardsLocal}
           />
-        socket = <SocketController user_login={props.user.login} session_id={thisSession.session_id} version={thisSession.last_version} />
       }
     } else {
       fetched_selected = <Messages caption="message_consultCardsError" fullscreen={true} />
@@ -62,23 +58,6 @@ function ConsultationCards(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCards.isLoaded])
 
-  // useEffect( () => {
-    // console.log(props.socketGet.data)
-  // }, [props.socketGet])
-
-  // props.sse.onmessage = e => {
-    // if (thisSession.last_version !== Number(e.data)) {
-      //console.log("id local не равно id server", thisSession.last_version, Number(e.data))
-      // setThisSession(thisSession.session_id, Number(e.data))
-      // getCardsThisSession()
-    // }
-  // }
-
-  // useEffect( () => () => {
-    // props.sse.close()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [])
-
   console.log('render Consultation cards')
  
   return (
@@ -86,7 +65,6 @@ function ConsultationCards(props) {
       {local_already_exist}
       {fetched_already_exist}
       {fetched_selected}
-      {socket}
     </div>
   )
 }
@@ -101,8 +79,6 @@ export default connect(
   {
     getSelectedCards: getSelectedCardItems,
     addSelectedCards: addSelectedCardItems,
-    getCardsThisSession,
-    setThisSession,
   }
 )(ConsultationCards)
 

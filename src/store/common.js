@@ -1,5 +1,12 @@
-export const api_path = window.location.hostname !== "localhost" ?
-  'http://metaforia-react-side.leonovlab.ru/api/' : 'http://localhost/ll/'
+export const api_path = 
+  process.env.NODE_ENV === 'production' ?
+    'http://metaforia-react-side.leonovlab.ru/api/' : 
+      'http://localhost/ll/'
 
-  export const websocket_path = window.location.hostname !== "localhost" ?
-  'ws://leonovlab.online:8080' : 'ws://localhost:8080'
+const port = process.env.PORT || 8080
+export const websocket_path = 
+  process.env.NODE_ENV === 'production' ?
+    `ws://leonovlab.online:${port}` : 
+      `ws://localhost:${port}`
+
+// window.location.hostname !== "localhost"

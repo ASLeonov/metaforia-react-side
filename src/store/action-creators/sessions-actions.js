@@ -56,6 +56,15 @@ export const setThisSession = (session_id, last_version) => {
   }
 }
 
+export const updateThisSession = last_version => {
+  return {
+    type: 'UPDATE_LAST_VERSION_THIS_SESSION',
+    payload: {
+      last_version
+    }
+  }
+}
+
 export const clearThisSession = () => {
   return {
     type: 'CLEAR_THIS_SESSION',

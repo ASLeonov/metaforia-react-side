@@ -61,6 +61,19 @@ export const thisSessionReducer = (
                 }
           }
         }
+        case 'UPDATE_LAST_VERSION_THIS_SESSION': {
+          console.log('UPDATE_LAST_VERSION_THIS_SESSION')
+          return {
+            session_id: thisSessionState.session_id,
+            last_version: Number(action.payload.last_version),
+            cardsThisSession: {
+              isLoaded: false,
+              isLoading: false,
+              data: {}
+            },
+            cardsThisSessionLocal: {}
+          }
+        }
         case 'CLEAR_THIS_SESSION': {
           // console.log('CLEAR_THIS_SESSION')
           return {
@@ -123,7 +136,6 @@ export const thisSessionReducer = (
             cardsThisSessionLocal: {}
           }
         }
-        
         case 'CLEAR_ALL_CARDS_THIS_SESSION': {
           console.log('CLEAR_ALL_CARDS_THIS_SESSION')
           return {
