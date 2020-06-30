@@ -1,6 +1,6 @@
 export const userReducer = 
 (
-  userState = {login: "", name: "", fullname: "", surname: "", spec: false},
+  userState = {login: "", name: "", fullname: "", surname: "", type: ""},
   action
 ) => {
   switch (action.type) {
@@ -10,7 +10,7 @@ export const userReducer =
         name: action.response.user_name,
         surname: action.response.user_surname,
         fullname: `${action.response.user_name} ${action.response.user_surname}`,
-        spec: action.response.user_spec === '1' ? true : false
+        type: action.response.user_spec === '1' ? 'master' : 'slave'
       }
     }
     case 'LOGIN_ERROR': {
@@ -19,7 +19,7 @@ export const userReducer =
         name: '',
         surname: '',
         fullname: '',
-        spec: false
+        type: ''
       }
     }
     case 'LOGOUT': {
@@ -28,7 +28,7 @@ export const userReducer =
         name: '',
         surname: '',
         fullname: '',
-        spec: false
+        type: ''
       }
     }
     default: {

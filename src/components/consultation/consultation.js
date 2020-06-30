@@ -13,17 +13,23 @@ function Consultation(props) {
   const [data, setData] = useState(null)
   const [socket, setSocket] = useState(false)
   const {user, thisSession, clearThisSession, clearSelectedCardItems, updateThisSession, getCardsThisSession} = props
+
+  const modificator = user.type
  
   useEffect( () => {
     if (thisSession.session_id) {
       const socket = new WebSocket(websocket_path)
       const send_data = {
-        user:     user.login,
-        session:  thisSession.session_id
+        user:        user.login,
+        session:     thisSession.session_id,
+        modificator: modificator
       }
       socket.onopen = e => socket.send(JSON.stringify(send_data))
       setData(<ConsultationContent session_id={thisSession.session_id} />)
       setSocket(socket)
+        return () => {
+          socket.close(1000, "finished socket connection by unMount target component")
+        }
     } else {
       setData(<Messages caption="message_currentSessionError" />)
     }
@@ -33,12 +39,14 @@ function Consultation(props) {
   useEffect( () => {
     if (socket) {
       socket.onmessage = e => {
-        if (String(thisSession.last_version) !== String(e.data)) {
-          console.log('current version -> bad ->', String(thisSession.last_version), '!==', String(e.data))
-          updateThisSession(e.data)
-          getCardsThisSession()
+        const get_data = JSON.parse(e.data)
+        if ( (String(thisSession.last_version) !== String(get_data.last_version)) || 
+             (String(thisSession.last_version) === String(get_data.last_version) && modificator !== get_data.last_modificator) ) {
+                console.log('current version -> bad')
+                updateThisSession(get_data.last_version)
+                getCardsThisSession()
         } else {
-          console.log('current version -> ok ->',  String(thisSession.last_version), '===', String(e.data))
+          console.log('current version -> ok ->',  String(thisSession.last_version), '===', String(get_data.last_version))
         }
       }
     }
@@ -46,7 +54,6 @@ function Consultation(props) {
   }, [socket, thisSession.last_version])
 
   useEffect ( () => () => {
-    socket.close(1000, "finished socket connection by unMount target component")
     clearThisSession()
     clearSelectedCardItems()
     // eslint-disable-next-line

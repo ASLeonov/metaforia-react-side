@@ -96,11 +96,11 @@ function SingleSession(props) {
         </div>
       </div>
       <div className="sessions-item-right">
-        {props.type === 'current_session' ? 
+        {props.type === 'current_session' && props.user.type === 'master' ? 
           <button className="sessions-item-button" onClick={inviteClick}>Пригласить</button> : ''}
         {props.type === 'current_session' ? 
           <Link to={`./consultation`}><button className="sessions-item-button" onClick={setSession}>Войти</button></Link> : ''} {/* /${session_id} */}
-        {props.type === 'current_session' ? 
+        {props.type === 'current_session' && props.user.type === 'master' ? 
           <button
             className="sessions-item-button"
             onClick={() => setShowAlert([
@@ -111,19 +111,22 @@ function SingleSession(props) {
               () => setShowAlert([])
             ])}>
               Закрыть
-            </button> : ''}  
-        <button
-          className="sessions-item-button"
-          onClick={() => setShowAlert([
-            'request',
-            'row',
-            'alert_sessionsDelete',
-            deleteClick,
-            () => setShowAlert([])
-          ])}
-        >
-          Удалить
-        </button>
+            </button> : ''}
+        {props.user.type === 'master' ?
+          <button
+            className="sessions-item-button"
+            onClick={() => setShowAlert([
+              'request',
+              'row',
+              'alert_sessionsDelete',
+              deleteClick,
+              () => setShowAlert([])
+            ])}
+          >
+            Удалить
+          </button> : null
+        }
+
         {alert}
       </div>
     </div>
