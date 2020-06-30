@@ -3,7 +3,6 @@ import Sessions from '../sessions'
 import Cards from '../cards'
 import Contacts from '../contacts'
 import Consultation from '../consultation'
-// import img from '../../images/cards/cards-1/card-1.png'
 import './content.css'
 
 function Content(props) {
@@ -27,10 +26,11 @@ function Content(props) {
         break;
     }
 
+  console.log('render Content')
+
   return (
       <div className="content">
         {activeData}
-        {/* <img src={img} className="App-logo" alt="logo" /> */}
       </div>
   )
 }

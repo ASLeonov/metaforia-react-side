@@ -11,6 +11,8 @@ function AppLevel() {
 
   const user_fullname = useSelector(state => state.user.fullname)
 
+  console.log('render AppLevel')
+
   return(
     <Router>
       <Header />

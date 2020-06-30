@@ -1,41 +1,34 @@
-// const express = require('express')
-const mysql = require('mysql2')
 const WebSocket = require('ws')
+const mysql = require('mysql2')
 const config = require('config')
-
-// const app = express()
 
 const port = process.env.PORT || 8080
 const wss = new WebSocket.Server({ port: port })
 const dbConfig = config.get('dbConfig')
 
-console.log('work type =', process.env.NODE_ENV)
-console.log('dbConfig =', dbConfig)
-console.log('port ws =', port)
- 
-wss.on('connection', function connection(ws) {
-
-  ws.on('message', function incoming(message) {
+wss.on('connection', ws => {
+  const connection = mysql.createConnection(dbConfig)
+  let timer
+  ws.on('message', message => {
     const client_data = JSON.parse(message)
-    const connection = mysql.createConnection(dbConfig)
-    // console.log('recieved msg')
-    let timerId = setTimeout(function tick() {
-      const query = `
-        SELECT \`last_version\` 
-        FROM \`${client_data.user}__sessions\`
-        WHERE \`session_id\` = ${client_data.session}`
-      connection.query(
-        query,
-        (err, results, fields) => {
-          ws.send(results[0].last_version)  // res.status(status).json(results)
-        }
-      )
-      // console.log('send msg')
-      timerId = setTimeout(tick, 7000)
-    }, 7000)
+      timer = setInterval( () => {
+        const query = `
+          SELECT \`last_version\` 
+          FROM \`${client_data.user}__sessions\`
+          WHERE \`session_id\` = ${client_data.session}`
+        connection.query(
+          query,
+          (err, results) => {
+            if (err) { console.log('err', err) }
+            else { results.length === 1 && ws.send(results[0].last_version) }
+          }
+        )
+      }, 7000)
+  })
+  ws.on('close', () => {
+    connection.destroy()
+    timer && clearInterval(timer)
   })
 })
 
-// app.listen(8081, () => console.log(`Server listening on port 8081`))
-
-// pm2 start npm -- run ws
+// pm2 start npm -- run wsx
