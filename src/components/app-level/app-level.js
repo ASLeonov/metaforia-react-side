@@ -9,7 +9,9 @@ import Login from '../login'
 
 function AppLevel() {
 
-  const user_fullname = useSelector(state => state.user.fullname)
+  const user = useSelector(state => state.user)
+
+  // const isLogin = localStorage.getItem('token')
 
   console.log('render AppLevel')
 
@@ -17,39 +19,55 @@ function AppLevel() {
     <Router>
       <Header />
         <Switch>
-          {user_fullname.length === 0 ?
+          {user.fullname.length === 0 ?     // user.fullname.length === 0 && localStorage.getItem('jwt') !== '123'
             <>
               <Route path="/login">
                 <Login />
               </Route>
               <Redirect from={'/'} to={'/login'} />       
-            </> :
+            </> : 
             <>
-              <Route path="/consultation">
-                <Middle activePage="consultation" />
-              </Route>
-              <Route path="/current-sessions">
-                <Middle activePage="sessions" activeTab="currentSessions" />
-              </Route>
-              <Route path="/last-sessions">
-                <Middle activePage="sessions" activeTab="lastSessions" />
-              </Route>
-              <Route path="/free-cards">
-                <Middle activePage="cards" activeTab="freeCards" />
-              </Route>
-              <Route path="/pay-cards">
-                <Middle activePage="cards" activeTab="payCards" />
-              </Route>
-              <Route path="/client-cards">
-                <Middle activePage="cards" activeTab="clientCards" />
-              </Route>
-              <Route path="/contacts">
-                <Middle activePage="contacts" activeTab="currentContacts" />
-              </Route>
-              <Route path="/add-contacts">
-                <Middle activePage="contacts" activeTab="addContacts" />
-              </Route>
-              <Redirect from={'/'} to={'/current-sessions'} />
+              {user.type === 'master' ? 
+                <>
+                  <Route path="/consultation">
+                    <Middle activePage="consultation" />
+                  </Route>
+                  <Route path="/current-sessions">
+                    <Middle activePage="sessions" activeTab="currentSessions" />
+                  </Route>
+                  <Route path="/last-sessions">
+                    <Middle activePage="sessions" activeTab="lastSessions" />
+                  </Route>
+                  <Route path="/free-cards">
+                    <Middle activePage="cards" activeTab="freeCards" />
+                  </Route>
+                  <Route path="/pay-cards">
+                    <Middle activePage="cards" activeTab="payCards" />
+                  </Route>
+                  <Route path="/client-cards">
+                    <Middle activePage="cards" activeTab="clientCards" />
+                  </Route>
+                  <Route path="/contacts">
+                    <Middle activePage="contacts" activeTab="currentContacts" />
+                  </Route>
+                  <Route path="/add-contacts">
+                    <Middle activePage="contacts" activeTab="addContacts" />
+                  </Route>
+                  <Redirect from={'/'} to={'/current-sessions'} />
+                </> : 
+                <>
+                  <Route path="/consultation">
+                    <Middle activePage="consultation" />
+                  </Route>
+                  <Route path="/current-sessions">
+                    <Middle activePage="sessions" activeTab="currentSessions" />
+                  </Route>
+                  <Route path="/last-sessions">
+                    <Middle activePage="sessions" activeTab="lastSessions" />
+                  </Route>
+                  <Redirect from={'/'} to={'/current-sessions'} />
+                </>
+              }
             </>
           }
         </Switch>

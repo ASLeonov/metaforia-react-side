@@ -10,12 +10,12 @@ import Messages from '../../../messages'
 import Loader from '../../../loader'
 import './current-sessions.css'
 
-// const WebSocket = require('isomorphic-ws')
-
 function CurrentSessions(props) {
   const {user, sessions_data, getCurrentSessions, getLastSessions, setThisSession} = props
 
   console.log('Render Current sessions')
+
+  // if (user.jwt !== '123') localStorage.setItem('jwt', user.jwt)
 
   let fetched = []
 
@@ -49,18 +49,13 @@ function CurrentSessions(props) {
     if (!sessions_data.isLoading && !sessions_data.isLoaded) {
       getCurrentSessions()
     }
-              // const ws = new WebSocket('ws://localhost:8080')
-              //   ws.onopen = function open() {
-              //   ws.send('msg from client')
-              // }
-              
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
     <div className="sessions-list">
       {fetched}
-      {fetched.length > 0 ? 
+      {fetched.length > 0 && props.user.type === 'master'? 
         <Link to='/contacts'><button className="sessions-standart-button">Выбрать клиента и создать сессию</button></Link> : ''}
     </div>
   )

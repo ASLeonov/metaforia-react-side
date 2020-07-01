@@ -1,6 +1,6 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {logout} from '../../../store/action-creators/user'
+import {logout} from '../../../store/action-creators/user-actions'
 import './exit.css'
 
 function Exit({logout}) {

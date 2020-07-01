@@ -13,14 +13,20 @@ wss.on('connection', ws => {
     const client_data = JSON.parse(message)
       timer = setInterval( () => {
         const query = `
-          SELECT \`last_version\` 
+          SELECT \`last_version\`, \`last_modificator\` 
           FROM \`${client_data.user}__sessions\`
           WHERE \`session_id\` = ${client_data.session}`
         connection.query(
           query,
           (err, results) => {
             if (err) { console.log('err', err) }
-            else { results.length === 1 && ws.send(results[0].last_version) }
+            else {
+              const send_data = {
+                last_version:     results[0].last_version,
+                last_modificator: results[0].last_modificator
+              }
+              results.length === 1 && ws.send(JSON.stringify(send_data))
+            }
           }
         )
       }, 7000)
