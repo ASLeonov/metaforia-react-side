@@ -3,7 +3,7 @@ const mysql = require('mysql2')
 const config = require('config')
 const dbConfig = config.get('dbConfig')
 
-console.log('dbConfig', dbConfig)
+console.log('api dbConfig', dbConfig)
 
 const reply = (res, query, status = 200) => {
   const connection = mysql.createConnection(dbConfig)
