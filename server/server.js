@@ -1,6 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
-const router = require('express').Router()
+// const router = require('express').Router()
 // const path = require("path")
 const mysql = require('mysql2')
 const api = require('./api')
