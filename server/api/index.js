@@ -1,13 +1,12 @@
 const router = require('express').Router()
 const mysql = require('mysql2')
+const config = require('config')
+const dbConfig = config.get('dbConfig')
+
+console.log('dbConfig', dbConfig)
 
 const reply = (res, query, status = 200) => {
-  const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    database: 'metaforia',
-    password: ''
-  })
+  const connection = mysql.createConnection(dbConfig)
   connection.query(
     query,
     (err, results, fields) => {

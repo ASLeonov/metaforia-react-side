@@ -2,6 +2,7 @@
   "name": "metaforia-react-side",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -24,11 +25,13 @@
     "ws": "^7.3.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "dev": "cross-env NODE_ENV=development concurrently \"nodemon server/websocket.js\" \"npm run start\"",
-    "ws": "cross-env NODE_ENV=production node server/websocket.js"
+    "start":    "react-scripts start",
+    "build":    "react-scripts build",
+    "test":     "react-scripts test",
+    "api_dev":  "nodemon server/server.js",
+    "dev":      "cross-env NODE_ENV=development concurrently \"npm run api_dev\" \"nodemon server/websocket.js\" \"npm run start\"",
+    "ws":       "cross-env NODE_ENV=production node server/websocket.js",
+    "api":      "cross-env NODE_ENV=production node server/server.js"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
-import {login} from '../../store/action-creators/user'
+import {login} from '../../store/action-creators/user-actions'
 import {selectUser} from '../../store/selectors/user'
 import Alerts from '../alerts'
 import {validateField} from '../../functions/form-validate'

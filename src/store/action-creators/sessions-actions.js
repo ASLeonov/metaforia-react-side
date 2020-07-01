@@ -6,8 +6,8 @@ export const getCurrentSessions = () => (dispatch, getState) => {
     dispatch({
       type: 'GET_SESSIONS_CURRENT__LOADING'
     })
-    fetch(`${api_path}sessions.php?name=${user_login}&user_type=${user_type}&type=currentSessions`)
-    // fetch(`/api/currentsessions?user_name=${user_login}`)
+    // fetch(`${api_path}sessions.php?name=${user_login}&user_type=${user_type}&type=currentSessions`)
+    fetch(`/api/currentsessions?user_name=${user_login}&user_type=${user_type}`)
     .then(res => res.json())
     .then(res =>
       dispatch({

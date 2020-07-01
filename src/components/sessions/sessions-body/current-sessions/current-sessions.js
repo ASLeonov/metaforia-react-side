@@ -15,6 +15,8 @@ function CurrentSessions(props) {
 
   console.log('Render Current sessions')
 
+  // if (user.jwt !== '123') localStorage.setItem('jwt', user.jwt)
+
   let fetched = []
 
   if (sessions_data.isLoading) {

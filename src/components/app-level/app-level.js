@@ -9,8 +9,9 @@ import Login from '../login'
 
 function AppLevel() {
 
-  const user_fullname = useSelector(state => state.user.fullname)
-  const user_type     = useSelector(state => state.user.type)
+  const user = useSelector(state => state.user)
+
+  // const isLogin = localStorage.getItem('token')
 
   console.log('render AppLevel')
 
@@ -18,7 +19,7 @@ function AppLevel() {
     <Router>
       <Header />
         <Switch>
-          {user_fullname.length === 0 ?
+          {user.fullname.length === 0 ?     // user.fullname.length === 0 && localStorage.getItem('jwt') !== '123'
             <>
               <Route path="/login">
                 <Login />
@@ -26,7 +27,7 @@ function AppLevel() {
               <Redirect from={'/'} to={'/login'} />       
             </> : 
             <>
-              {user_type === 'master' ? 
+              {user.type === 'master' ? 
                 <>
                   <Route path="/consultation">
                     <Middle activePage="consultation" />
