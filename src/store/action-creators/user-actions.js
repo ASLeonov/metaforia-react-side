@@ -1,26 +1,23 @@
-import {api_path} from '../common'
-
 export const login = (user_login, user_password) => (dispatch, getState) => {
-  console.log('action ->', user_login, user_password)
-  // const send_data = {
-  //   login: 'ok',
-  //   user_login,
-  //   user_password
-  // }
-  fetch(`${api_path}login.php`, {
+  const send_data = {
+    login: 'ok',
+    user_login,
+    user_password
+  }
+  fetch(`/api/login`, {
     method: 'POST',
-    headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-    // body: JSON.stringify({send_data})
-    body: `login=ok&user_login=${user_login}&user_password=${user_password}`
+    headers: {'Content-Type':'application/json; charset=UTF-8'},
+    body: JSON.stringify(send_data)
   })
     .then(res => res.json())
     .then(res =>
       dispatch({
         type: 'LOGIN_OK',
-        response: res[0],
+        response: res,
       })
     )
     .catch(error => {
+      console.log(error)
       dispatch({
         type: 'LOGIN_ERROR'
       })

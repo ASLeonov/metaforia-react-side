@@ -6,7 +6,7 @@ const port = process.env.PORT || 8080
 const wss = new WebSocket.Server({ port: port })
 const dbConfig = config.get('dbConfig')
 
-console.log('websocket dbConfig', dbConfig)
+// console.log('websocket dbConfig', dbConfig)
 
 wss.on('connection', ws => {
   const connection = mysql.createConnection(dbConfig)

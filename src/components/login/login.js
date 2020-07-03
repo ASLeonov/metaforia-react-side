@@ -101,7 +101,7 @@ function Login({user, login}) {
     }
   }, [user])
 
-  console.log('render Login', badValuesReg)
+  console.log('render Login', badValuesEnter)
 
   return(
     <div className="login">

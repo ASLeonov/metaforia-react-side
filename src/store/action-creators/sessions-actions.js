@@ -1,13 +1,10 @@
-import {api_path} from '../common'
-
 export const getCurrentSessions = () => (dispatch, getState) => {
   const user_login = getState().user.login
   const user_type  = getState().user.type
     dispatch({
       type: 'GET_SESSIONS_CURRENT__LOADING'
     })
-    // fetch(`${api_path}sessions.php?name=${user_login}&user_type=${user_type}&type=currentSessions`)
-    fetch(`/api/currentsessions?user_name=${user_login}&user_type=${user_type}`)
+    fetch(`/api/currentsessions?user_login=${user_login}&user_type=${user_type}`)
     .then(res => res.json())
     .then(res =>
       dispatch({
@@ -25,10 +22,11 @@ export const getCurrentSessions = () => (dispatch, getState) => {
 
 export const getLastSessions = () => (dispatch, getState) => {
   const user_login = getState().user.login
+  const user_type  = getState().user.type
   dispatch({
     type: 'GET_SESSIONS_LAST__LOADING'
   })
-  fetch(`${api_path}sessions.php?name=${user_login}&type=lastSessions`)
+  fetch(`/api/lastsessions?user_login=${user_login}&user_type=${user_type}`)
     .then(res => res.json())
     .then(res =>
       dispatch({

@@ -10,8 +10,8 @@ export const userReducer =
         name: action.response.user_name,
         surname: action.response.user_surname,
         fullname: `${action.response.user_name} ${action.response.user_surname}`,
-        type: action.response.user_spec === '1' ? 'master' : 'slave',
-        token: '123'
+        type: action.response.user_spec === 1 ? 'master' : 'slave',
+        token: action.response.token
       }
     }
     case 'LOGIN_ERROR': {

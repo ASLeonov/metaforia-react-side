@@ -11,6 +11,7 @@
     "cross-env": "^7.0.2",
     "express": "^4.17.1",
     "isomorphic-ws": "^4.0.1",
+    "js-md5": "^0.7.3",
     "mysql2": "^2.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -25,13 +26,12 @@
     "ws": "^7.3.0"
   },
   "scripts": {
-    "start":    "react-scripts start",
-    "build":    "react-scripts build",
-    "test":     "react-scripts test",
-    "api_dev":  "nodemon server/server.js",
-    "dev":      "cross-env NODE_ENV=development concurrently \"npm run api_dev\" \"nodemon server/websocket.js\" \"npm run start\"",
-    "ws":       "cross-env NODE_ENV=production node server/websocket.js",
-    "api":      "cross-env NODE_ENV=production node server/server.js"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "dev": "cross-env NODE_ENV=development concurrently \"nodemon server/restapi.js\" \"nodemon server/websocket.js\" \"npm run start\"",
+    "ws": "cross-env NODE_ENV=production node server/websocket.js",
+    "api": "cross-env NODE_ENV=production node server/restapi.js"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -8,7 +8,8 @@ export const getUserCards = () => (dispatch, getState) => {
     dispatch({
       type: 'GET_USER_CARDS__LOADING'
     })
-    fetch(`${api_path}cards.php?name=${user_login}&type=userPayCards`)
+    // fetch(`${api_path}cards.php?name=${user_login}&type=userPayCards`)
+    fetch(`/api/usercards?user_login=${user_login}`)
     .then(res => res.json())
     .then(res =>
       dispatch({
