@@ -9,9 +9,9 @@ function ContactsList(props) {
 
   const onHandleClick = event => {
     const this_client_id = event.target.attributes.attr_client_id.value
-    if (isActive !== this_client_id) {
-      setIsActive(this_client_id)
-      props.changeActiveContact(this_client_id)
+    if (isActive !== Number(this_client_id)) {
+      setIsActive(Number(this_client_id))
+      props.changeActiveContact(Number(this_client_id))
     }
   }
 

@@ -17,10 +17,20 @@ function ContactItem(props) {
   const redirectBtn = useRef(null)
 
   const onDeleteClick = () => {
-    fetch(`${api_path}clients.php`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-      body: `delete=ok&user_name=${props.user.login}&client_id=${client_id}`
+    // fetch(`${api_path}clients.php`, {
+    //   method: 'POST',
+    //   headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
+    //   body: `delete=ok&user_name=${props.user.login}&client_id=${client_id}`
+    // })
+    const send_data = {
+      user_login: props.user.login,
+      client_id:  client_id,
+      user_tools: props.user.tools
+    }
+    fetch(`/api/deleteclient`, {
+      method:  'DELETE',
+      headers: {'Content-Type':'application/json; charset=UTF-8'},
+      body:    JSON.stringify(send_data)
     })
       .then(response => response.text())
       .then(data => {
@@ -85,10 +95,20 @@ function ContactItem(props) {
     const client_surname_Up = clientData.surname.trim() ? clientData.surname.trim()[0].toUpperCase()  + clientData.surname.trim().slice(1)  : ''
     const client_gender_Up  = clientData.gend.trim() ? clientData.gend.trim()[0].toUpperCase()        + clientData.gend.trim().slice(1)     : ''
 
-    fetch(`${api_path}clients.php`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-      body: `${props.type === 'add_contact' ? 'insert' :'update'}=ok&user_name=${props.user.login}&client_id=${client_id}&client_name=${client_name_Up}&client_surname=${client_surname_Up}&client_gender=${client_gender_Up}&client_email=${clientData.email}&client_descr=${clientData.descr}`
+    const send_data = {
+      user_login:     props.user.login,
+      client_id:      client_id,
+      client_name:    client_name_Up,
+      client_surname: client_surname_Up,
+      client_gender:  client_gender_Up,
+      client_email:   clientData.email,
+      client_descr:   clientData.descr,
+      user_tools:     props.user.tools
+    }
+    fetch(`/api/${props.type === 'add_contact' ? 'addclient' : 'editclient'}`, {
+      method:  'POST',
+      headers: {'Content-Type':'application/json; charset=UTF-8'},
+      body:    JSON.stringify(send_data)
     })
       .then(response => response.text())
       .then(data => {
@@ -117,10 +137,15 @@ function ContactItem(props) {
   }
 
   const startSession = event => {
-    fetch(`${api_path}sessions.php`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-      body: `insert=ok&user_name=${props.user.login}&client_id=${client_id}`
+    const send_data = {
+      user_login:     props.user.login,
+      client_id:      client_id,
+      user_tools:     props.user.tools
+    }
+    fetch(`/api/createsession`, {
+      method:  'POST',
+      headers: {'Content-Type':'application/json; charset=UTF-8'},
+      body:    JSON.stringify(send_data)
     })
       .then(response => response.text())
       .then(data => {

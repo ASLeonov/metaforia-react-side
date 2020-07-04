@@ -5,11 +5,11 @@ import {api_path} from '../common'
 
 export const getUserCards = () => (dispatch, getState) => {
   const user_login = getState().user.login
+  const user_tools = getState().user.tools
     dispatch({
       type: 'GET_USER_CARDS__LOADING'
     })
-    // fetch(`${api_path}cards.php?name=${user_login}&type=userPayCards`)
-    fetch(`/api/usercards?user_login=${user_login}`)
+    fetch(`/api/userscards?user_login=${user_login}&user_tools=${user_tools}`)
     .then(res => res.json())
     .then(res =>
       dispatch({

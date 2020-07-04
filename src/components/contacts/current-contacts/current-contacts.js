@@ -62,7 +62,7 @@ function CurrentContacts(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  console.log('render current contacts', '    activeContact ->', activeContact)
+  console.log('render current contacts', '    activeContact ->', activeContact, typeof activeContact)
 
   return (
     <div className="content-contacts-body-currentContacts">
