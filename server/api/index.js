@@ -82,13 +82,13 @@ router.post('/login', bodyParser.json(), (req, res, next) => {
 router.get('/currentsessions', (req, res, next) => {
   const user_login = req.query.user_login
   const query = `
-    SELECT s.session_id, s.session_date, s.session_descr, c.client_name, c.client_surname
+    SELECT s.session_id, s.session_date, s.session_descr, s.last_version, c.client_name, c.client_surname
     FROM sessions AS s, clients AS c, users 
     WHERE users.user_login = '${user_login}' 
     AND s.session_client = c.client_id 
     AND s.session_closed = 0`
   reply(res, query)
-
+  // И добавить users_id
   // Дописать логику для клиентов - свой запрос
 })
 
@@ -167,7 +167,8 @@ router.post('/createsession', bodyParser.json(), (req, res, next) => {
     SELECT session_id
     FROM   sessions
     WHERE  session_client = ${client_id}
-    AND    master_id = '${user_tools}'`
+    AND    master_id = '${user_tools}'
+    AND    session_closed = 0`
   const connection = mysql.createConnection(dbConfig)
     let promise = new Promise((resolve, reject) => {
       connection.query(
@@ -209,7 +210,48 @@ router.post('/createsession', bodyParser.json(), (req, res, next) => {
     )
 })
 
-module.exports = router
+router.get('/paycards', (req, res, next) => {
+  const user_tools = req.query.user_tools
+  const query = `
+    SELECT *
+    FROM   allcards AS ac
+    WHERE  ac.cards_id 
+    NOT IN (SELECT cards_id FROM userscards WHERE cards_id = ac.cards_id AND user_id = '${user_tools}') 
+    AND    ac.cards_type != 0`
+  reply(res, query)
+})
 
+router.delete('/deletesession', bodyParser.json(), (req, res, next) => {
+  const {user_tools, session_id} = req.body
+  const query = `
+    DELETE FROM sessions
+    WHERE session_id = ${session_id}
+    AND   master_id  = ${user_tools}`
+  const msg = 'DELETE_SESSION'
+  reply(res, query, msg)
+})
+
+router.post('/closesession', bodyParser.json(), (req, res, next) => {
+  const {user_tools, session_id} = req.body
+  const query = `
+    UPDATE sessions 
+    SET    session_closed = 1
+    WHERE  session_id = ${session_id}
+    AND    master_id  = ${user_tools}`
+  const msg = 'CLOSE_SESSION'
+  reply(res, query, msg)
+})
+
+router.get('/selectedcardsitems', (req, res, next) => {
+  const cards_id = req.query.cards_id
+  const table = `allcards__items_${cards_id}`
+  const query = `
+    SELECT *
+    FROM   ${table}`
+    console.log(query)
+  reply(res, query)
+})
+
+module.exports = router
 
 // Если запрос строка, то просто выполняем его, если не строка(массив) - то проходим по всем элементам этого массива, выполняем все его запросы и отдаем один общий результат.

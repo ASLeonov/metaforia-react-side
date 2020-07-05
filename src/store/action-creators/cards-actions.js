@@ -32,10 +32,11 @@ export const getUserCards = () => (dispatch, getState) => {
 
 export const getPayCards = () => (dispatch, getState) => {
   const user_login = getState().user.login
+  const user_tools = getState().user.tools
   dispatch({
     type: 'GET_CARDS_PAY__LOADING'
   })
-  fetch(`${api_path}cards.php?name=${user_login}&type=payCards`)
+  fetch(`/api/paycards?user_login=${user_login}&user_tools=${user_tools}`)
     .then(res => res.json())
     .then(res =>
       dispatch({
@@ -121,7 +122,7 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
     dispatch({
       type: 'GET_SELECTED_CARD_ITEMS__LOADING'
     })
-    fetch(`${api_path}cards.php?name=nobody&type=userSelectedCards&payload=${cards_id}`)  // name - любое
+    fetch(`/api/selectedcardsitems?cards_id=${cards_id}`)
     .then(res => res.json())
     .then(res =>
       dispatch({

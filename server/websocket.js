@@ -15,9 +15,9 @@ wss.on('connection', ws => {
     const client_data = JSON.parse(message)
       timer = setInterval( () => {
         const query = `
-          SELECT \`last_version\`, \`last_modificator\` 
-          FROM \`${client_data.user}__sessions\`
-          WHERE \`session_id\` = ${client_data.session}`
+          SELECT last_version, last_modificator 
+          FROM   sessions
+          WHERE  session_id = '${client_data.session}'`
         connection.query(
           query,
           (err, results) => {

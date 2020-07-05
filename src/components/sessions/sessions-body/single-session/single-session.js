@@ -25,10 +25,15 @@ function SingleSession(props) {
   }
 
   const closeClick = () => {
-    fetch(`${api_path}sessions.php`, {
+    const send_data = {
+      user_login: props.user.login,
+      session_id: session_id,
+      user_tools: props.user.tools
+    }
+    fetch(`/api/closesession`, {
       method: 'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-      body: `close=ok&user_name=${props.user.login}&session_id=${session_id}`
+      headers: {'Content-Type':'application/json; charset=UTF-8'},
+      body: JSON.stringify(send_data)
     })
       .then(response => response.text())
       .then(data => {
@@ -48,10 +53,15 @@ function SingleSession(props) {
   }
 
   const deleteClick = () => {
-    fetch(`${api_path}sessions.php`, {
-      method: 'POST',
-      headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-      body: `delete=ok&user_name=${props.user.login}&session_id=${session_id}`
+    const send_data = {
+      user_login: props.user.login,
+      session_id: session_id,
+      user_tools: props.user.tools
+    }
+    fetch(`/api/deletesession`, {
+      method: 'DELETE',
+      headers: {'Content-Type':'application/json; charset=UTF-8'},
+      body: JSON.stringify(send_data)
     })
       .then(response => response.text())
       .then(data => {

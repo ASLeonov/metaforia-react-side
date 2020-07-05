@@ -14,7 +14,7 @@ function Consultation(props) {
   const [socket, setSocket] = useState(false)
   const {user, thisSession, clearThisSession, clearSelectedCardItems, updateThisSession, getCardsThisSession} = props
 
-  const modificator = user.type
+  const modificator = user.type  // Правильно ли ????? Скорее при инициализайии нет.
  
   useEffect( () => {
     if (thisSession.session_id) {
