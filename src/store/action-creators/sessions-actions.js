@@ -45,21 +45,23 @@ export const getLastSessions = () => (dispatch, getState) => {
 
 
 
-export const setThisSession = (session_id, last_version) => {
+export const setThisSession = (session_id, last_version, last_modificator) => {
   return {
     type: 'SET_THIS_SESSION',
     payload: {
       session_id,
-      last_version
+      last_version,
+      last_modificator
     }
   }
 }
 
-export const updateThisSession = last_version => {
+export const updateThisSession = (last_version, last_modificator) => {
   return {
     type: 'UPDATE_LAST_VERSION_THIS_SESSION',
     payload: {
-      last_version
+      last_version,
+      last_modificator
     }
   }
 }

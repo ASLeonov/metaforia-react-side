@@ -58,12 +58,11 @@ export const getPayCards = () => (dispatch, getState) => {
 // ---------- CARDS THIS SESSION Вся логика по работе с картами сессии, записанными в БД ---------- //
 
 export const getCardsThisSession = () => (dispatch, getState) => {
-  const user_login = getState().user.login
   const session_id = getState().thisSession.session_id
   dispatch({
     type: 'GET_CARDS_THIS_SESSIONS__LOADING'
   })
-  fetch(`${api_path}cards.php?name=${user_login}&type=getCardsThisSessions&session_id=${session_id}`)
+  fetch(`/api/cardsthissession?session_id=${session_id}`)
     .then(res => res.json())
     .then(res =>
       dispatch({
@@ -86,12 +85,21 @@ export const clearAllCardsThisSession = () => {
 }
 
 export const saveCardThisSession = (card, position_left, position_top, scale, session_id) => (dispatch, getState) => {
-  const user_login  = getState().user.login
   const modificator = getState().user.type
-  fetch(`${api_path}cards.php`, {
+  const send_data = {
+    session_id,
+    modificator,
+    cards_id:   card.cards_id,
+    cards_name: card.cards_name,
+    cards_img:  card.cards_img,
+    position_left,
+    position_top,
+    scale
+  }
+  fetch(`/api/savecardthissession`, {
     method: 'POST',
-    headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-    body: `saveCardThisSession=ok&name=${user_login}&modificator=${modificator}&session_id=${session_id}&cards_id=${card.cards_id}&cards_name=${card.cards_name}&cards_img=${card.cards_img}&position_left=${position_left}&position_top=${position_top}&scale=${scale}`
+    headers: {'Content-Type':'application/json; charset=UTF-8'},
+    body: JSON.stringify(send_data)
   })
     .then(response => response.text())
     .then(data => {
@@ -99,6 +107,7 @@ export const saveCardThisSession = (card, position_left, position_top, scale, se
         dispatch({
           type: 'INCREASE_THIS_SESSION',
           payload: {
+            modificator,
             card,
             position_left,
             position_top,

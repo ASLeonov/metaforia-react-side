@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import {connect} from 'react-redux'
+import {selectUser} from '../../../store/selectors/user'
 import {selectUserSelectedCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {saveCardThisSession} from '../../../store/action-creators/cards-actions'
 import './consultation-card.css'
@@ -10,6 +11,21 @@ function ConsultationCard(props) {
   const [isMove, setIsMove] = useState(false)
   const [scale, setScale] = useState(1)
   const {cards_id, cards_img, cards_name} = props.card
+
+  const sendDataSocket = (thisScale) => {
+    const send_data = {
+      type: 'saveCardThisSession',
+      cards_id,
+      cards_name,
+      cards_img, 
+      position_left: position[1],
+      position_top:  position[2],
+      scale:         thisScale,
+      session_id:    props.session_id,
+      modificator:   props.user.type
+    }
+    props.socket.send(JSON.stringify(send_data))
+  }
 
   const setDraggbleON = (event) => {
     const move_DOM = document.querySelector(`#consultation-card-${cards_id}`).getBoundingClientRect()
@@ -22,19 +38,21 @@ function ConsultationCard(props) {
 
   const setDraggbleOFF = () => {
     const border_DOM = document.querySelector('.consultation-field').getBoundingClientRect()
-    const move_DOM = document.querySelector(`#consultation-card-${cards_id}`).getBoundingClientRect()
+    const move_DOM   = document.querySelector(`#consultation-card-${cards_id}`).getBoundingClientRect()
     if (position[0]) {
       if (move_DOM.bottom < border_DOM.bottom) {
         setPosition([false, position[1], position[2], position[3], position[4], position[5], position[6]])
         !playMode && setPlayMode(true)
+                      sendDataSocket(scale)
         if (props.exist_card || props.exist_card_local) {
-          if (isMove) {
-            props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale, props.session_id)
-            setIsMove(false)
-          }
-        } else {
-            props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale, props.session_id)
-        }
+          // if (isMove) {
+            // props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale, props.session_id)
+                      isMove && setIsMove(false)      // Почему isMove делаем false только если props.exist_card || props.exist_card_local ???
+          // }
+        } 
+        // else {
+        //     props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], scale, props.session_id)
+        // }
       } else {
         setPosition([false, 0, 0, 0, 0, 0, 0])
       }
@@ -61,17 +79,22 @@ function ConsultationCard(props) {
   const increaseScale = () => {
     if (scale < 2) {
       const new_scale = Number((scale + 0.2).toFixed(1))
+      sendDataSocket(new_scale)
       setScale(new_scale)
-      props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale, props.session_id)
+      // props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale, props.session_id)
     }
   }
   const decreaseScale = () => {
     if (scale > 1) {
       const new_scale = Number((scale - 0.2).toFixed(1))
+      sendDataSocket(new_scale)
       setScale(new_scale)
-      props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale, props.session_id)
+      // props.saveCardThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale, props.session_id)
     }
   }
+// Возможно лучше сделать useEffect на изменение scale и вызывать в нем sendDataSocket ,,,???????
+
+
   const img_width = 100*scale + 'px'
   const img_style = {width: img_width}      //, animation: 'cards-fadeIn 1.2s'
 
@@ -125,7 +148,8 @@ function ConsultationCard(props) {
 
 export default connect(
   state => ({
-    userSelectedCards: selectUserSelectedCards(state),
+    user:                  selectUser(state),
+    userSelectedCards:     selectUserSelectedCards(state),
     thisSessionCardsLocal: selectThisSessionCardsLocal(state)
   }),
   {

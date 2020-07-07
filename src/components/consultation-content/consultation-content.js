@@ -84,7 +84,7 @@ function ConsultationContent(props) {
           </h4> : ''
         }
       </div>
-        {selectCards ? <ConsultationCards activeCards_id={selectCards} user={props.user} /> : ''}
+        {selectCards ? <ConsultationCards activeCards_id={selectCards} user={props.user} socket={props.socket} /> : ''}
     </div>
   )
 }

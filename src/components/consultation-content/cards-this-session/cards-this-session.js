@@ -1,7 +1,8 @@
 import React from 'react'
 import ConsultationCard from '../consultation-card'
+import { PromisePool } from 'mysql2/promise'
 
-function CardsThisSession({session_id, thisSessionCards, thisSessionCardsLocal}) {
+function CardsThisSession({session_id, thisSessionCards, thisSessionCardsLocal, socket}) {
   let cards = {}
   let dataJSX = []
   
@@ -26,6 +27,7 @@ function CardsThisSession({session_id, thisSessionCards, thisSessionCardsLocal})
             scale={element.scale}
             exist_card={true}
             session_id={session_id}
+            socket={socket}
           />
         )
     }

@@ -1,17 +1,19 @@
 export const thisSessionReducer = (
     thisSessionState = {
-      session_id: null,
+      session_id:   null,
       last_version: null,
-      cardsThisSession: {},
+      last_modificator:  null,
+      cardsThisSession:      {},
       cardsThisSessionLocal: {}
     }, action) => {  
       switch (action.type) {
         case 'SET_THIS_SESSION': {
           console.log('SET_THIS_SESSION')
           return {
-            session_id: action.payload.session_id,
-            last_version: Number(action.payload.last_version),
-            cardsThisSession: {...thisSessionState.cardsThisSession},
+            session_id:       action.payload.session_id,
+            last_version:     Number(action.payload.last_version),
+            last_modificator: action.payload.last_modificator,
+            cardsThisSession:      {...thisSessionState.cardsThisSession},
             cardsThisSessionLocal: {...thisSessionState.cardsThisSessionLocal}
           }
         }
@@ -30,8 +32,9 @@ export const thisSessionReducer = (
                 scale: scale
               }
                 return {
-                  session_id: thisSessionState.session_id,
-                  last_version: new_version,
+                  session_id:       thisSessionState.session_id,
+                  last_version:     new_version,
+                  last_modificator: action.payload.modificator,
                   cardsThisSession: {
                     ...new_cards_modificate
                   },
@@ -44,14 +47,15 @@ export const thisSessionReducer = (
               ...thisSessionState.cardsThisSessionLocal
             }
               new_cards_modificate[card.cards_id] = {
-                card: card,
+                card:          card,
                 position_left: position_left,
-                position_top: position_top,
-                scale: scale
+                position_top:  position_top,
+                scale:         scale
               }
                 return {
-                  session_id: thisSessionState.session_id,
-                  last_version: new_version,
+                  session_id:       thisSessionState.session_id,
+                  last_version:     new_version,
+                  last_modificator: action.payload.modificator,
                   cardsThisSession: {
                     ...thisSessionState.cardsThisSession
                   },
@@ -64,12 +68,13 @@ export const thisSessionReducer = (
         case 'UPDATE_LAST_VERSION_THIS_SESSION': {
           console.log('UPDATE_LAST_VERSION_THIS_SESSION')
           return {
-            session_id: thisSessionState.session_id,
-            last_version: Number(action.payload.last_version),
+            session_id:       thisSessionState.session_id,
+            last_version:     Number(action.payload.last_version),
+            last_modificator: action.payload.last_modificator,
             cardsThisSession: {
-              isLoaded: false,
+              isLoaded:  false,
               isLoading: false,
-              data: {}
+              data:      {}
             },
             cardsThisSessionLocal: {}
           }
@@ -77,9 +82,10 @@ export const thisSessionReducer = (
         case 'CLEAR_THIS_SESSION': {
           // console.log('CLEAR_THIS_SESSION')
           return {
-            session_id: null,
-            last_version: null,
-            cardsThisSession: {},
+            session_id:       null,
+            last_version:     null,
+            last_modificator: null,
+            cardsThisSession:      {},
             cardsThisSessionLocal: {}
           }
         }
@@ -87,12 +93,13 @@ export const thisSessionReducer = (
         case 'GET_CARDS_THIS_SESSIONS__LOADING': {
           console.log('GET_CARDS_THIS_SESSIONS__LOADING')
           return {
-            session_id: thisSessionState.session_id,
-            last_version: thisSessionState.last_version,
+            session_id:       thisSessionState.session_id,
+            last_version:     thisSessionState.last_version,
+            last_modificator: thisSessionState.last_modificator,
             cardsThisSession: {
-              isLoaded: false,
+              isLoaded:  false,
               isLoading: true,
-              data: {}
+              data:      {}
             },
             cardsThisSessionLocal: {}
           }
@@ -113,12 +120,13 @@ export const thisSessionReducer = (
               }
             })
           return {
-            session_id: thisSessionState.session_id,
-            last_version: thisSessionState.last_version,
+            session_id:       thisSessionState.session_id,
+            last_version:     thisSessionState.last_version,
+            last_modificator: thisSessionState.last_modificator,
             cardsThisSession: {
-              isLoaded: true,
+              isLoaded:  true,
               isLoading: false,
-              data: {...data_new}
+              data:      {...data_new}
             },
             cardsThisSessionLocal: {}
           }
@@ -126,12 +134,13 @@ export const thisSessionReducer = (
         case 'GET_CARDS_THIS_SESSIONS__FAILED': {
           console.log('GET_CARDS_THIS_SESSIONS__FAILED')
           return {
-            session_id: thisSessionState.session_id,
-            last_version: thisSessionState.last_version,
+            session_id:       thisSessionState.session_id,
+            last_version:     thisSessionState.last_version,
+            last_modificator: thisSessionState.last_modificator,
             cardsThisSession: {
-              isLoaded: true,
+              isLoaded:  true,
               isLoading: false,
-              data: {"ERROR": action.error}
+              data:      {"ERROR": action.error}
             },
             cardsThisSessionLocal: {}
           }
@@ -139,12 +148,13 @@ export const thisSessionReducer = (
         case 'CLEAR_ALL_CARDS_THIS_SESSION': {
           console.log('CLEAR_ALL_CARDS_THIS_SESSION')
           return {
-            session_id: thisSessionState.session_id,
-            last_version: thisSessionState.last_version,
+            session_id:       thisSessionState.session_id,
+            last_version:     thisSessionState.last_version,
+            last_modificator: thisSessionState.last_modificator,
             cardsThisSession: {
-              isLoaded: false,
+              isLoaded:  false,
               isLoading: false,
-              data: {}
+              data:      {}
             },
             cardsThisSessionLocal: {}
           }

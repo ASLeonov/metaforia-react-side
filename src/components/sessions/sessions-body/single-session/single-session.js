@@ -7,7 +7,9 @@ import './single-session.css'
 
 function SingleSession(props) {
   const [showAlert, setShowAlert] = useState([])
-  const {session_id, session_date, client_name, client_surname, client_email, session_descr, last_version} = props.session
+  const {
+    session_id, session_date, client_name, client_surname, client_email, session_descr, last_version, last_modificator
+  } = props.session
 
   const inviteClick = () => {
     console.log('invite client')
@@ -21,7 +23,7 @@ function SingleSession(props) {
   }
 
   const setSession = () => {
-    props.setThisSession(session_id, last_version)
+    props.setThisSession(session_id, last_version, last_modificator)
   }
 
   const closeClick = () => {

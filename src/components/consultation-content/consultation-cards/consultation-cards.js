@@ -26,11 +26,13 @@ function ConsultationCards(props) {
           <CardsThisSession
             session_id={thisSession.session_id}
             thisSessionCards={thisSessionCards.data}
+            socket={props.socket}
           />
         local_already_exist = 
           <CardsThisSession
             session_id={thisSession.session_id}
             thisSessionCardsLocal={thisSessionCardsLocal}
+            socket={props.socket}
           />
         fetched_selected = 
           <SelectedCards
@@ -39,6 +41,7 @@ function ConsultationCards(props) {
             data={selectedCards.data}
             thisSessionCards={thisSessionCards.data}
             thisSessionCardsLocal={thisSessionCardsLocal}
+            socket={props.socket}
           />
       }
     } else {

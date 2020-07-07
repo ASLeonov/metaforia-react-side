@@ -19,6 +19,8 @@ const reply = (res, query, msg, status = 200) => {
           } else {
             res.status(status).json(results)
           }
+        } else {
+          console.log('ERR', err)
         }
       }
     )
@@ -82,7 +84,7 @@ router.post('/login', bodyParser.json(), (req, res, next) => {
 router.get('/currentsessions', (req, res, next) => {
   const user_login = req.query.user_login
   const query = `
-    SELECT s.session_id, s.session_date, s.session_descr, s.last_version, c.client_name, c.client_surname
+    SELECT s.session_id, s.session_date, s.session_descr, s.last_version, s.last_modificator ,c.client_name, c.client_surname
     FROM sessions AS s, clients AS c, users 
     WHERE users.user_login = '${user_login}' 
     AND s.session_client = c.client_id 
@@ -167,7 +169,6 @@ router.post('/createsession', bodyParser.json(), (req, res, next) => {
     SELECT session_id
     FROM   sessions
     WHERE  session_client = ${client_id}
-    AND    master_id = '${user_tools}'
     AND    session_closed = 0`
   const connection = mysql.createConnection(dbConfig)
     let promise = new Promise((resolve, reject) => {
@@ -248,9 +249,63 @@ router.get('/selectedcardsitems', (req, res, next) => {
   const query = `
     SELECT *
     FROM   ${table}`
-    console.log(query)
   reply(res, query)
 })
+
+router.get('/cardsthissession', (req, res, next) => {
+  const {session_id} = req.query
+  const query = `
+    SELECT cards_id, cards_name, cards_img, position_left, position_top, scale
+    FROM   sessions_cards
+    WHERE  session_id = '${session_id}'`
+  reply(res, query)
+})
+
+// router.post('/savecardthissession', bodyParser.json(), (req, res, next) => {
+//   const {session_id, modificator, cards_id, cards_name, cards_img, position_left, position_top, scale} = req.body
+//   const query_checkExist = `
+//     SELECT cards_id
+//     FROM   sessions_cards
+//     WHERE  cards_id = '${cards_id}'
+//     AND    session_id = ${session_id}`
+//   const connection = mysql.createConnection(dbConfig)
+//   let promise = new Promise((resolve, reject) => {
+//     connection.query(
+//       query_checkExist,
+//       (err, results) => {
+//         if (!err) {
+//           if (results.length > 0) {
+//             resolve('good - card allready exist')
+//             console.log('good - card allready exist')
+//           } else {
+//             reject('good - card not exist')
+//             console.log('good - card not exist')
+//           }
+//         }
+//       }
+//     )
+//   })
+//   promise.then(
+//     () => {
+//       connection.end()
+//       const query_cards = `
+//         UPDATE sessions_cards
+//         SET    position_left = ${position_left}, position_top = ${position_top}, scale = ${scale} 
+//         WHERE  session_id = ${session_id} 
+//         AND    cards_id = '${cards_id}'`
+//       const msg = 'INSERT_CARD_THIS_SESSION'
+//       reply(res, query_cards, msg)
+//     },
+//     () => {
+//       connection.end()
+//       const query_cards = `
+//         INSERT INTO sessions_cards 
+//         VALUES (null, ${session_id}, '${cards_id}', '${cards_name}', '${cards_img}', ${position_left}, ${position_top}, ${scale})`
+//       const msg = 'INSERT_CARD_THIS_SESSION'
+//       reply(res, query_cards, msg)
+//     }
+//   )
+// })
 
 module.exports = router
 
