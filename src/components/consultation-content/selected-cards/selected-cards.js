@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import ConsultationCard from '../consultation-card'
 
-function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, thisSessionCardsLocal}) {
+function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, thisSessionCardsLocal, socket}) {
   const [xPosition, setXPosition] = useState(0)
   const [mixCards, setMixCards] = useState([0])
   const [dataJSX, setDataJSX] = useState([])
@@ -58,6 +58,7 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
                             style_1={style_1}
                             card={element}
                             session_id={session_id}
+                            socket={socket}
                           />
                         keys[randomNumber] = key
                       }
@@ -79,6 +80,7 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
                       style_1={style_1}
                       card={element}
                       session_id={session_id}
+                      socket={socket}
                     />
                   )
                   console.log('dataJSX_', ' ', element.cards_id)
@@ -100,6 +102,7 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
                       style_1={style_1}
                       card={element}
                       session_id={session_id}
+                      socket={socket}
                     />
                   )
               }

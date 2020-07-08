@@ -85,41 +85,54 @@ export const clearAllCardsThisSession = () => {
 }
 
 export const saveCardThisSession = (card, position_left, position_top, scale, session_id) => (dispatch, getState) => {
+  // const modificator = getState().user.type
+  // const send_data = {
+  //   session_id,
+  //   modificator,
+  //   cards_id:   card.cards_id,
+  //   cards_name: card.cards_name,
+  //   cards_img:  card.cards_img,
+  //   position_left,
+  //   position_top,
+  //   scale
+  // }
+  // fetch(`/api/savecardthissession`, {
+  //   method: 'POST',
+  //   headers: {'Content-Type':'application/json; charset=UTF-8'},
+  //   body: JSON.stringify(send_data)
+  // })
+  //   .then(response => response.text())
+  //   .then(data => {
+  //     if (data === 'INSERT_CARD_THIS_SESSION') {
+  //       dispatch({
+  //         type: 'INCREASE_THIS_SESSION',
+  //         payload: {
+  //           modificator,
+  //           card,
+  //           position_left,
+  //           position_top,
+  //           scale
+  //         }
+  //       })
+  //     } else {
+  //     // Если данные на сервере обновятся некорректно, то фетчим их по новой для синхронизации
+  //       dispatch(getCardsThisSession())
+  //     }
+  //   })
+  //   .catch(e => console.log('catch error =>', e))
+}
+export const increaseThisSession = (card, position_left, position_top, scale) => (dispatch, getState) => {
   const modificator = getState().user.type
-  const send_data = {
-    session_id,
-    modificator,
-    cards_id:   card.cards_id,
-    cards_name: card.cards_name,
-    cards_img:  card.cards_img,
-    position_left,
-    position_top,
-    scale
-  }
-  fetch(`/api/savecardthissession`, {
-    method: 'POST',
-    headers: {'Content-Type':'application/json; charset=UTF-8'},
-    body: JSON.stringify(send_data)
-  })
-    .then(response => response.text())
-    .then(data => {
-      if (data === 'INSERT_CARD_THIS_SESSION') {
-        dispatch({
-          type: 'INCREASE_THIS_SESSION',
-          payload: {
-            modificator,
-            card,
-            position_left,
-            position_top,
-            scale
-          }
-        })
-      } else {
-      // Если данные на сервере обновятся некорректно, то фетчим их по новой для синхронизации
-        dispatch(getCardsThisSession())
+    dispatch({
+      type: 'INCREASE_THIS_SESSION',
+      payload: {
+        modificator,
+        card,
+        position_left,
+        position_top,
+        scale
       }
     })
-    .catch(e => console.log('catch error =>', e))
 }
 
 // ---------- END OF CARDS THIS SESSION ---------- //

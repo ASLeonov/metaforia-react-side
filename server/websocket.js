@@ -34,7 +34,7 @@ wss.on('connection', ws => {
           }
         )
       }, 7000)
-    } else {
+    } else if (client_data.type === 'saveCardThisSession') {
       console.log(client_data.type)
       const {session_id, modificator, cards_id, cards_name, cards_img, position_left, position_top, scale} = client_data
       const query_checkExist = `
@@ -67,9 +67,7 @@ wss.on('connection', ws => {
             WHERE  sc.session_id = ${session_id} 
             AND    sc.session_id = s.session_id 
             AND    sc.cards_id   = '${cards_id}'`
-          const msg = {
-            type: 'SAVE_CARD',
-            body: 'INSERT_CARD_THIS_SESSION'}
+          const msg = {type: 'SAVE_CARD', body: 'INSERT_CARD_THIS_SESSION'}
           connection.query(
             query_cards,
             (err, results) => {
@@ -82,10 +80,50 @@ wss.on('connection', ws => {
           )
         },
         () => {
-          const query_cards = `
+          const query_cards_1 = `
             INSERT INTO sessions_cards 
             VALUES (null, ${session_id}, '${cards_id}', '${cards_name}', '${cards_img}', ${position_left}, ${position_top}, ${scale})`
-          const msg = 'INSERT_CARD_THIS_SESSION'
+          const query_cards_2 = `
+            UPDATE sessions 
+            SET last_version = last_version+1, last_modificator = '${modificator}'`
+          const msg = {type: 'SAVE_CARD', body: 'INSERT_CARD_THIS_SESSION'}
+
+          connection.beginTransaction((err) => {
+            if (err) {
+              ws.send(JSON.stringify({type: 'SAVE_NEW_CARD_ERROR'}))
+              throw err
+            }
+            connection.query(
+              query_cards_1,
+              (err, results) => {
+              if (err) {
+                return connection.rollback(() => {
+                  ws.send(JSON.stringify({type: 'SAVE_NEW_CARD_ERROR'}))
+                  throw err
+                })
+              }
+          
+              connection.query(
+                query_cards_2,
+                (err, results) => {
+                if (err) {
+                  return connection.rollback(() => {
+                    ws.send(JSON.stringify({type: 'SAVE_NEW_CARD_ERROR'}))
+                    throw err
+                  })
+                }
+                connection.commit((err) => {
+                  if (err) {
+                    return connection.rollback(() => {
+                      ws.send(JSON.stringify({type: 'SAVE_NEW_CARD_ERROR'}))
+                      throw err
+                    })
+                  }
+                  ws.send(JSON.stringify(msg))
+                })
+              })
+            })
+          })
         }
       )
     
