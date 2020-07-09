@@ -25,7 +25,6 @@ function ConsultationCard(props) {
       session_id:    props.session_id,
       modificator:   props.user.type
     }
-    console.log('SOCKET ->', props.socket)
     props.socket.send(JSON.stringify(send_data))
   }
 
@@ -42,7 +41,6 @@ function ConsultationCard(props) {
   }
 
   const setDraggbleOFF = () => {    // Завершение движения
-    console.log('setDraggbleOFF-setDraggbleOFF-setDraggbleOFF')
     const border_DOM = document.querySelector('.consultation-field').getBoundingClientRect()
     const move_DOM   = document.querySelector(`#consultation-card-${cards_id}`).getBoundingClientRect()
     if (position[0]) {
@@ -87,7 +85,6 @@ function ConsultationCard(props) {
   }, [props.position_left, props.position_top, props.scale])
 
   const increaseScale = () => {
-    console.log('isMove', isMove)
     if (scale < 2) {
       const new_scale = Number((scale + 0.2).toFixed(1))
       props.increaseThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)

@@ -66,7 +66,7 @@ function Consultation(props) {
     // eslint-disable-next-line
   }, [])
 
-  console.log('render Consultation', socket)
+  console.log('render Consultation')
 
   return (
     <>

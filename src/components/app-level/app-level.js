@@ -1,25 +1,45 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import {BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom"
-import {useSelector} from 'react-redux'
+import {connect} from 'react-redux'
+import {selectUser} from '../../store/selectors/user'
+import {login_token} from '../../store/action-creators/user-actions'
 import Header from '../header'
 import Middle from '../middle'
 import Footer from '../footer'
 import Login from '../login'
 
+function AppLevel({user, login_token}) {
+  const [showApp, setShowApp] = useState(false)
 
-function AppLevel() {
+  useEffect( () => {
+    if (localStorage.token) {
+      if (user.token !== localStorage.token) {
+        if (user.login === 'UPDATE_TOKEN') {
+          delete localStorage.token
+          !showApp && setShowApp(true)
+        } else {
+          login_token(localStorage.token)
+        }
+      } else {
+        if (user.login.length > 0 && user.login !== 'BAD_LOGIN') {
+          !showApp && setShowApp(true)
+        }
+      }
+    } else {
+      (user.login.length > 0 && user.token.length > 0) && (localStorage.token = user.token)
+      !showApp && setShowApp(true)
+    }
+  }, [user])
 
-  const user = useSelector(state => state.user)
+  console.log('render AppLevel', showApp, user.fullname)
 
-  // const isLogin = localStorage.getItem('token')
-
-  console.log('render AppLevel')
+  if (!showApp) return null
 
   return(
     <Router>
       <Header />
         <Switch>
-          {user.fullname.length === 0 ?     // user.fullname.length === 0 && localStorage.getItem('jwt') !== '123'
+          {user.fullname.length === 0 ?
             <>
               <Route path="/login">
                 <Login />
@@ -77,7 +97,14 @@ function AppLevel() {
 
 }
 
-export default AppLevel
+export default connect(
+  state => ({
+    user: selectUser(state),
+  }),
+  {
+    login_token
+  }
+)(AppLevel)
 
 
 // Этот компонент - просто уровень нуеобходимый, чтобы принять user из стора и сделать в зависимости от этого роутинг. Уровнем выше этого сделать было нельзя.

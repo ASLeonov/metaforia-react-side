@@ -5,7 +5,10 @@ import './exit.css'
 
 function Exit({logout}) {
 
-  const logoutClick = () => logout()
+  const logoutClick = () => {
+    delete localStorage.token
+    logout()
+  }
 
   return (
     <div className="header-exit">

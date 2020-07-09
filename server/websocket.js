@@ -6,8 +6,6 @@ const port = process.env.PORT || 8080
 const wss = new WebSocket.Server({ port: port })
 const dbConfig = config.get('dbConfig')
 
-// console.log('websocket dbConfig', dbConfig)
-
 wss.on('connection', ws => {
   const connection = mysql.createConnection(dbConfig)
   let timer
@@ -87,7 +85,6 @@ wss.on('connection', ws => {
             UPDATE sessions 
             SET last_version = last_version+1, last_modificator = '${modificator}'`
           const msg = {type: 'SAVE_CARD', body: 'INSERT_CARD_THIS_SESSION'}
-
           connection.beginTransaction((err) => {
             if (err) {
               ws.send(JSON.stringify({type: 'SAVE_NEW_CARD_ERROR'}))
@@ -102,7 +99,6 @@ wss.on('connection', ws => {
                   throw err
                 })
               }
-          
               connection.query(
                 query_cards_2,
                 (err, results) => {
@@ -126,9 +122,7 @@ wss.on('connection', ws => {
           })
         }
       )
-    
     }
-
   })
   ws.on('close', () => {
     connection.destroy()

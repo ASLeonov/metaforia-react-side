@@ -3,9 +3,9 @@ const bodyParser = require('body-parser')
 const mysql = require('mysql2')
 const config = require('config')
 const dbConfig = config.get('dbConfig')
-md5 = require('js-md5')
-
-// console.log('api dbConfig', dbConfig)
+const {v4: uuidv4} = require('uuid')
+const md5 = require('js-md5')
+const { CP850_BIN } = require('mysql2/lib/constants/charsets')
 
 const reply = (res, query, msg, status = 200) => {
   const connection = mysql.createConnection(dbConfig)
@@ -49,36 +49,87 @@ const reply = (res, query, msg, status = 200) => {
 }
 
 router.post('/login', bodyParser.json(), (req, res, next) => {
-  const {user_login, user_password} = req.body
-  const query = `
-    SELECT user_login, user_password, user_salt, user_name, user_surname, user_spec, user_id AS user_tools
-    FROM users 
-    WHERE user_login='${user_login}'`
+  const {user_login, user_password, user_token} = req.body
   const connection = mysql.createConnection(dbConfig)
-  connection.query(
-    query,
-    (err, results) => {
-      if (!err) {
-        result = results[0]
-        if (md5(md5(user_password) + result.user_salt) === result.user_password) {
-          send_data = {
-            user_login:   result.user_login,
-            user_name:    result.user_name,
-            user_surname: result.user_surname,
-            user_spec:    result.user_spec,
-            user_tools:   result.user_tools
+    if (user_token) {
+      const query = `
+        SELECT u.user_login, u.user_name, u.user_surname, u.user_spec, u.user_id AS user_tools
+        FROM   users AS u, tokens AS t
+        WHERE  u.user_id = t.user_id 
+        AND    t.token='${user_token}'`
+      connection.query(
+        query,
+        (err, results) => {
+          if (!err) {
+            if (results.length > 0) {
+              result = results[0]
+              const send_data = {
+                user_login:   result.user_login,
+                user_name:    result.user_name,
+                user_surname: result.user_surname,
+                user_spec:    result.user_spec,
+                user_tools:   result.user_tools,
+                user_token:   user_token
+              }
+              res.status(200).json(send_data)
+            } else {
+              res.status(200).json({'update_token': true})
+            }
+
+          } else {
+            console.log('Err', err)
+            res.status(200).json({'login_failed': true})
+
+            // Может удалить токен, если results.length === 0 ???
+
           }
-          res.status(200).json(send_data)
-        } else {
-          console.log('Login bad', result.user_password, md5(md5(user_password) + result.user_salt))
-          // Прописать логику неправильного логина/пароля
         }
-      } else {
-        console.log('Err', err)
-      }
+      )
+      connection.end()
+    } else {
+      const query = `
+        SELECT user_login, user_password, user_salt, user_name, user_surname, user_spec, user_id AS user_tools
+        FROM   users 
+        WHERE  user_login='${user_login}'`
+      const token = uuidv4()
+      const send_data = {'login_failed': true}
+      let promise = new Promise((resolve, reject) => {
+        connection.query(
+          query,
+          (err, results) => {
+            if (!err && results.length > 0) {
+              result = results[0]
+              if (md5(md5(user_password) + result.user_salt) === result.user_password) {
+                send_data['user_login']   = result.user_login
+                send_data['user_name']    = result.user_name
+                send_data['user_surname'] = result.user_surname
+                send_data['user_spec']    = result.user_spec
+                send_data['user_tools']   = result.user_tools
+                send_data['user_token']   = token
+                delete send_data['login_failed']
+                res.status(200).json(send_data)
+                resolve(result.user_tools)
+  
+              } else { reject() }
+            } else { reject() }
+          }
+        )
+      })
+      promise.then(
+        data => {
+          const query_addToken = `
+          UPDATE tokens  
+          SET    token   = '${token}' 
+          WHERE  user_id = ${data}`
+          connection.query(query_addToken)
+          connection.end()
+        },
+        () => {
+          res.status(200).json(send_data)
+          connection.end()
+        }
+      )
     }
-  )
-  connection.end()
 })
 
 router.get('/currentsessions', (req, res, next) => {

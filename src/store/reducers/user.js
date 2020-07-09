@@ -11,8 +11,30 @@ export const userReducer =
         surname:  action.response.user_surname,
         fullname: `${action.response.user_name} ${action.response.user_surname}`,
         type:     action.response.user_spec === 1 ? 'master' : 'slave',
-        token:    action.response.token,
+        token:    action.response.user_token,
         tools:    action.response.user_tools
+      }
+    }
+    case 'LOGIN_TOKEN_OK': {
+      return {
+        login:    action.response.user_login,
+        name:     action.response.user_name,
+        surname:  action.response.user_surname,
+        fullname: `${action.response.user_name} ${action.response.user_surname}`,
+        type:     action.response.user_spec === 1 ? 'master' : 'slave',
+        token:    action.response.user_token,
+        tools:    action.response.user_tools
+      }
+    }
+    case 'UPDATE_TOKEN': {
+      return {
+        login:    'UPDATE_TOKEN',
+        name:     '',
+        surname:  '',
+        fullname: '',
+        type:     '',
+        token:    '',
+        tools:    ''
       }
     }
     case 'LOGIN_ERROR': {
