@@ -10,6 +10,7 @@ function CardsBox(props) {
     switch (mode) {
       case 'consult-mode-enter':
         getSelectedCardItems(cards.cards_id)
+        // setCardsThisSession(cards.cards_id)
         getCardsThisSession()
         callback(cards.cards_id)
         break
@@ -46,9 +47,10 @@ function CardsBox(props) {
 }
 
 export default connect(
-  () => ({}),
+  null,
   {
-    getSelectedCardItems, getCardsThisSession, addSelectedCardItems
+    getSelectedCardItems, getCardsThisSession, 
+    addSelectedCardItems
   }
 )(CardsBox)
 

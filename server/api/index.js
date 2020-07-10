@@ -5,7 +5,6 @@ const config = require('config')
 const dbConfig = config.get('dbConfig')
 const {v4: uuidv4} = require('uuid')
 const md5 = require('js-md5')
-const { CP850_BIN } = require('mysql2/lib/constants/charsets')
 
 const reply = (res, query, msg, status = 200) => {
   const connection = mysql.createConnection(dbConfig)
@@ -133,26 +132,25 @@ router.post('/login', bodyParser.json(), (req, res, next) => {
 })
 
 router.get('/currentsessions', (req, res, next) => {
-  const user_login = req.query.user_login
+  const user_id = req.query.user_tools
   const query = `
-    SELECT s.session_id, s.session_date, s.session_descr, s.last_version, s.last_modificator ,c.client_name, c.client_surname
-    FROM sessions AS s, clients AS c, users 
-    WHERE users.user_login = '${user_login}' 
-    AND s.session_client = c.client_id 
-    AND s.session_closed = 0`
+    SELECT s.session_id, s.session_date, s.session_descr, s.last_version, s.last_modificator, s.active_card_box , c.client_name, c.client_surname
+    FROM   sessions AS s, clients AS c
+    WHERE  s.session_user   = ${user_id}
+    AND    s.session_client = c.client_id 
+    AND    s.session_closed = 0`
   reply(res, query)
-  // И добавить users_id
   // Дописать логику для клиентов - свой запрос
 })
 
 router.get('/lastsessions', (req, res, next) => {
-  const user_login = req.query.user_login
+  const user_id = req.query.user_tools
   const query = `
     SELECT s.session_id, s.session_date, s.session_descr, c.client_name, c.client_surname
-    FROM sessions AS s, clients AS c, users 
-    WHERE users.user_login = '${user_login}' 
-    AND s.session_client = c.client_id 
-    AND s.session_closed = 1`
+    FROM   sessions AS s, clients AS c 
+    WHERE  s.session_user   = ${user_id} 
+    AND    s.session_client = c.client_id 
+    AND    s.session_closed = 1`
   reply(res, query)
   // Дописать логику для клиентов - свой запрос
 })
@@ -177,7 +175,7 @@ router.get('/clients', (req, res, next) => {
   const query = `
     SELECT   c.client_id, c.client_name, c.client_surname, c.client_gender, c.client_email, c.client_descr
     FROM     clients AS c
-    WHERE    c.master_id = ${user_tools}
+    WHERE    c.user_id = ${user_tools}
     ORDER BY c.client_name ASC`
   reply(res, query)
 })
@@ -188,7 +186,7 @@ router.post('/editclient', bodyParser.json(), (req, res, next) => {
     UPDATE clients AS c
     SET    c.client_name = '${client_name}', c.client_surname = '${client_surname}', c.client_gender = '${client_gender}', 
            c.client_email = '${client_email}', c.client_descr='${client_descr}'
-    WHERE  c.master_id = '${user_tools}' 
+    WHERE  c.user_id = '${user_tools}' 
     AND    c.client_id = '${client_id}'`
   const msg = 'UPDATE_CLIENT'
   reply(res, query, msg)
@@ -208,7 +206,7 @@ router.delete('/deleteclient', bodyParser.json(), (req, res, next) => {
   const query = `
     DELETE FROM clients
     WHERE client_id = ${client_id}
-    AND   master_id = ${user_tools}`
+    AND   user_id = ${user_tools}`
   const msg = 'DELETE_CLIENT'
 
   reply(res, query, msg)
@@ -242,7 +240,7 @@ router.post('/createsession', bodyParser.json(), (req, res, next) => {
         const date  = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()}`
         const query = `
           INSERT INTO sessions
-          VALUES(null, '${user_tools}', '${date}', '${client_id}', ' --- ', 0, 1, 'master')`
+          VALUES(null, '${user_tools}', '${date}', '${client_id}', ' --- ', 0, 1, 'master', 0)`
         connection.query(
           query,
           (err, results) => {
@@ -277,8 +275,8 @@ router.delete('/deletesession', bodyParser.json(), (req, res, next) => {
   const {user_tools, session_id} = req.body
   const query = `
     DELETE FROM sessions
-    WHERE session_id = ${session_id}
-    AND   master_id  = ${user_tools}`
+    WHERE session_id   = ${session_id}
+    AND   session_user = ${user_tools}`
   const msg = 'DELETE_SESSION'
   reply(res, query, msg)
 })
@@ -288,10 +286,36 @@ router.post('/closesession', bodyParser.json(), (req, res, next) => {
   const query = `
     UPDATE sessions 
     SET    session_closed = 1
-    WHERE  session_id = ${session_id}
-    AND    master_id  = ${user_tools}`
+    WHERE  session_id   = ${session_id}
+    AND    session_user = ${user_tools}`
   const msg = 'CLOSE_SESSION'
   reply(res, query, msg)
+})
+
+router.get('/allselectedcardsitemsbase', (req, res, next) => {
+  const session_id = req.query.session_id
+  // const table = `allcards__items_${cards_id}`
+  // const query = `
+  //   SELECT *
+  //   FROM   ${table}`
+  const query = `
+    SELECT   sc.card_box_id, s.active_card_box  
+    FROM     sessions AS s, sessions_cards AS sc
+    WHERE    sc.session_id = s.session_id 
+    AND      sc.session_id = ${session_id}
+    GROUP BY sc.card_box_id`
+  reply(res, query)
+})
+router.get('/allselectedcardsitemsacb', (req, res, next) => {
+  const carbox_id = req.query.carbox_id
+  const table = `allcards__items_${carbox_id}`
+  // const query = `
+  //   SELECT *
+  //   FROM   ${table}`
+  const query = `
+    SELECT   *  
+    FROM     ${table}`
+  reply(res, query)
 })
 
 router.get('/selectedcardsitems', (req, res, next) => {
@@ -311,52 +335,6 @@ router.get('/cardsthissession', (req, res, next) => {
     WHERE  session_id = '${session_id}'`
   reply(res, query)
 })
-
-// router.post('/savecardthissession', bodyParser.json(), (req, res, next) => {
-//   const {session_id, modificator, cards_id, cards_name, cards_img, position_left, position_top, scale} = req.body
-//   const query_checkExist = `
-//     SELECT cards_id
-//     FROM   sessions_cards
-//     WHERE  cards_id = '${cards_id}'
-//     AND    session_id = ${session_id}`
-//   const connection = mysql.createConnection(dbConfig)
-//   let promise = new Promise((resolve, reject) => {
-//     connection.query(
-//       query_checkExist,
-//       (err, results) => {
-//         if (!err) {
-//           if (results.length > 0) {
-//             resolve('good - card allready exist')
-//             console.log('good - card allready exist')
-//           } else {
-//             reject('good - card not exist')
-//             console.log('good - card not exist')
-//           }
-//         }
-//       }
-//     )
-//   })
-//   promise.then(
-//     () => {
-//       connection.end()
-//       const query_cards = `
-//         UPDATE sessions_cards
-//         SET    position_left = ${position_left}, position_top = ${position_top}, scale = ${scale} 
-//         WHERE  session_id = ${session_id} 
-//         AND    cards_id = '${cards_id}'`
-//       const msg = 'INSERT_CARD_THIS_SESSION'
-//       reply(res, query_cards, msg)
-//     },
-//     () => {
-//       connection.end()
-//       const query_cards = `
-//         INSERT INTO sessions_cards 
-//         VALUES (null, ${session_id}, '${cards_id}', '${cards_name}', '${cards_img}', ${position_left}, ${position_top}, ${scale})`
-//       const msg = 'INSERT_CARD_THIS_SESSION'
-//       reply(res, query_cards, msg)
-//     }
-//   )
-// })
 
 module.exports = router
 

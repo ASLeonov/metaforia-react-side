@@ -81,7 +81,8 @@ export default connect(
     thisSession: selectThisSession(state)
   }),
   {
-    clearThisSession, clearSelectedCardItems, updateThisSession, getCardsThisSession
+    clearThisSession, clearSelectedCardItems, 
+    updateThisSession, getCardsThisSession
   }
 )(Consultation)
 

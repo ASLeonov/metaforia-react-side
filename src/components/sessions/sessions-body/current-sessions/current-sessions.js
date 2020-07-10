@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {Link} from 'react-router-dom'
 import {getCurrentSessions, getLastSessions} from '../../../../store/action-creators/sessions-actions'
 import {setThisSession} from '../../../../store/action-creators/sessions-actions'
+import {getAllSelectedCardItemsInit} from '../../../../store/action-creators/cards-actions'
 import {selectCurrentSessions} from '../../../../store/selectors/sessions'
 import {selectUser} from '../../../../store/selectors/user'
 import SingleSession from '../single-session'
@@ -11,11 +12,7 @@ import Loader from '../../../loader'
 import './current-sessions.css'
 
 function CurrentSessions(props) {
-  const {user, sessions_data, getCurrentSessions, getLastSessions, setThisSession} = props
-
-  console.log('Render Current sessions')
-
-  // if (user.jwt !== '123') localStorage.setItem('jwt', user.jwt)
+  const {user, sessions_data, getCurrentSessions, getLastSessions, setThisSession, getAllSelectedCardItemsInit} = props
 
   let fetched = []
 
@@ -35,6 +32,7 @@ function CurrentSessions(props) {
             getCurrentSessions={getCurrentSessions}
             getLastSessions={getLastSessions}
             setThisSession={setThisSession}
+            getAllSelectedCardItemsInit={getAllSelectedCardItemsInit}
           />
         ))
       } else {
@@ -52,11 +50,16 @@ function CurrentSessions(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
+  console.log('Render Current sessions')
+
   return (
     <div className="sessions-list">
       {fetched}
       {fetched.length > 0 && props.user.type === 'master'? 
-        <Link to='/contacts'><button className="sessions-standart-button">Выбрать клиента и создать сессию</button></Link> : ''}
+        <Link to='/contacts'>
+          <button className="sessions-standart-button">Выбрать клиента и создать сессию</button>
+        </Link> : ''
+      }
     </div>
   )
 }
@@ -67,9 +70,8 @@ export default connect(
     user: selectUser(state)
   }),
   {
-    getCurrentSessions,
-    getLastSessions,
-    setThisSession
+    getCurrentSessions, getLastSessions,
+    setThisSession, getAllSelectedCardItemsInit
   }
 )(CurrentSessions)
 

@@ -1,8 +1,8 @@
 export const thisSessionReducer = (
     thisSessionState = {
-      session_id:   null,
-      last_version: null,
-      last_modificator:  null,
+      session_id:            null,
+      last_version:          null,
+      last_modificator:      null,
       cardsThisSession:      {},
       cardsThisSessionLocal: {}
     }, action) => {  
@@ -10,9 +10,9 @@ export const thisSessionReducer = (
         case 'SET_THIS_SESSION': {
           console.log('SET_THIS_SESSION')
           return {
-            session_id:       action.payload.session_id,
-            last_version:     Number(action.payload.last_version),
-            last_modificator: action.payload.last_modificator,
+            session_id:            action.payload.session_id,
+            last_version:          Number(action.payload.last_version),
+            last_modificator:      action.payload.last_modificator,
             cardsThisSession:      {...thisSessionState.cardsThisSession},
             cardsThisSessionLocal: {...thisSessionState.cardsThisSessionLocal}
           }
@@ -89,7 +89,6 @@ export const thisSessionReducer = (
             cardsThisSessionLocal: {}
           }
         }
-
         case 'GET_CARDS_THIS_SESSIONS__LOADING': {
           console.log('GET_CARDS_THIS_SESSIONS__LOADING')
           return {

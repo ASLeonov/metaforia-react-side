@@ -2,7 +2,6 @@ import React, {useState, useEffect, useRef} from 'react'
 import {Link} from 'react-router-dom'
 import Alerts from '../../alerts'
 import {validateField} from '../../../functions/form-validate'
-import {api_path} from '../../../store/common'
 import './contact-item.css'
 
 function ContactItem(props) {
@@ -17,11 +16,6 @@ function ContactItem(props) {
   const redirectBtn = useRef(null)
 
   const onDeleteClick = () => {
-    // fetch(`${api_path}clients.php`, {
-    //   method: 'POST',
-    //   headers: {'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
-    //   body: `delete=ok&user_name=${props.user.login}&client_id=${client_id}`
-    // })
     const send_data = {
       user_login: props.user.login,
       client_id:  client_id,

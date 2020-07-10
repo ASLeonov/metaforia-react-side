@@ -1,6 +1,5 @@
 import React from 'react'
 import ConsultationCard from '../consultation-card'
-import { PromisePool } from 'mysql2/promise'
 
 function CardsThisSession({session_id, thisSessionCards, thisSessionCardsLocal, socket}) {
   let cards = {}

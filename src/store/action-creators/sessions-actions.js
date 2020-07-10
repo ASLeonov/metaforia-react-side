@@ -1,10 +1,11 @@
 export const getCurrentSessions = () => (dispatch, getState) => {
   const user_login = getState().user.login
   const user_type  = getState().user.type
+  const user_tools = getState().user.tools
     dispatch({
       type: 'GET_SESSIONS_CURRENT__LOADING'
     })
-    fetch(`/api/currentsessions?user_login=${user_login}&user_type=${user_type}`)
+    fetch(`/api/currentsessions?user_login=${user_login}&user_type=${user_type}&user_tools=${user_tools}`)
     .then(res => res.json())
     .then(res =>
       dispatch({
@@ -23,10 +24,11 @@ export const getCurrentSessions = () => (dispatch, getState) => {
 export const getLastSessions = () => (dispatch, getState) => {
   const user_login = getState().user.login
   const user_type  = getState().user.type
+  const user_tools = getState().user.tools
   dispatch({
     type: 'GET_SESSIONS_LAST__LOADING'
   })
-  fetch(`/api/lastsessions?user_login=${user_login}&user_type=${user_type}`)
+  fetch(`/api/lastsessions?user_login=${user_login}&user_type=${user_type}&user_tools=${user_tools}`)
     .then(res => res.json())
     .then(res =>
       dispatch({
@@ -45,12 +47,13 @@ export const getLastSessions = () => (dispatch, getState) => {
 
 
 
-export const setThisSession = (session_id, last_version, last_modificator) => {
+export const setThisSession = (session_id, last_version, last_modificator, current_cards) => {
   return {
     type: 'SET_THIS_SESSION',
     payload: {
       session_id,
       last_version,
+      current_cards,
       last_modificator
     }
   }
@@ -61,7 +64,8 @@ export const updateThisSession = (last_version, last_modificator) => {
     type: 'UPDATE_LAST_VERSION_THIS_SESSION',
     payload: {
       last_version,
-      last_modificator
+      last_modificator, 
+
     }
   }
 }

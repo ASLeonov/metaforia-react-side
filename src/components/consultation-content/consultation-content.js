@@ -21,12 +21,6 @@ function ConsultationContent(props) {
       setSelectCards(cardsBox_id)
   }
 
-  if (isLoading) {
-    fetched = <Loader />
-  } else if (isLoaded && !props.userSelectedCards.isLoaded && !props.userSelectedCards.isLoading && !selectCards) {
-    fetched = cardsJSX(data, 'consult-mode-enter', 'freeCards', onSelectCardsClick)
-  }
-
   const onChangeWindow = () => {
     if (showChangeCards) setShowChangeCards(false)
     setWindowFullScreen(!windowFullScreen)
@@ -39,14 +33,20 @@ function ConsultationContent(props) {
     }
   }
 
-  console.log('render Consultation content')
-
   useEffect( () => {
     if (!isLoaded && !isLoading) {
       props.getUserCards()
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
+
+  if (isLoading) {
+    fetched = <Loader />
+  } else if (isLoaded && !props.userSelectedCards.isLoaded && !props.userSelectedCards.isLoading && !selectCards) {
+    fetched = cardsJSX(data, 'consult-mode-enter', 'freeCards', onSelectCardsClick)
+  }
+
+  console.log('render Consultation content')
 
   return (
     <div className={window_CN}>

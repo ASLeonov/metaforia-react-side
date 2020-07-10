@@ -1,6 +1,3 @@
-import {api_path} from '../common'
-
-
 // ---------- GET USER CARDS Все колоды карт (бесплатные и оплаченные) пользователя ---------- //
 
 export const getUserCards = () => (dispatch, getState) => {
@@ -84,43 +81,8 @@ export const clearAllCardsThisSession = () => {
   }
 }
 
-export const saveCardThisSession = (card, position_left, position_top, scale, session_id) => (dispatch, getState) => {
-  // const modificator = getState().user.type
-  // const send_data = {
-  //   session_id,
-  //   modificator,
-  //   cards_id:   card.cards_id,
-  //   cards_name: card.cards_name,
-  //   cards_img:  card.cards_img,
-  //   position_left,
-  //   position_top,
-  //   scale
-  // }
-  // fetch(`/api/savecardthissession`, {
-  //   method: 'POST',
-  //   headers: {'Content-Type':'application/json; charset=UTF-8'},
-  //   body: JSON.stringify(send_data)
-  // })
-  //   .then(response => response.text())
-  //   .then(data => {
-  //     if (data === 'INSERT_CARD_THIS_SESSION') {
-  //       dispatch({
-  //         type: 'INCREASE_THIS_SESSION',
-  //         payload: {
-  //           modificator,
-  //           card,
-  //           position_left,
-  //           position_top,
-  //           scale
-  //         }
-  //       })
-  //     } else {
-  //     // Если данные на сервере обновятся некорректно, то фетчим их по новой для синхронизации
-  //       dispatch(getCardsThisSession())
-  //     }
-  //   })
-  //   .catch(e => console.log('catch error =>', e))
-}
+export const saveCardThisSession = (card, position_left, position_top, scale, session_id) => (dispatch, getState) => {}
+
 export const increaseThisSession = (card, position_left, position_top, scale) => (dispatch, getState) => {
   const modificator = getState().user.type
     dispatch({
@@ -139,6 +101,37 @@ export const increaseThisSession = (card, position_left, position_top, scale) =>
 
 
 // ---------- SELECTED CARD ITEMS Карты из выбранной для работы колоды ---------- //
+
+export const getAllSelectedCardItemsInit = session_id => (dispatch, getState) => {
+  // dispatch({
+  //   type: 'SET_INITIAL_ACTIVE_CARD_BOX',
+  //   payload: {
+  //     cardsBox_id
+  //   }
+  // })
+  dispatch({
+    type: 'GET_SELECTED_CARD_ITEMS__LOADING'
+  })
+  fetch(`/api/allselectedcardsitemsbase?session_id=${session_id}`)
+    .then(res => res.json())
+    .then(res => {
+      if (res[0].active_card_box > 0) {
+        fetch(`/api/allselectedcardsitemsacb?carbox_id=${res[0].active_card_box}`)
+      }
+      console.log(res)
+    }
+      // dispatch({
+      //   type: 'GET_INIT_ALL_SELECTED_CARD_ITEMS__SUCCESS',
+      //   response: res,
+      // })
+    )
+    .catch(error => {
+      dispatch({
+        type: 'GET_SELECTED_CARD_ITEMS__FAILED',
+        error,
+      })
+    })
+}
 
 export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
     dispatch({

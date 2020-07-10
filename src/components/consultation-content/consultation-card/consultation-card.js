@@ -82,6 +82,7 @@ function ConsultationCard(props) {
       scale !== props.scale && setScale(props.scale)
       !playMode && setPlayMode(true)
     }
+    // eslint-disable-next-line
   }, [props.position_left, props.position_top, props.scale])
 
   const increaseScale = () => {

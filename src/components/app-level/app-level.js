@@ -29,6 +29,7 @@ function AppLevel({user, login_token}) {
       (user.login.length > 0 && user.token.length > 0) && (localStorage.token = user.token)
       !showApp && setShowApp(true)
     }
+    // eslint-disable-next-line
   }, [user])
 
   console.log('render AppLevel', showApp, user.fullname)
@@ -38,17 +39,43 @@ function AppLevel({user, login_token}) {
   return(
     <Router>
       <Header />
-        <Switch>
-          {user.fullname.length === 0 ?
-            <>
+        {user.fullname.length === 0 ?
+            <Switch>
               <Route path="/login">
                 <Login />
               </Route>
               <Redirect from={'/'} to={'/login'} />       
-            </> : 
-            <>
-              {user.type === 'master' ? 
-                <>
+            </Switch> :
+          <>
+            {user.type === 'master' ? 
+              <Switch>
+              <Route path="/consultation">
+                <Middle activePage="consultation" />
+              </Route>
+              <Route path="/current-sessions">
+                <Middle activePage="sessions" activeTab="currentSessions" />
+              </Route>
+              <Route path="/last-sessions">
+                <Middle activePage="sessions" activeTab="lastSessions" />
+              </Route>
+              <Route path="/free-cards">
+                <Middle activePage="cards" activeTab="freeCards" />
+              </Route>
+              <Route path="/pay-cards">
+                <Middle activePage="cards" activeTab="payCards" />
+              </Route>
+              <Route path="/client-cards">
+                <Middle activePage="cards" activeTab="clientCards" />
+              </Route>
+              <Route path="/contacts">
+                <Middle activePage="contacts" activeTab="currentContacts" />
+              </Route>
+              <Route path="/add-contacts">
+                <Middle activePage="contacts" activeTab="addContacts" />
+              </Route>
+              <Redirect from={'/'} to={'/current-sessions'} />
+            </Switch> :
+              <Switch>
                   <Route path="/consultation">
                     <Middle activePage="consultation" />
                   </Route>
@@ -58,43 +85,14 @@ function AppLevel({user, login_token}) {
                   <Route path="/last-sessions">
                     <Middle activePage="sessions" activeTab="lastSessions" />
                   </Route>
-                  <Route path="/free-cards">
-                    <Middle activePage="cards" activeTab="freeCards" />
-                  </Route>
-                  <Route path="/pay-cards">
-                    <Middle activePage="cards" activeTab="payCards" />
-                  </Route>
-                  <Route path="/client-cards">
-                    <Middle activePage="cards" activeTab="clientCards" />
-                  </Route>
-                  <Route path="/contacts">
-                    <Middle activePage="contacts" activeTab="currentContacts" />
-                  </Route>
-                  <Route path="/add-contacts">
-                    <Middle activePage="contacts" activeTab="addContacts" />
-                  </Route>
                   <Redirect from={'/'} to={'/current-sessions'} />
-                </> : 
-                <>
-                  <Route path="/consultation">
-                    <Middle activePage="consultation" />
-                  </Route>
-                  <Route path="/current-sessions">
-                    <Middle activePage="sessions" activeTab="currentSessions" />
-                  </Route>
-                  <Route path="/last-sessions">
-                    <Middle activePage="sessions" activeTab="lastSessions" />
-                  </Route>
-                  <Redirect from={'/'} to={'/current-sessions'} />
-                </>
-              }
-            </>
-          }
-        </Switch>
+                </Switch>
+            }
+          </>
+        }
       <Footer />
     </Router>
   )
-
 }
 
 export default connect(
