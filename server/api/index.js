@@ -306,12 +306,17 @@ router.get('/allselectedcardsitemsbase', (req, res, next) => {
     GROUP BY sc.card_box_id`
   reply(res, query)
 })
+router.get('/allselectedcardsitemscards', (req, res, next) => {
+  const carbox_id = req.query.carbox_id
+  const table = `allcards__items_${carbox_id}`
+  const query = `
+    SELECT   *  
+    FROM     ${table}`
+  reply(res, query)
+})
 router.get('/allselectedcardsitemsacb', (req, res, next) => {
   const carbox_id = req.query.carbox_id
   const table = `allcards__items_${carbox_id}`
-  // const query = `
-  //   SELECT *
-  //   FROM   ${table}`
   const query = `
     SELECT   *  
     FROM     ${table}`

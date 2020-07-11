@@ -71,21 +71,24 @@ export const userSelectedCardsReducer =
       case 'GET_INIT_ALL_SELECTED_CARD_ITEMS__SUCCESS': {
         console.log('GET_INIT_ALL_SELECTED_CARD_ITEMS__SUCCESS')
         const data_new = {}
-          action.response.forEach(element => {
+          let i = 1
+          action.total_response.forEach(element => {
+            if (i < action.total_response.length-1)
             data_new[element.cards_id] = {
               cards_id:   element.cards_id,
               cards_box:  element.cards_box,
               cards_name: element.cards_name,
               cards_img:  element.cards_img,
             }
+            i++
           })
-        const cardBoxes_new = {...userSelectedCardsState.cardBoxes}
-          cardBoxes_new[action.response[0].cards_box] = ""
+        // const cardBoxes_new = {...userSelectedCardsState.cardBoxes}
+        //   cardBoxes_new[action.response[0].cards_box] = ""
         return {
           isLoaded:       true,
           isLoading:      false,
-          activeCardsBox: '1000', //action.response[0].active_card_box,
-          cardBoxes:      {'1':'1', '2':'2', '3':'3'},
+          activeCardsBox: action.total_response[action.total_response.length-1],
+          cardBoxes:      action.total_response[action.total_response.length-2],
           data:           {...data_new}
         }
       }

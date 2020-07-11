@@ -116,15 +116,41 @@ export const getAllSelectedCardItemsInit = session_id => (dispatch, getState) =>
     .then(res => res.json())
     .then(res => {
       if (res[0].active_card_box > 0) {
-        fetch(`/api/allselectedcardsitemsacb?carbox_id=${res[0].active_card_box}`)
+        let needACBLoad = true
+        const cardBoxes = {}
+        res.forEach(el => cardBoxes[el.card_box_id] = '')
+        const allQueries = res.map(el => {
+          if (res[0].active_card_box === el.card_box_id) needACBLoad = false
+          return fetch(`/api/allselectedcardsitemscards?carbox_id=${el.card_box_id}`)
+        })
+        console.log('needACBLoad', needACBLoad)
+        if (needACBLoad) {
+          cardBoxes[res[0].active_card_box] = ''
+          allQueries.push(fetch(`/api/allselectedcardsitemsacb?carbox_id=${res[0].active_card_box}`))
+        }
+        Promise.all(allQueries)
+          .then(responses => 
+            Promise.all(responses.map(r => r.json()))
+          )
+          .then(response => {
+            let total_response = []
+            response.forEach(el => total_response = total_response.concat(el))
+              total_response.push(cardBoxes)
+              total_response.push(res[0].active_card_box)
+            console.log(total_response)
+              dispatch({
+                type: 'GET_INIT_ALL_SELECTED_CARD_ITEMS__SUCCESS',
+                total_response
+              })
+          })
+          .catch(error => {
+            dispatch({
+              type: 'GET_SELECTED_CARD_ITEMS__FAILED',
+              error,
+            })
+          })
       }
-      console.log(res)
-    }
-      // dispatch({
-      //   type: 'GET_INIT_ALL_SELECTED_CARD_ITEMS__SUCCESS',
-      //   response: res,
-      // })
-    )
+    })
     .catch(error => {
       dispatch({
         type: 'GET_SELECTED_CARD_ITEMS__FAILED',
