@@ -134,7 +134,7 @@ router.post('/login', bodyParser.json(), (req, res, next) => {
 router.get('/currentsessions', (req, res, next) => {
   const user_id = req.query.user_tools
   const query = `
-    SELECT s.session_id, s.session_date, s.session_descr, s.last_version, s.last_modificator, s.active_card_box , c.client_name, c.client_surname
+    SELECT s.session_id, s.session_date, s.session_descr, s.last_version, s.last_modificator, s.active_card_box, c.client_name, c.client_surname
     FROM   sessions AS s, clients AS c
     WHERE  s.session_user   = ${user_id}
     AND    s.session_client = c.client_id 

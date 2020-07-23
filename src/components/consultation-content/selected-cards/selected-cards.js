@@ -122,7 +122,7 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
           <span onClick={mixCardsClick}>Перемешать карты</span>
         </div>
         <div className="consultation-cards-tools-item consultation-cards-tools-divider">
-          <span>Случайная карта</span>
+          <span>Перевернуть карты</span>
         </div>
       </div>
       <div className="consultation-cards-leftBtn" onClick={leftScrollClick}>

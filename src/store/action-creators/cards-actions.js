@@ -97,6 +97,16 @@ export const increaseThisSession = (card, position_left, position_top, scale) =>
     })
 }
 
+export const increaseThisSessionACB = () => (dispatch, getState) => {
+  const modificator = getState().user.type
+    dispatch({
+      type: 'INCREASE_THIS_SESSION_ACB',
+      payload: {
+        modificator,
+      }
+    })
+}
+
 // ---------- END OF CARDS THIS SESSION ---------- //
 
 
@@ -137,7 +147,6 @@ export const getAllSelectedCardItemsInit = session_id => (dispatch, getState) =>
             response.forEach(el => total_response = total_response.concat(el))
               total_response.push(cardBoxes)
               total_response.push(res[0].active_card_box)
-            console.log(total_response)
               dispatch({
                 type: 'GET_INIT_ALL_SELECTED_CARD_ITEMS__SUCCESS',
                 total_response
@@ -159,7 +168,7 @@ export const getAllSelectedCardItemsInit = session_id => (dispatch, getState) =>
     })
 }
 
-export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
+export const getSelectedCardItems = cards_id => (dispatch, getState) => {
     dispatch({
       type: 'GET_SELECTED_CARD_ITEMS__LOADING'
     })
@@ -179,21 +188,13 @@ export const getSelectedCardItems = (cards_id) => (dispatch, getState) => {
     })
 }
 
-export const addSelectedCardItems = (cardsBox_id) => (dispatch) => {
-  // setTimeout( () => {
-// Фикс бага Warning: Cannot update a component (`ConnectFunction`) while rendering a different component (`ConsultationCards`) ... ...
-// Здесь, видимо, речь о том, что при рендере компонента, мы меяем стор и этот же компонент рендереится в тот же момент, т.е. два рендера одного компонента одновременно. Но я не уверен, что именно в этом казус.
-// ТаймАут без задержки вроде как должен дать закончиться предыдующему коду, прежде чем задиспатчить этот экшн, что кажись помогает.
-
-// Убрал ТаймАут пока, т.к. закомментил проблемную строку.
-    dispatch({
-      type: 'ADD_SELECTED_CARD_ITEMS',
-      payload: {
-        cardsBox_id: cardsBox_id
-      }
-    })
-  // })
-
+export const addSelectedCardItems = cardsBox_id => dispatch => {
+  dispatch({
+    type: 'ADD_SELECTED_CARD_ITEMS',
+    payload: {
+      cardsBox_id
+    }
+  })
 }
 
 export const clearSelectedCardItems = () => {

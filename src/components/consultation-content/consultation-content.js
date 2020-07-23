@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUser} from '../../store/selectors/user'
+import {selectThisSession} from '../../store/selectors/sessions'
 import {selectUserCards, selectUserSelectedCards} from '../../store/selectors/cards'
 import {getUserCards} from '../../store/action-creators/cards-actions'
 import {cardsJSX} from '../../functions/cards-box-jsx'
@@ -10,9 +11,10 @@ import './consultation-content.css'
 
 function ConsultationContent(props) {
   const [windowFullScreen, setWindowFullScreen] = useState(false)
-  const [showChangeCards, setShowChangeCards] = useState(false)
-  const [selectCards, setSelectCards] = useState(null)
+  const [showChangeCards, setShowChangeCards]   = useState(false)
+  const [selectCards, setSelectCards]           = useState(null)
   const {isLoaded, isLoading, data} = props.userCards
+  const {user, socket, session_id, last_version} = props
 
   let fetched
 
@@ -37,8 +39,16 @@ function ConsultationContent(props) {
     if (!isLoaded && !isLoading) {
       props.getUserCards()
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line
   }, [])
+
+  useEffect( () => {
+    const ACB = props.userSelectedCards.activeCardsBox
+    if (!selectCards && ACB) {
+      setSelectCards(ACB)
+    }
+    // eslint-disable-next-line
+  }, [props.userSelectedCards.activeCardsBox])
 
   if (isLoading) {
     fetched = <Loader />
@@ -65,7 +75,7 @@ function ConsultationContent(props) {
           <div className="consultation-header-setCards-wrapper" onClick={setCards} style={showChangeCards ? {display:'block'} : {}}>
             <div className="consultation-header-setCards">
               {(showChangeCards && !isLoading && isLoaded) ? 
-                cardsJSX(data, 'consult-mode-play', 'freeCards', onSelectCardsClick, selectCards) : ''}
+                cardsJSX(data, 'consult-mode-play', 'freeCards', onSelectCardsClick, selectCards, socket, user, session_id, last_version) : ''}
             </div>
           </div>
         <span className="consultation-header-closeButton" title={windowFullScreen ? "Свернуть окно" : "В полноэкранный режим"} onClick={onChangeWindow}>
@@ -84,7 +94,7 @@ function ConsultationContent(props) {
           </h4> : ''
         }
       </div>
-        {selectCards ? <ConsultationCards activeCards_id={selectCards} user={props.user} socket={props.socket} /> : ''}
+        {selectCards ? <ConsultationCards activeCards_id={selectCards} user={user} socket={socket} /> : ''}
     </div>
   )
 }
@@ -93,6 +103,8 @@ export default connect(
   state => ({
       user: selectUser(state),
       userCards: selectUserCards(state),
+      session_id: selectThisSession(state).session_id,
+      last_version: selectThisSession(state).last_version,
       userSelectedCards: selectUserSelectedCards(state)
   }),
   {
@@ -100,7 +112,7 @@ export default connect(
   }
 )(ConsultationContent)
 
-// ПРОВЕРЕНО ЛОКАЛЬНО
+// ПРОВЕРЕНО ЛОКАЛЬНО  ПРОВЕРЯТЬ ЗАННОВО !!!
 
 // Корректная работа.
 // После монтирования срабатывает useEffect - при необходимости фетчим доступные для работы колоды (getUserCards) и отображаем их на экране с флагом 'consult-mode-enter', который говорит о том, что при клике на колоду, надо запустить фетч этой колоды и существующих карта сессии и сделать сетстейт компонента. На этом этапе лишних рендеров нет, фетч один - все ok.

@@ -65,6 +65,17 @@ export const thisSessionReducer = (
                 }
           }
         }
+        case 'INCREASE_THIS_SESSION_ACB': {
+          console.log('INCREASE_THIS_SESSION_ACB')
+          const new_version = thisSessionState.last_version + 1
+          return {
+            session_id:            thisSessionState.session_id,
+            last_version:          new_version,
+            last_modificator:      thisSessionState.last_modificator,
+            cardsThisSession:      thisSessionState.cardsThisSession,
+            cardsThisSessionLocal: thisSessionState.cardsThisSessionLocal
+          }
+        }
         case 'UPDATE_LAST_VERSION_THIS_SESSION': {
           console.log('UPDATE_LAST_VERSION_THIS_SESSION')
           return {

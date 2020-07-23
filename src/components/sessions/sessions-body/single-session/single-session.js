@@ -10,7 +10,7 @@ function SingleSession(props) {
   const 
     {
       session_id, session_date, client_name, client_surname, 
-      client_email, session_descr, last_version, last_modificator, active_card_box
+      client_email, session_descr, last_version, last_modificator
     } = props.session
 
   const inviteClick = () => {
@@ -27,7 +27,6 @@ function SingleSession(props) {
   const setSession = () => {
     props.setThisSession(session_id, last_version, last_modificator)
     props.getAllSelectedCardItemsInit(session_id)
-    // active_card_box !== 0 && props.setACB(session_id)
   }
 
   const closeClick = () => {
@@ -93,7 +92,7 @@ function SingleSession(props) {
       discardChanges = {showAlert[4]}
     /> : ''
 
-  console.log('render Single current session')
+  // console.log('render Single current session')
 
   return (
     <div className="sessions-item">

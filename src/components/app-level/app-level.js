@@ -32,7 +32,7 @@ function AppLevel({user, login_token}) {
     // eslint-disable-next-line
   }, [user])
 
-  console.log('render AppLevel', showApp, user.fullname)
+  console.log('render AppLevel')
 
   if (!showApp) return null
 

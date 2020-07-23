@@ -15,7 +15,7 @@ function ConsultationCard(props) {
 
   const sendDataSocket = (thisScale) => {
     const send_data = {
-      type: 'saveCardThisSession',
+      type:          'saveCardThisSession',
       cards_id,
       cards_name,
       cards_img, 

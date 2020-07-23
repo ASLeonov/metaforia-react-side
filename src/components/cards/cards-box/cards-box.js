@@ -1,10 +1,13 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {getSelectedCardItems, getCardsThisSession, addSelectedCardItems} from '../../../store/action-creators/cards-actions'
+import {getSelectedCardItems, getCardsThisSession, addSelectedCardItems, increaseThisSessionACB} from '../../../store/action-creators/cards-actions'
 import './cards-box.css'
 
 function CardsBox(props) {
-  const {cards, mode, callback, selectCards, getSelectedCardItems, getCardsThisSession, addSelectedCardItems} = props
+  const {
+    user, mode, cards, socket, callback, selectCards, session_id, last_version,
+    getSelectedCardItems, getCardsThisSession, addSelectedCardItems, increaseThisSessionACB
+  } = props
 
   const selectCardsBox = () => {
     switch (mode) {
@@ -16,8 +19,20 @@ function CardsBox(props) {
         break
       case 'consult-mode-play':
         if (selectCards !== cards.cards_id) {
+
+            // Добавить запись в бд (в бекэнде)
+
+          increaseThisSessionACB()
           addSelectedCardItems(cards.cards_id)
           callback(cards.cards_id)
+            const send_data = {
+              type:         'setSelectedCards',
+              session:      session_id,
+              last_version: last_version,
+              modificator:  user.type,
+
+            }
+            socket.send(JSON.stringify(send_data))
         }
         break
       case 'cards-page':
@@ -28,7 +43,7 @@ function CardsBox(props) {
     }
   }
 
-  console.log('render CardBox', mode)
+  console.log('render CardBox')
 
   return(
     <div className="cardsBox-item" key={cards.cards_id} onClick={selectCardsBox}>
@@ -49,8 +64,7 @@ function CardsBox(props) {
 export default connect(
   null,
   {
-    getSelectedCardItems, getCardsThisSession, 
-    addSelectedCardItems
+    getSelectedCardItems, getCardsThisSession, addSelectedCardItems, increaseThisSessionACB
   }
 )(CardsBox)
 
@@ -59,3 +73,4 @@ export default connect(
 // Второй - здесь при выборе колоды на этапе начальной загрузки сессии (mode:"consult-mode-enter"). Сейчас этот вариант работает по умолчанию. Лишних рендеров и фетчей не наблюдаю - все ok. Этот вариант экономит лишний рендер, т.к. getSelectedCardItems и getCardsThisSession вызваны рядом в одном месте и получается как бы вызывают одно изменение стора.
 // Отключить фетч здесь и переключиться на фетч через компонент consultation-cards - просто снести здесь getSelectedCardItems(cards.cards_id) и getCardsThisSession().
 // Подгрузка доп. колод во время сессии происходит в <ConsultationCards />.
+// А если уже есть существующая колода, то ... ... ...

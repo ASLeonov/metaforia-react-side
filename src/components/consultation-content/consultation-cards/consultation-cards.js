@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
-import {getSelectedCardItems, addSelectedCardItems} from '../../../store/action-creators/cards-actions'
+import {getSelectedCardItems, addSelectedCardItems, getCardsThisSession} from '../../../store/action-creators/cards-actions'
 import SelectedCards from '../selected-cards'
 import CardsThisSession from '../cards-this-session'
 import Messages from '../../messages'
@@ -54,11 +54,11 @@ function ConsultationCards(props) {
       // Срабатывает при загрузке новой колоды в процессе консультации
       props.getSelectedCards(props.activeCards_id)
     }
-    // if (!thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
+    if (!thisSessionCards.isLoaded && !thisSessionCards.isLoading) {
     //   Это загрузка существующих карт сессии - сейчас не актуальна, т.к. она происходит из <CardsBox />
-    //   props.getCardsThisSession()
-    // }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      props.getCardsThisSession()
+    }
+    // eslint-disable-next-line
   }, [selectedCards.isLoaded])
 
   console.log('render Consultation cards')
@@ -80,18 +80,13 @@ export default connect(
     thisSession: selectThisSession(state)
   }),
   {
-    getSelectedCards: getSelectedCardItems,
-    addSelectedCards: addSelectedCardItems,
+    getSelectedCards:    getSelectedCardItems,
+    addSelectedCards:    addSelectedCardItems,
+    getCardsThisSession: getCardsThisSession
   }
 )(ConsultationCards)
 
 
-// Корректная работа.
+// Корректная работа.   ПЕРЕПРОВРЕКА   !!!"!!!!"!
 // После первого рендера срабатывает useEffect - при необходимости стартуем фетч карт из выбранной колоды (getSelectedCards сейчас должен срабатывать только при выборе другой колоды из режима консультации, т.к. при первичном выборе колоды он запускается из <CardsBox />), а также фетч ранее сохраненных в БД карт из текущей сессии (getCardsThisSession - вообще закомментил, т.к. запускаю также из <CardBox />).
 // Лишних рендеров и фетчей не наблюдаю, все ok.
-
-
-// SSE
-// Здесь происходит вся работа с SSE кроме инициализации (она уровнем выше).
-// При получении ответа от бэка сравнивается локальная версися косультации и серверная, если нет разницы - не делаем ничего, если есть - то приводим данные по консультации к актуальным(серверным) и фетчим последние данные по сессии.
-// При unMount компонента, рушим SSE.

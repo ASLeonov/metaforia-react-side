@@ -11,29 +11,17 @@ export const userSelectedCardsReducer =
     action
   ) => {
     switch (action.type) {
-      // case 'SET_INITIAL_ACTIVE_CARD_BOX': {
-      //   console.log('SET_INITIAL_ACTIVE_CARD_BOX')
-      //   const new_cardBoxes = {...userSelectedCardsState.cardBoxes}
-      //   new_cardBoxes[action.payload.cardsBox_id] = ''
-      //   return {
-      //     isLoaded:       userSelectedCardsState.isLoaded,
-      //     isLoading:      userSelectedCardsState.isLoading,
-      //     activeCardsBox: action.payload.cardsBox_id,
-      //     cardBoxes:      {...new_cardBoxes},
-      //     data:           {...userSelectedCardsState.data}
-      //   }
-      // }
       case 'ADD_SELECTED_CARD_ITEMS': {
         console.log('ADD_SELECTED_CARD_ITEMS')
-        const new_cardBoxes = userSelectedCardsState.cardBoxes[action.payload.cardsBox_id]
-        const isLoaded_new = new_cardBoxes === undefined ? false : true
+        const new_cardBoxes      = userSelectedCardsState.cardBoxes[action.payload.cardsBox_id]
+        const isLoaded_new       = new_cardBoxes === undefined ? false : true
         const activeCardsBox_new = isLoaded_new ===  true ? action.payload.cardsBox_id : userSelectedCardsState.activeCardsBox
         return {
-          isLoaded: isLoaded_new,
-          isLoading: false,
+          isLoaded:       isLoaded_new,
+          isLoading:      false,
           activeCardsBox: activeCardsBox_new,
-          cardBoxes: {...userSelectedCardsState.cardBoxes},
-          data: {...userSelectedCardsState.data}
+          cardBoxes:      {...userSelectedCardsState.cardBoxes},
+          data:           {...userSelectedCardsState.data}
         }
       }
       case 'GET_SELECTED_CARD_ITEMS__LOADING': {
