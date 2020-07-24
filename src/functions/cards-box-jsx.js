@@ -2,7 +2,7 @@ import React from 'react'
 import CardsBox from '../components/cards/cards-box'
 import Messages from '../components/messages'
 
-export const cardsJSX = (data, mode, msg, callback, selectCards, socket, user, session_id, last_version, result) => {
+export const cardsJSX = (data, mode, msg, callback, selectCards, socket, user, session_id, result) => {
   if (data[0] !== "ERROR") {
     if (data.length > 0) {
       result = data.map(
@@ -16,7 +16,6 @@ export const cardsJSX = (data, mode, msg, callback, selectCards, socket, user, s
             socket       = {socket}
             user         = {user}
             session_id   = {session_id}
-            last_version = {last_version}
           />
         )
       )

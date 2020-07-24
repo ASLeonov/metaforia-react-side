@@ -4,11 +4,39 @@
   /* height: 134px;
   Убрал условие, т.к. это самый быстрый способ сохранение пропорций этого блока при изменениях вложенного img.
   В принципе можно будет добавить в style рассчетный height*/
-  transition: width 0.3s;
+  transition: width 0.3s, transform 1s;
 }
 
 .consultation-card-wrapper:hover {
   z-index: 8888;
+}
+
+/* .ttt {
+  background-image: url('https://goo.gl/jwC1mV');
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  border-radius: 25px;
+  transform: perspective(2000px)
+  rotateY(0deg);
+} */
+
+.consultation-card-wrapper__closed {
+  transition: transform 1s;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+
+}
+
+.consultation-card-back {
+  backface-visibility: hidden;
+  transform: rotateY(360deg);
+  transition: transform 1s;
+}
+.consultation-card-back__closed {
+  backface-visibility: hidden;
+  transform: rotateY(180deg);
+  transition: transform 1s;
 }
 
 .consultation-card {
@@ -24,9 +52,6 @@
   /* animation: proba 2s; */
   /* animation: name duration timing-function delay iteration-count direction fill-mode; */
 }
-
-
-
 
 .consultation-card-wrapper:hover .consultation-card {
   border: 5px solid chocolate;

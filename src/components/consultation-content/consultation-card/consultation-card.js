@@ -10,6 +10,7 @@ function ConsultationCard(props) {
   // Двигаемся, left, top, расст по X до точки приложения, расст по Y до точки приложения, ширина, высота
   const [playMode, setPlayMode] = useState(false)
   const [isMove, setIsMove] = useState(false)
+  // const [side, setSide] = useState()
   const [scale, setScale] = useState(1)
   const {cards_id, cards_img, cards_name} = props.card
 
@@ -74,6 +75,27 @@ function ConsultationCard(props) {
     }
   }
 
+  const increaseScale = () => {
+    if (scale < 2) {
+      const new_scale = Number((scale + 0.2).toFixed(1))
+      props.increaseThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)
+      sendDataSocket(new_scale)
+    }
+  }
+
+  const decreaseScale = () => {
+    if (scale > 1) {
+      const new_scale = Number((scale - 0.2).toFixed(1))
+      props.increaseThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)
+      sendDataSocket(new_scale)
+    }
+  }
+
+  const hideCard = () => {
+    setPosition([false, -1000, -1000, position[3], position[4], position[5], position[6]])
+    props.saveCardThisSession(cards_id, {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img}, -1000, -1000, props.session_id)
+  }
+
   useEffect( () => {
     if (props.exist_card || props.exist_card_local) {   // Если карта уже выбрана в данной сессии
       if (position[0] || position[1] !== props.position_left || position[2] !== props.position_top) {
@@ -85,28 +107,8 @@ function ConsultationCard(props) {
     // eslint-disable-next-line
   }, [props.position_left, props.position_top, props.scale])
 
-  const increaseScale = () => {
-    if (scale < 2) {
-      const new_scale = Number((scale + 0.2).toFixed(1))
-      props.increaseThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)
-      sendDataSocket(new_scale)
-    }
-  }
-  const decreaseScale = () => {
-    if (scale > 1) {
-      const new_scale = Number((scale - 0.2).toFixed(1))
-      props.increaseThisSession({cards_id, cards_name, cards_img}, position[1], position[2], new_scale)
-      sendDataSocket(new_scale)
-    }
-  }
-
   const img_width = 100*scale + 'px'
   const img_style = {width: img_width}
-
-  const hideCard = () => {
-    setPosition([false, -1000, -1000, position[3], position[4], position[5], position[6]])
-    props.saveCardThisSession(cards_id, {cards_id: cards_id, cards_name: cards_name, cards_img: cards_img}, -1000, -1000, props.session_id)
-  }
 
   const currentStyle = (position[1] !== 0 && position[2] !== 0) ?
     {
@@ -118,6 +120,10 @@ function ConsultationCard(props) {
       ...props.style_1
     } : props.style_1
 
+  const CN_front = props.side === 0 ? "consultation-card-wrapper__closed" : "consultation-card-wrapper"
+  // const CN_back  = "consultation-card-back"
+  const CN_back  = props.side === 0 ? "consultation-card-back" : "consultation-card-back__closed"
+
   // console.log('cons card scale =', props.scale, scale)
 
   return (
@@ -126,10 +132,11 @@ function ConsultationCard(props) {
       onMouseUp={setDraggbleOFF}
       // onMouseLeave={setDraggbleOFF}
       style={ (position[0] && isMove) ? {position:'fixed', top:'0', left:'0', bottom:'0', right:'0', zIndex:'1000', backgroundColor:'transparent'} : {} }
-    >   
+    >
+      <div className={CN_back}>Зад</div>
       <div 
         id={`consultation-card-${cards_id}`}
-        className="consultation-card-wrapper" 
+        className={CN_front}
         style={currentStyle}
         onMouseDown={setDraggbleON} // включаем режим переноса карты кликом на этом блоке, остальные события обрабатываем на полноэкранном блоке выше, чтобы исключить соскакивания мыши
       >

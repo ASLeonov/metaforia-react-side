@@ -174,7 +174,7 @@ export const getSelectedCardItems = cards_id => (dispatch, getState) => {
     })
     fetch(`/api/selectedcardsitems?cards_id=${cards_id}`)
     .then(res => res.json())
-    .then(res =>
+    .then(res => 
       dispatch({
         type: 'GET_SELECTED_CARD_ITEMS__SUCCESS',
         response: res,

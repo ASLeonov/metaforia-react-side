@@ -14,7 +14,7 @@ function ConsultationContent(props) {
   const [showChangeCards, setShowChangeCards]   = useState(false)
   const [selectCards, setSelectCards]           = useState(null)
   const {isLoaded, isLoading, data} = props.userCards
-  const {user, socket, session_id, last_version} = props
+  const {user, socket, session_id} = props
 
   let fetched
 
@@ -75,7 +75,7 @@ function ConsultationContent(props) {
           <div className="consultation-header-setCards-wrapper" onClick={setCards} style={showChangeCards ? {display:'block'} : {}}>
             <div className="consultation-header-setCards">
               {(showChangeCards && !isLoading && isLoaded) ? 
-                cardsJSX(data, 'consult-mode-play', 'freeCards', onSelectCardsClick, selectCards, socket, user, session_id, last_version) : ''}
+                cardsJSX(data, 'consult-mode-play', 'freeCards', onSelectCardsClick, selectCards, socket, user, session_id) : ''}
             </div>
           </div>
         <span className="consultation-header-closeButton" title={windowFullScreen ? "Свернуть окно" : "В полноэкранный режим"} onClick={onChangeWindow}>
@@ -104,7 +104,6 @@ export default connect(
       user: selectUser(state),
       userCards: selectUserCards(state),
       session_id: selectThisSession(state).session_id,
-      last_version: selectThisSession(state).last_version,
       userSelectedCards: selectUserSelectedCards(state)
   }),
   {

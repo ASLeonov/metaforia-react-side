@@ -5,7 +5,7 @@ import './cards-box.css'
 
 function CardsBox(props) {
   const {
-    user, mode, cards, socket, callback, selectCards, session_id, last_version,
+    user, mode, cards, socket, callback, selectCards, session_id,
     getSelectedCardItems, getCardsThisSession, addSelectedCardItems, increaseThisSessionACB
   } = props
 
@@ -28,9 +28,8 @@ function CardsBox(props) {
             const send_data = {
               type:         'setSelectedCards',
               session:      session_id,
-              last_version: last_version,
+              acb:          cards.cards_id,
               modificator:  user.type,
-
             }
             socket.send(JSON.stringify(send_data))
         }

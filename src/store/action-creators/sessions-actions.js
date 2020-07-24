@@ -47,13 +47,13 @@ export const getLastSessions = () => (dispatch, getState) => {
 
 
 
-export const setThisSession = (session_id, last_version, last_modificator, current_cards) => {
+export const setThisSession = (session_id, last_version, last_modificator, cards_side) => {
   return {
     type: 'SET_THIS_SESSION',
     payload: {
       session_id,
+      cards_side,
       last_version,
-      current_cards,
       last_modificator
     }
   }

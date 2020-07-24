@@ -1,17 +1,28 @@
 import React, {useState, useEffect} from 'react'
 import ConsultationCard from '../consultation-card'
 
-function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, thisSessionCardsLocal, socket}) {
+function SelectedCards(props) {
   const [xPosition, setXPosition] = useState(0)
   const [mixCards, setMixCards] = useState([0])
   const [dataJSX, setDataJSX] = useState([])
   const [dataKeys, setDataKeys] = useState({})
-  const data_length = Object.keys(data).length
+  const [side, setSide] = useState(99999)
 
+  const {session_id, activeCardsBox, cards_side, data, thisSessionCards, thisSessionCardsLocal, socket} = props
+  const data_length = Object.keys(data).length
+  
   const mixCardsClick = () => {
     setDataKeys({})
     setXPosition(0)
     setMixCards([mixCards[0] + 1])
+  }
+
+  const turnCardsClick = () => {
+    if (side === 0) {
+      setSide(1)
+    } else {
+      setSide(0)
+    }
   }
 
   const rightScrollClick = () => {
@@ -54,11 +65,12 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
                       if (dataJSX_[randomNumber] === undefined) {
                         dataJSX_[randomNumber] =
                           <ConsultationCard
-                            key={element.cards_id}
-                            style_1={style_1}
-                            card={element}
-                            session_id={session_id}
-                            socket={socket}
+                            key        = {element.cards_id}
+                            style_1    = {style_1}
+                            side       = {side}
+                            card       = {element}
+                            session_id = {session_id}
+                            socket     = {socket}
                           />
                         keys[randomNumber] = key
                       }
@@ -78,6 +90,7 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
                     <ConsultationCard
                       key={element.cards_id}
                       style_1={style_1}
+                      side={side}
                       card={element}
                       session_id={session_id}
                       socket={socket}
@@ -100,6 +113,7 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
                     <ConsultationCard
                       key={element.cards_id}
                       style_1={style_1}
+                      side={side}
                       card={element}
                       session_id={session_id}
                       socket={socket}
@@ -111,9 +125,15 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
     }
     setDataJSX(dataJSX_)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mixCards, xPosition, thisSessionCardsLocal])
+  }, [mixCards, xPosition, thisSessionCardsLocal, side])
 
-  console.log('render selected cards')
+  useEffect( () => {
+    if (side !== cards_side) {
+      setSide(cards_side)
+    }
+  }, [cards_side])
+
+  console.log('render selected cards', side)
 
   return (
     <>
@@ -122,7 +142,7 @@ function SelectedCards({session_id, activeCardsBox, data, thisSessionCards, this
           <span onClick={mixCardsClick}>Перемешать карты</span>
         </div>
         <div className="consultation-cards-tools-item consultation-cards-tools-divider">
-          <span>Перевернуть карты</span>
+          <span onClick={turnCardsClick}>Перевернуть карты</span>
         </div>
       </div>
       <div className="consultation-cards-leftBtn" onClick={leftScrollClick}>

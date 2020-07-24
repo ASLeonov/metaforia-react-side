@@ -10,7 +10,7 @@ function SingleSession(props) {
   const 
     {
       session_id, session_date, client_name, client_surname, 
-      client_email, session_descr, last_version, last_modificator
+      client_email, session_descr, last_version, last_modificator, cards_side
     } = props.session
 
   const inviteClick = () => {
@@ -25,7 +25,7 @@ function SingleSession(props) {
   }
 
   const setSession = () => {
-    props.setThisSession(session_id, last_version, last_modificator)
+    props.setThisSession(session_id, last_version, last_modificator, cards_side)
     props.getAllSelectedCardItemsInit(session_id)
   }
 

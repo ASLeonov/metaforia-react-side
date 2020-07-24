@@ -38,6 +38,7 @@ function ConsultationCards(props) {
           <SelectedCards
             session_id={thisSession.session_id}
             activeCardsBox={selectedCards.activeCardsBox}
+            cards_side={thisSession.cards_side}
             data={selectedCards.data}
             thisSessionCards={thisSessionCards.data}
             thisSessionCardsLocal={thisSessionCardsLocal}

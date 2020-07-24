@@ -128,21 +128,14 @@ wss.on('connection', ws => {
         break
       case 'setSelectedCards':
         const query = `
-          SELECT last_version, last_modificator 
-          FROM   sessions
+          UPDATE sessions 
+          SET    last_version = last_version + 1, active_card_box = ${client_data.acb}, last_modificator = '${client_data.modificator}'
           WHERE  session_id = ${client_data.session}`
         connection.query(
           query,
           (err, results) => {
             if (err) { console.log('err', err) }
-            else {
-              const send_data = {
-                type:             'SYNCHRO',
-                last_version:     results[0].last_version,
-                last_modificator: results[0].last_modificator
-              }
-              results.length === 1 && ws.send(JSON.stringify(send_data))
-            }
+            else { console.log('ok', results) }
           }
         )
         break

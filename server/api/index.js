@@ -19,7 +19,7 @@ const reply = (res, query, msg, status = 200) => {
             res.status(status).json(results)
           }
         } else {
-          console.log('ERR', err)
+          res.status(500).json({err: 'err'})
         }
       }
     )
@@ -134,7 +134,8 @@ router.post('/login', bodyParser.json(), (req, res, next) => {
 router.get('/currentsessions', (req, res, next) => {
   const user_id = req.query.user_tools
   const query = `
-    SELECT s.session_id, s.session_date, s.session_descr, s.last_version, s.last_modificator, s.active_card_box, c.client_name, c.client_surname
+    SELECT s.session_id, s.session_date, s.session_descr, s.last_version, s.last_modificator,
+           s.active_card_box, s.cards_side, c.client_name, c.client_surname
     FROM   sessions AS s, clients AS c
     WHERE  s.session_user   = ${user_id}
     AND    s.session_client = c.client_id 
@@ -294,10 +295,6 @@ router.post('/closesession', bodyParser.json(), (req, res, next) => {
 
 router.get('/allselectedcardsitemsbase', (req, res, next) => {
   const session_id = req.query.session_id
-  // const table = `allcards__items_${cards_id}`
-  // const query = `
-  //   SELECT *
-  //   FROM   ${table}`
   const query = `
     SELECT   sc.card_box_id, s.active_card_box  
     FROM     sessions AS s, sessions_cards AS sc
