@@ -10,15 +10,15 @@ function ConsultationCard(props) {
   // Двигаемся, left, top, расст по X до точки приложения, расст по Y до точки приложения, ширина, высота
   const [playMode, setPlayMode] = useState(false)
   const [isMove, setIsMove] = useState(false)
-  // const [side, setSide] = useState()
   const [scale, setScale] = useState(1)
-  const {cards_id, cards_img, cards_name} = props.card
+  const {cards_id, cards_box, cards_name, cards_img} = props.card
 
   const sendDataSocket = (thisScale) => {
     const send_data = {
       type:          'saveCardThisSession',
-      cards_id,
-      cards_name,
+      cards_id, 
+      cards_box, 
+      cards_name, 
       cards_img, 
       position_left: position[1],
       position_top:  position[2],
@@ -26,6 +26,7 @@ function ConsultationCard(props) {
       session_id:    props.session_id,
       modificator:   props.user.type
     }
+    console.log('send_data ->', send_data)
     props.socket.send(JSON.stringify(send_data))
   }
 
@@ -113,48 +114,46 @@ function ConsultationCard(props) {
   const currentStyle = (position[1] !== 0 && position[2] !== 0) ?
     {
       position: 'fixed',
-      left: position[1],
-      top: position[2],
-      // margin: '50px',
+      left:     position[1],
+      top:      position[2],
+      fontSize: '100%',
       ...img_style,
       ...props.style_1
     } : props.style_1
 
   const CN_front = props.side === 0 ? "consultation-card-wrapper__closed" : "consultation-card-wrapper"
-  // const CN_back  = "consultation-card-back"
-  const CN_back  = props.side === 0 ? "consultation-card-back" : "consultation-card-back__closed"
 
-  // console.log('cons card scale =', props.scale, scale)
+  // console.log('cons card')
 
   return (
     <div
       onMouseMove={changePositionMouseDown}
       onMouseUp={setDraggbleOFF}
-      // onMouseLeave={setDraggbleOFF}
-      style={ (position[0] && isMove) ? {position:'fixed', top:'0', left:'0', bottom:'0', right:'0', zIndex:'1000', backgroundColor:'transparent'} : {} }
+      style={ (position[0] && isMove) ? {position:'fixed', top:'0', left:'0', bottom:'0', right:'0', zIndex:'1000', backgroundColor:'transparent'} : {position:'relative'} }
     >
-      <div className={CN_back}>Зад</div>
       <div 
-        id={`consultation-card-${cards_id}`}
-        className={CN_front}
-        style={currentStyle}
-        onMouseDown={setDraggbleON} // включаем режим переноса карты кликом на этом блоке, остальные события обрабатываем на полноэкранном блоке выше, чтобы исключить соскакивания мыши
+        id          = {`consultation-card-${cards_id}`}
+        style       = {currentStyle}
+        className   = {CN_front}
+        onMouseDown = {setDraggbleON}
+        // включаем режим переноса карты кликом на этом блоке, остальные события обрабатываем на полноэкранном блоке выше, чтобы исключить соскакивания мыши
       >
         <div className="consultation-card-tools" id={`cctools-${cards_id}`} style={playMode ? {} : {height:'0'}}>
           <div>
-            <span onClick={increaseScale} style={scale >= 2 ? {opacity: 0.1} : {}}>+</span>
-            <span onClick={decreaseScale} style={scale <= 1 ? {opacity: 0.1} : {}}>-</span>
+            <span onClick={increaseScale} style={scale >= 2 ? {opacity: 0.1} : {}}> + </span>
+            <span onClick={decreaseScale} style={scale <= 1 ? {opacity: 0.1} : {}}> - </span>
           </div>
-          <span onClick={hideCard}>x</span>
+          <span onClick={hideCard}> x </span>
         </div>
         <img
-          src={`../images/cards-item/${cards_img}`}
-          className="consultation-card"
-          style={img_style}
-          alt={`Карта «${cards_name}»`}
-          title={`Карта «${cards_name}»`}
+          src       = {`../images/cards-item/${cards_img}`}
+          className = "consultation-card"
+          style     = {img_style}
+          alt       = {`Карта «${cards_name}»`}
+          title     = {`Карта «${cards_name}»`}
         />
       </div>
+      {/* <div className={CN_back}></div> */}
     </div>
   )
 }

@@ -107,6 +107,25 @@ export const increaseThisSessionACB = () => (dispatch, getState) => {
     })
 }
 
+export const increaseThisSessionSide = (side, socket) => (dispatch, getState) => {
+  const session_id  = getState().thisSession.session_id
+  const modificator = getState().user.type
+  const new_side    = side === 0 ? 1 : 0
+    const send_data = {
+      type:        'setSelectedCardsSide',
+      side:        new_side,
+      session:     session_id,
+      modificator: modificator,
+    }
+    socket.send(JSON.stringify(send_data))
+  dispatch({
+    type: 'INCREASE_THIS_SESSION_SIDE',
+    payload: {
+      modificator,
+    }
+  })
+}
+
 // ---------- END OF CARDS THIS SESSION ---------- //
 
 

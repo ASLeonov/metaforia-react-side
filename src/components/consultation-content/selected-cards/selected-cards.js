@@ -8,7 +8,10 @@ function SelectedCards(props) {
   const [dataKeys, setDataKeys] = useState({})
   const [side, setSide] = useState(99999)
 
-  const {session_id, activeCardsBox, cards_side, data, thisSessionCards, thisSessionCardsLocal, socket} = props
+  const {
+    session_id, activeCardsBox, cards_side, data, socket, 
+    thisSessionCards, thisSessionCardsLocal, increaseThisSessionSide
+  } = props
   const data_length = Object.keys(data).length
   
   const mixCardsClick = () => {
@@ -17,13 +20,7 @@ function SelectedCards(props) {
     setMixCards([mixCards[0] + 1])
   }
 
-  const turnCardsClick = () => {
-    if (side === 0) {
-      setSide(1)
-    } else {
-      setSide(0)
-    }
-  }
+  const turnCardsClick = () => increaseThisSessionSide(cards_side, socket)
 
   const rightScrollClick = () => {
     const wrapper_element = document.querySelector('.consultation-cards-center-wrapper')
@@ -129,6 +126,7 @@ function SelectedCards(props) {
 
   useEffect( () => {
     if (side !== cards_side) {
+      console.log('side !== cards_side', side, cards_side)
       setSide(cards_side)
     }
   }, [cards_side])

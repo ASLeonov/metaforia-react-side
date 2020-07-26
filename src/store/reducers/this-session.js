@@ -81,13 +81,26 @@ export const thisSessionReducer = (
             cardsThisSessionLocal: thisSessionState.cardsThisSessionLocal
           }
         }
+        case 'INCREASE_THIS_SESSION_SIDE': {
+          console.log('INCREASE_THIS_SESSION_SIDE')
+          const new_version = thisSessionState.last_version + 1
+          const new_side    = thisSessionState.cards_side === 0 ? 1 : 0
+          return {
+            session_id:            thisSessionState.session_id,
+            last_version:          new_version,
+            last_modificator:      thisSessionState.last_modificator,
+            cards_side:            new_side,
+            cardsThisSession:      thisSessionState.cardsThisSession,
+            cardsThisSessionLocal: thisSessionState.cardsThisSessionLocal
+          }
+        }
         case 'UPDATE_LAST_VERSION_THIS_SESSION': {
           console.log('UPDATE_LAST_VERSION_THIS_SESSION')
           return {
             session_id:       thisSessionState.session_id,
             last_version:     Number(action.payload.last_version),
             last_modificator: action.payload.last_modificator,
-            cards_side:       thisSessionState.cards_side,
+            cards_side:       Number(action.payload.cards_side),
             cardsThisSession: {
               isLoaded:  false,
               isLoading: false,

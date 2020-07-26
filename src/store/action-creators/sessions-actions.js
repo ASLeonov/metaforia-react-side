@@ -59,13 +59,13 @@ export const setThisSession = (session_id, last_version, last_modificator, cards
   }
 }
 
-export const updateThisSession = (last_version, last_modificator) => {
+export const updateThisSession = (last_version, last_modificator, cards_side) => {
   return {
     type: 'UPDATE_LAST_VERSION_THIS_SESSION',
     payload: {
       last_version,
       last_modificator, 
-
+      cards_side
     }
   }
 }

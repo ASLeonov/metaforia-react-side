@@ -19,17 +19,14 @@ function CardsBox(props) {
         break
       case 'consult-mode-play':
         if (selectCards !== cards.cards_id) {
-
-            // Добавить запись в бд (в бекэнде)
-
           increaseThisSessionACB()
           addSelectedCardItems(cards.cards_id)
           callback(cards.cards_id)
             const send_data = {
-              type:         'setSelectedCards',
-              session:      session_id,
-              acb:          cards.cards_id,
-              modificator:  user.type,
+              type:        'setSelectedCards',
+              session:     session_id,
+              acb:         cards.cards_id,
+              modificator: user.type,
             }
             socket.send(JSON.stringify(send_data))
         }

@@ -2,7 +2,7 @@ import React, {useEffect} from 'react'
 import {connect} from 'react-redux'
 import {selectUserSelectedCards, selectThisSessionCards, selectThisSessionCardsLocal} from '../../../store/selectors/cards'
 import {selectThisSession} from '../../../store/selectors/sessions'
-import {getSelectedCardItems, addSelectedCardItems, getCardsThisSession} from '../../../store/action-creators/cards-actions'
+import {getSelectedCardItems, addSelectedCardItems, getCardsThisSession, increaseThisSessionSide} from '../../../store/action-creators/cards-actions'
 import SelectedCards from '../selected-cards'
 import CardsThisSession from '../cards-this-session'
 import Messages from '../../messages'
@@ -42,6 +42,7 @@ function ConsultationCards(props) {
             data={selectedCards.data}
             thisSessionCards={thisSessionCards.data}
             thisSessionCardsLocal={thisSessionCardsLocal}
+            increaseThisSessionSide={props.increaseThisSessionSide}
             socket={props.socket}
           />
       }
@@ -81,9 +82,10 @@ export default connect(
     thisSession: selectThisSession(state)
   }),
   {
-    getSelectedCards:    getSelectedCardItems,
-    addSelectedCards:    addSelectedCardItems,
-    getCardsThisSession: getCardsThisSession
+    getSelectedCards: getSelectedCardItems,
+    addSelectedCards: addSelectedCardItems,
+    getCardsThisSession,
+    increaseThisSessionSide
   }
 )(ConsultationCards)
 

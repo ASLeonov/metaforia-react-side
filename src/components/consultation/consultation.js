@@ -44,7 +44,7 @@ function Consultation(props) {
              console.log('current version -> bad ->',
                thisSession.last_version, '!==', get_data.last_version, ' OR ', 
                  thisSession.last_modificator, '!==', get_data.last_modificator)
-             updateThisSession(get_data.last_version, get_data.last_modificator)
+             updateThisSession(get_data.last_version, get_data.last_modificator, get_data.cards_side)
              getCardsThisSession()
           } else {
             console.log('current version -> ok ->', 

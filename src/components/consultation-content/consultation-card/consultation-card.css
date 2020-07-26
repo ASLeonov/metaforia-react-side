@@ -1,59 +1,65 @@
 .consultation-card-wrapper {
-  display: inline-block;
+  box-sizing: border-box;
   width: 100px;
+  font-size: 0;
+  /* height: 134px; */
   /* height: 134px;
   Убрал условие, т.к. это самый быстрый способ сохранение пропорций этого блока при изменениях вложенного img.
   В принципе можно будет добавить в style рассчетный height*/
-  transition: width 0.3s, transform 1s;
+  background: url('/images/cards-item/card-back-side.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 82px 118px;
+  box-shadow: inset 0 0 0 5px rgba(210, 105, 30, 0);
+  transition: width 0.3s, transform 1s linear;
 }
 
-.consultation-card-wrapper:hover {
+.consultation-card-wrapper:hover, .consultation-card-wrapper__closed:hover {
   z-index: 8888;
 }
 
-/* .ttt {
-  background-image: url('https://goo.gl/jwC1mV');
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  border-radius: 25px;
-  transform: perspective(2000px)
-  rotateY(0deg);
-} */
-
 .consultation-card-wrapper__closed {
-  transition: transform 1s;
-  transform: rotateY(180deg);
-  backface-visibility: hidden;
-
+  box-sizing: border-box;
+  width: 100px;
+  height: 134px;
+  font-size: 0;
+  transform: rotateX(180deg);
+  background: url('/images/cards-item/card-back-side.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 82px 118px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 5px rgba(210, 105, 30, 0);
+  transition: transform 1s linear;
 }
 
-.consultation-card-back {
-  backface-visibility: hidden;
-  transform: rotateY(360deg);
-  transition: transform 1s;
+.consultation-card-wrapper__closed:hover {
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 5px rgba(210, 105, 30, 1);
 }
-.consultation-card-back__closed {
-  backface-visibility: hidden;
-  transform: rotateY(180deg);
-  transition: transform 1s;
+
+.consultation-card-wrapper .consultation-card {
+  opacity: 1;
+}
+
+.consultation-card-wrapper__closed .consultation-card {
+  opacity: 0;
 }
 
 .consultation-card {
   box-sizing: border-box;
-  /* width: 0px; */
   width: 100px;
-  /* height: 134px; */
   border: 5px solid transparent;
   border-radius: 5px;
-  /* margin: 10px; */
-  transition: all 0.3s;
+  transition: opacity 0s 0.5s, width 0.3s;
   pointer-events: none; /* Убиваем drag'n'drop и прочие события браузера */
-  /* animation: proba 2s; */
-  /* animation: name duration timing-function delay iteration-count direction fill-mode; */
 }
 
 .consultation-card-wrapper:hover .consultation-card {
+  border: 5px solid chocolate;
+}
+
+.consultation-card-wrapper__closed:hover .consultation-card {
   border: 5px solid chocolate;
 }
 
